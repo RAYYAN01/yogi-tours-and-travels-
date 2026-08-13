@@ -145,6 +145,21 @@
           </a>
           <a href="<%= telHref %>" class="btn btn-ghost w-full"><%- include('../partials/icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Or Call <%= business.phone %></span></a>
         </div>
+
+        <% if (typeof relevantRoutes !== "undefined" && relevantRoutes.length) { %>
+        <div class="mt-6 pt-5 border-t border-ink-100">
+          <h3 class="text-sm font-semibold text-ink-900 mb-3">Popular Routes With This Vehicle</h3>
+          <ul class="space-y-2">
+            <% relevantRoutes.forEach(function(r) { %>
+            <li>
+              <a href="/routes/<%= r.slug %>" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+                <span>Bangalore to <%= r.destination %> Cab</span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } %>
       </div>
     </div>
   </div>

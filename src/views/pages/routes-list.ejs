@@ -1,0 +1,25 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Bangalore Outstation Cab Routes</h1>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4 max-w-2xl">Distance, travel time and suggested vehicles for the outstation routes we're booked for most often.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      <% routes.forEach(function(r) { %>
+      <a href="/routes/<%= r.slug %>" class="block bg-white rounded-2xl border border-ink-100 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 p-5">
+        <h2 class="font-display font-semibold text-ink-900 text-[17px]">Bangalore to <%= r.destination %></h2>
+        <div class="flex items-center gap-3 mt-2 text-[13px] text-ink-500">
+          <span class="flex items-center gap-1"><%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5 text-brand-500' }) %>~<%= r.distanceKm %> km</span>
+          <span class="flex items-center gap-1"><%- include('../partials/icon', { name: 'clock', cls: 'w-3.5 h-3.5 text-brand-500' }) %><%= r.travelTimeHours %></span>
+        </div>
+        <p class="text-sm text-ink-500 mt-2.5 leading-relaxed line-clamp-2"><%= r.intro %></p>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

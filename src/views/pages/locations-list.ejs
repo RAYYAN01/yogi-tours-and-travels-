@@ -1,0 +1,23 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Areas We Serve in Bangalore</h1>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4 max-w-2xl">Car, cab, Tempo Traveller and bus rental across Bangalore — pick your area for local pickup details, nearby landmarks and available vehicles.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      <% locations.forEach(function(l) { %>
+      <a href="/locations/car-rental-<%= l.slug %>" class="block bg-white rounded-2xl border border-ink-100 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 p-5">
+        <h2 class="font-display font-semibold text-ink-900 text-[17px] flex items-center gap-2">
+          <%- include('../partials/icon', { name: 'map-pin', cls: 'w-4 h-4 text-brand-500' }) %>Car Rental in <%= l.name %>
+        </h2>
+        <p class="text-sm text-ink-500 mt-2 leading-relaxed line-clamp-2"><%= l.intro %></p>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

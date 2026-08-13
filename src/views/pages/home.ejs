@@ -261,6 +261,28 @@
   </div>
 </section>
 
+<!-- POPULAR ROUTES -->
+<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10">
+      <%- include('../components/section-heading', {
+        eyebrow: 'Outstation Routes',
+        heading: 'Popular Cab Routes From Bangalore',
+        sub: 'Distance, travel time and vehicle options for the routes we\'re booked for most often.'
+      }) %>
+      <a href="/routes" class="btn btn-outline shrink-0">View All Routes<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+    <div class="flex flex-wrap gap-2.5">
+      <% homeRoutes.forEach(function(r) { %>
+        <a href="/routes/<%= r.slug %>" class="badge badge-outline !py-2.5 !px-4 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors bg-white">
+          <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %>Bangalore to <%= r.destination %> Cab
+        </a>
+      <% }); %>
+    </div>
+    <p class="text-sm text-ink-500 mt-6">Also serving <a href="/locations" class="text-brand-700 hover:text-brand-800 font-medium">areas across Bangalore</a> including Whitefield, Electronic City, Koramangala, Indiranagar and more.</p>
+  </div>
+</section>
+
 <!-- WHY CHOOSE US -->
 <section class="py-16 lg:py-24 bg-gradient-to-br from-brand-900 via-brand-800 to-ink-950 relative overflow-hidden" data-reveal>
   <div class="absolute inset-0 ph-pattern-overlay opacity-[0.05]" aria-hidden="true"></div>

@@ -1,0 +1,97 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container grid lg:grid-cols-5 gap-8 lg:gap-12">
+    <div class="lg:col-span-3">
+      <h1 class="font-display font-bold text-3xl text-ink-900 tracking-tight">Bangalore to <%= route.destination %> Cab</h1>
+      <p class="text-[15px] text-ink-600 leading-relaxed mt-4"><%= route.intro %></p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+        <div class="rounded-xl bg-ink-50/70 p-4 text-center">
+          <p class="text-[11px] text-ink-500">Distance</p>
+          <p class="font-display font-bold text-ink-900 mt-1">~<%= route.distanceKm %> km</p>
+        </div>
+        <div class="rounded-xl bg-ink-50/70 p-4 text-center">
+          <p class="text-[11px] text-ink-500">Travel Time</p>
+          <p class="font-display font-bold text-ink-900 mt-1"><%= route.travelTimeHours %></p>
+        </div>
+        <div class="rounded-xl bg-ink-50/70 p-4 text-center">
+          <p class="text-[11px] text-ink-500">State</p>
+          <p class="font-display font-bold text-ink-900 mt-1"><%= route.state %></p>
+        </div>
+        <div class="rounded-xl bg-ink-50/70 p-4 text-center">
+          <p class="text-[11px] text-ink-500">Trip Type</p>
+          <p class="font-display font-bold text-ink-900 mt-1">One-way / Round trip</p>
+        </div>
+      </div>
+
+      <% if (route.highlights.length) { %>
+      <div class="mt-8">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Places to See in <%= route.destination %></h2>
+        <div class="flex flex-wrap gap-2">
+          <% route.highlights.forEach(function(h) { %>
+            <span class="badge badge-outline"><%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %><%= h %></span>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="mt-10 rounded-2xl bg-ink-50/70 p-5 sm:p-6">
+        <h2 class="font-display font-semibold text-ink-900 mb-3">Bangalore to <%= route.destination %> — Common Questions</h2>
+        <div class="space-y-4 text-sm text-ink-700">
+          <div>
+            <p class="font-medium text-ink-900">What is the distance from Bangalore to <%= route.destination %>?</p>
+            <p class="mt-1 text-ink-600">Approximately <%= route.distanceKm %> km by road, taking around <%= route.travelTimeHours %> depending on traffic and the exact pickup point. This can vary by a few kilometres depending on the route taken.</p>
+          </div>
+          <div>
+            <p class="font-medium text-ink-900">Can I book a one-way drop to <%= route.destination %>?</p>
+            <p class="mt-1 text-ink-600">Yes, one-way drops are available on this route alongside round trips. Let us know your preference when you enquire.</p>
+          </div>
+          <div>
+            <p class="font-medium text-ink-900">Which vehicle should I choose for this route?</p>
+            <p class="mt-1 text-ink-600">This depends on your group size — see the suggested vehicles below, or <a href="/fleet" class="text-brand-700 hover:text-brand-800 font-medium">browse the full fleet</a> for seating and luggage details.</p>
+          </div>
+          <div>
+            <p class="font-medium text-ink-900">What is included in the fare?</p>
+            <p class="mt-1 text-ink-600">Each vehicle's per-km rate, minimum daily kilometres and driver Bata are listed on its own page. Toll, parking, permit and state taxes are additional and confirmed in your quotation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div class="admin-card !border-ink-100 p-6 sticky top-24">
+        <h2 class="font-display font-semibold text-ink-900 mb-1">Get a Quote for This Route</h2>
+        <p class="text-sm text-ink-500 mb-5">Share your travel date and group size — we'll confirm the vehicle and fare.</p>
+        <div class="space-y-2.5">
+          <button type="button" class="btn btn-accent w-full" data-enquiry-trigger data-enquiry-type="outstation" data-enquiry-context="Route: Bangalore to <%= route.destination %>">
+            <%- include('../partials/icon', { name: 'send', cls: 'w-4 h-4' }) %><span>Get Best Quote</span>
+          </button>
+          <a href="https://wa.me/<%= whatsappDigits %>?text=<%= encodeURIComponent('Hi, I would like a quote for Bangalore to ' + route.destination + '.') %>" target="_blank" rel="noopener" class="btn btn-outline w-full">
+            <%- include('../partials/icon', { name: 'whatsapp', cls: 'w-4 h-4' }) %><span>WhatsApp About This Trip</span>
+          </a>
+          <a href="<%= telHref %>" class="btn btn-ghost w-full"><%- include('../partials/icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Or Call <%= business.phone %></span></a>
+        </div>
+
+        <% if (vehicles.length) { %>
+        <div class="mt-7 pt-6 border-t border-ink-100">
+          <h3 class="text-sm font-semibold text-ink-900 mb-3">Suggested Vehicles</h3>
+          <ul class="space-y-2">
+            <% vehicles.forEach(function(v) { %>
+            <li>
+              <a href="/fleet/<%= v.category %>/<%= v.slug %>" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+                <span><%= v.name %></span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

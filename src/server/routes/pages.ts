@@ -15,6 +15,7 @@ import {
   sortVehiclesAlphabetically
 } from "../db/content.js";
 import { faqSchema } from "../utils/schema.js";
+import { TRIP_ROUTES } from "../config/tripRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const creditsPath = path.resolve(__dirname, "../../../IMAGE_CREDITS.json");
@@ -35,9 +36,9 @@ router.get("/", async (req, res, next) => {
     const faqs = allFaqs.slice(0, 12);
     res.render("pages/home", {
       vehicles: sortVehiclesAlphabetically(vehicles),
-      title: "Yogi Tours & Travels | Tours & Travels in Bangalore — Cabs, Tempo Traveller & Bus Rental",
+      title: "Tours and Travels in Bangalore | Yogi Tours & Travels",
       metaDescription:
-        "Car, Tempo Traveller & bus rental, airport transfers and custom tour packages in Bangalore. Get a free quote from Yogi Tours & Travels today.",
+        "Car rental, cab and taxi service in Bangalore for local, airport and outstation travel — Tempo Traveller, Innova, Urbania and bus rental with transparent per-km pricing. Yogi Tours & Travels, available 24/7.",
       canonicalPath: "/",
       // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
       transparentHeader: true,
@@ -47,6 +48,7 @@ router.get("/", async (req, res, next) => {
       faqs,
       testimonials,
       galleryTeaser,
+      homeRoutes: TRIP_ROUTES.slice(0, 6),
       schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
     });
   } catch (err) {

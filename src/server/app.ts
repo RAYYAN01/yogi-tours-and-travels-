@@ -23,6 +23,8 @@ import blogRouter from "./routes/blog.js";
 import apiRouter from "./routes/api.js";
 import seoRouter from "./routes/seo.js";
 import adminRouter from "./routes/admin/index.js";
+import locationsRouter from "./routes/locations.js";
+import tripRoutesRouter from "./routes/tripRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "../../");
@@ -124,6 +126,8 @@ app.use(pagesRouter);
 app.use("/fleet", vehiclesRouter);
 app.use("/services", servicesRouter);
 app.use("/tour-packages", packagesRouter);
+app.use("/locations", locationsRouter);
+app.use("/routes", tripRoutesRouter);
 app.use("/gallery", galleryRouter);
 app.use("/blog", blogRouter);
 app.use("/api", apiRouter);

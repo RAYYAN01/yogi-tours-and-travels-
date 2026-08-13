@@ -1,0 +1,74 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container max-w-3xl">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Car &amp; Cab Rental in <%= location.name %>, Bangalore</h1>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4"><%= location.intro %></p>
+
+    <% if (location.landmarks.length) { %>
+    <div class="flex flex-wrap gap-2 mt-5">
+      <% location.landmarks.forEach(function(l) { %>
+        <span class="badge badge-outline"><%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %><%= l %></span>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="mt-10">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Vehicles Available in <%= location.name %></h2>
+      <p class="text-sm text-ink-600 mb-5">Local, airport and outstation pickups from <%= location.name %> — the full fleet range below, with transparent per-km pricing where confirmed.</p>
+      <div class="flex flex-wrap gap-2.5">
+        <% vehicleCategoryLabelsList.forEach(function(c) { %>
+          <a href="/fleet/<%= c.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+            <%- include('../partials/icon', { name: vehicleCategoryIcon(c.slug), cls: 'w-3.5 h-3.5' }) %><%= c.label %>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+
+    <% if (featuredVehicles.length) { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 mt-8">
+      <% featuredVehicles.forEach(function(v) { %>
+        <%- include('../components/vehicle-card', { vehicle: v }) %>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="mt-10 rounded-2xl bg-ink-50/70 p-5 sm:p-6">
+      <h2 class="font-display font-semibold text-ink-900 mb-3">Common Questions — <%= location.name %></h2>
+      <div class="space-y-4 text-sm text-ink-700">
+        <div>
+          <p class="font-medium text-ink-900">Do you offer airport pickup from <%= location.name %>?</p>
+          <p class="mt-1 text-ink-600">Yes — we cover pickup and drop to Kempegowda International Airport from <%= location.name %> and every other area we serve. See our <a href="/services/airport-transfer" class="text-brand-700 hover:text-brand-800 font-medium">airport transfer service</a> for details.</p>
+        </div>
+        <div>
+          <p class="font-medium text-ink-900">Can I book an outstation trip from <%= location.name %>?</p>
+          <p class="mt-1 text-ink-600">Yes. Pickup is arranged directly from <%= location.name %> for outstation trips — see our <a href="/services/outstation-travel" class="text-brand-700 hover:text-brand-800 font-medium">outstation cab service</a> or browse <a href="/routes" class="text-brand-700 hover:text-brand-800 font-medium">popular routes from Bangalore</a>.</p>
+        </div>
+        <div>
+          <p class="font-medium text-ink-900">Which vehicles are available in <%= location.name %>?</p>
+          <p class="mt-1 text-ink-600">The full fleet — sedans, Toyota Innova &amp; Innova Crysta, Tempo Travellers, Force Urbania and buses — can be arranged for pickup in <%= location.name %>. See the <a href="/fleet" class="text-brand-700 hover:text-brand-800 font-medium">full fleet</a> for seating and pricing.</p>
+        </div>
+      </div>
+    </div>
+
+    <% if (nearby.length) { %>
+    <div class="mt-10">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Nearby Areas We Serve</h2>
+      <div class="flex flex-wrap gap-2.5">
+        <% nearby.forEach(function(n) { %>
+          <a href="/locations/car-rental-<%= n.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+            <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %>Car Rental in <%= n.name %>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/cta-section', {
+  ctaHeading: `Book a Vehicle in ${location.name}`,
+  ctaSub: `Tell us your pickup point in ${location.name}, group size and destination — we'll confirm the right vehicle and a clear quotation.`
+}) %>
+<%- include('../partials/page-end') %>

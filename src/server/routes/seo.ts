@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { env, business } from "../config/env.js";
 import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS, faqsRepo } from "../db/content.js";
+import { LOCATIONS } from "../config/locations.js";
+import { TRIP_ROUTES } from "../config/tripRoutes.js";
 
 const router = Router();
 
@@ -10,6 +12,8 @@ const STATIC_PATHS = [
   { path: "/fleet", priority: "0.9", changefreq: "weekly" },
   { path: "/services", priority: "0.9", changefreq: "weekly" },
   { path: "/tour-packages", priority: "0.9", changefreq: "weekly" },
+  { path: "/locations", priority: "0.7", changefreq: "monthly" },
+  { path: "/routes", priority: "0.8", changefreq: "monthly" },
   { path: "/gallery", priority: "0.5", changefreq: "monthly" },
   { path: "/blog", priority: "0.6", changefreq: "weekly" },
   { path: "/contact", priority: "0.6", changefreq: "yearly" },
@@ -42,6 +46,12 @@ router.get("/sitemap.xml", async (req, res, next) => {
   }
   for (const post of blogPosts) {
     urls.push({ path: `/blog/${post.slug}`, priority: "0.5", changefreq: "monthly" });
+  }
+  for (const l of LOCATIONS) {
+    urls.push({ path: `/locations/car-rental-${l.slug}`, priority: "0.6", changefreq: "monthly" });
+  }
+  for (const r of TRIP_ROUTES) {
+    urls.push({ path: `/routes/${r.slug}`, priority: "0.7", changefreq: "monthly" });
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

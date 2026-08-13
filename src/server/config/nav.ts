@@ -25,7 +25,10 @@ export const footerToursLinks: NavLink[] = [
   { label: "South India Tours", href: "/tour-packages?region=south-india", match: "/tour-packages" },
   { label: "Corporate Tours", href: "/services/corporate-travel", match: "/services/corporate-travel" },
   { label: "Family Tours", href: "/services/family-tours", match: "/services/family-tours" },
-  { label: "Pilgrimage Tours", href: "/services/pilgrimage-tours", match: "/services/pilgrimage-tours" }
+  { label: "Pilgrimage Tours", href: "/services/pilgrimage-tours", match: "/services/pilgrimage-tours" },
+  { label: "Bangalore to Mysore Cab", href: "/routes/bangalore-to-mysore-cab", match: "/routes" },
+  { label: "Bangalore to Coorg Cab", href: "/routes/bangalore-to-coorg-cab", match: "/routes" },
+  { label: "All Outstation Routes", href: "/routes", match: "/routes" }
 ];
 
 export const footerCompanyLinks: NavLink[] = [
