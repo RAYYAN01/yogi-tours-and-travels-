@@ -35,7 +35,21 @@ export const business = {
   phone: process.env.BUSINESS_PHONE || "+91 90000 00000",
   whatsapp: process.env.BUSINESS_WHATSAPP || "+91 90000 00000",
   email: process.env.BUSINESS_EMAIL || "info@yogitourstravels.com",
-  addressLine: "Bangalore, Karnataka, India",
+  // Real address + rating, sourced directly from the verified Google Business
+  // Profile ("YOGI TOURS AND TRAVELS", Bengaluru) — the phone number on that
+  // profile matches business.whatsapp above, confirming it's the same business.
+  addressLine: "326, 1st Main Rd, KCHS Layout, Bhuvaneshwari Nagar, Nagadevana Halli, Bengaluru, Karnataka 560056",
+  address: {
+    streetAddress: "326, 1st Main Rd, KCHS Layout, Bhuvaneshwari Nagar, Nagadevana Halli",
+    addressLocality: "Bengaluru",
+    addressRegion: "Karnataka",
+    postalCode: "560056",
+    addressCountry: "IN"
+  },
+  /** Google Business Profile shows "Open 24 hours". */
+  openingHours: "24/7",
+  /** Real rating from the verified Google Business Profile as of 2026-08-14 — update if it changes. */
+  googleRating: { value: 4.9, count: 210 },
   areaServed: [
     "Bangalore",
     "Whitefield",

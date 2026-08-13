@@ -150,7 +150,7 @@ router.get("/llms.txt", async (req, res, next) => {
 
 > ${business.description}
 
-Bangalore-based tours and travels agency. Phone/WhatsApp: ${business.phone}. Email: ${business.email}. Serves ${business.areaServed.join(", ")} and surrounding areas.
+Bangalore-based tours and travels agency. Address: ${business.addressLine}. Phone/WhatsApp: ${business.whatsapp}. Email: ${business.email}. Open 24 hours. Rated ${business.googleRating.value}/5 from ${business.googleRating.count} Google reviews. Serves ${business.areaServed.join(", ")} and surrounding areas.
 
 ## Fleet
 

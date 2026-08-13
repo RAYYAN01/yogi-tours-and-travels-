@@ -8,13 +8,26 @@ export function organizationSchema(): Record<string, unknown> {
     name: business.name,
     description: business.description,
     url: env.siteUrl,
-    telephone: business.phone,
+    telephone: business.whatsapp,
     email: business.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Bangalore",
-      addressRegion: "Karnataka",
-      addressCountry: "IN"
+      streetAddress: business.address.streetAddress,
+      addressLocality: business.address.addressLocality,
+      addressRegion: business.address.addressRegion,
+      postalCode: business.address.postalCode,
+      addressCountry: business.address.addressCountry
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "00:00",
+      closes: "23:59"
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: business.googleRating.value,
+      reviewCount: business.googleRating.count
     },
     areaServed: business.areaServed.map((a) => ({ "@type": "City", name: a })),
     priceRange: "$$"
