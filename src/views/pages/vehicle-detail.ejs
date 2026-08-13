@@ -150,6 +150,20 @@
   </div>
 </section>
 
+
+<% if (featuredInPackages.length) { %>
+<section class="py-16 lg:py-20">
+  <div class="container">
+    <%- include('../components/section-heading', { eyebrow: 'Where This Vehicle Fits', heading: `Tour Packages Featuring the ${vehicle.name}` }) %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 mt-8">
+      <% featuredInPackages.forEach(function(p) { %>
+        <%- include('../components/package-card', { pkg: p }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <% if (related.length) { %>
 <section class="py-16 lg:py-20 bg-ink-50/60">
   <div class="container">

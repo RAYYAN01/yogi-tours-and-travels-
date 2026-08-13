@@ -72,6 +72,22 @@
           </ul>
         </div>
         <% } %>
+
+        <div class="mt-7 pt-6 border-t border-ink-100">
+          <h3 class="text-sm font-semibold text-ink-900 mb-3">Plan Your Trip</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="/fleet" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+                <span>Browse Our Full Fleet</span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+              </a>
+            </li>
+            <li>
+              <a href="/tour-packages" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+                <span>Explore Tour Packages</span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

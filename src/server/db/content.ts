@@ -72,6 +72,41 @@ export async function vehiclesByCategory(category: VehicleCategory): Promise<Veh
   return sortVehiclesAlphabetically(vehicles);
 }
 
+function normalizeVehicleLabel(s: string): string {
+  return s.toLowerCase().replace(/[()]/g, "").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Best-effort match between a free-text vehicle label (e.g. a tour
+ * package's vehicleOptions entry, often a shorthand like "Innova Crysta")
+ * and a real fleet vehicle, for internal linking. Exact match first, then
+ * a single-candidate substring match; returns null rather than guessing
+ * when the label is generic (e.g. "Sedan"), ambiguous, or refers to a
+ * vehicle no longer in the fleet — callers must render plain, unlinked
+ * text in that case rather than link to a guess or a dead page.
+ */
+export function matchVehicleByLabel(label: string, vehicles: Vehicle[]): Vehicle | null {
+  const norm = normalizeVehicleLabel(label);
+  if (!norm) return null;
+  const exact = vehicles.find((v) => normalizeVehicleLabel(v.name) === norm);
+  if (exact) return exact;
+  const candidates = vehicles.filter((v) => {
+    const vn = normalizeVehicleLabel(v.name);
+    return vn.includes(norm) || norm.includes(vn);
+  });
+  return candidates.length === 1 ? candidates[0]! : null;
+}
+
+/**
+ * Reverse lookup for the vehicle detail page: tour packages whose
+ * vehicleOptions mentions this vehicle, using the same matching rule as
+ * matchVehicleByLabel so the two stay consistent in both directions.
+ */
+export async function packagesForVehicle(vehicle: Vehicle): Promise<TourPackage[]> {
+  const allPackages = await packagesRepo.all();
+  return allPackages.filter((p) => packageVehicleOptions(p).some((opt) => matchVehicleByLabel(opt, [vehicle]) !== null));
+}
+
 export async function featuredPackages(limit = 6): Promise<TourPackage[]> {
   return (await packagesRepo.allWhere("featured = 1")).slice(0, limit);
 }

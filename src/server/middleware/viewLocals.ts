@@ -3,7 +3,7 @@ import { business, env, telHref, mailtoHref, whatsappDigits } from "../config/en
 import { mainNav, footerServiceLinks, footerToursLinks, footerCompanyLinks, legalLinks } from "../config/nav.js";
 import { organizationSchema } from "../utils/schema.js";
 import { parseJsonArray } from "../db/repo.js";
-import { VEHICLE_CATEGORY_LABELS } from "../db/content.js";
+import { VEHICLE_CATEGORY_LABELS, matchVehicleByLabel } from "../db/content.js";
 import { dutyTariff, estimatedMinimumDailyTotal, DUTY_POLICY } from "../db/pricing.js";
 import type { Vehicle, VehicleCategory } from "../types/models.js";
 
@@ -45,6 +45,7 @@ export function injectViewLocals(req: Request, res: Response, next: NextFunction
   // Cars don't use this convention, so they keep a plain seat count.
   res.locals.seatLabel = (v: Pick<Vehicle, "seats" | "category">): string =>
     v.category === "car" ? `${v.seats} Seats` : `${v.seats}+1 Seats`;
+  res.locals.matchVehicleByLabel = matchVehicleByLabel;
   res.locals.dutyTariff = dutyTariff;
   res.locals.estimatedMinimumDailyTotal = estimatedMinimumDailyTotal;
   res.locals.DUTY_POLICY = DUTY_POLICY;

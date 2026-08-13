@@ -5,7 +5,8 @@ import {
   VEHICLE_CATEGORY_LABELS,
   VEHICLE_CATEGORY_SLUGS,
   vehicleFeatures,
-  vehicleGallery
+  vehicleGallery,
+  packagesForVehicle
 } from "../db/content.js";
 import { productVehicleSchema, breadcrumbSchema } from "../utils/schema.js";
 import type { VehicleCategory } from "../types/models.js";
@@ -100,6 +101,7 @@ router.get("/:category/:slug", async (req, res, next) => {
     }
     const label = VEHICLE_CATEGORY_LABELS[category];
     const related = (await vehiclesByCategory(category)).filter((v) => v.id !== vehicle.id).slice(0, 3);
+    const featuredInPackages = (await packagesForVehicle(vehicle)).slice(0, 3);
 
     res.render("pages/vehicle-detail", {
       title: `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
@@ -116,6 +118,7 @@ router.get("/:category/:slug", async (req, res, next) => {
       features: vehicleFeatures(vehicle),
       gallery: vehicleGallery(vehicle),
       related,
+      featuredInPackages,
       schemas: [
         productVehicleSchema({
           name: vehicle.name,

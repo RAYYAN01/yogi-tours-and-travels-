@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { packagesRepo, packageHighlights, packageVehicleOptions } from "../db/content.js";
+import { packagesRepo, packageHighlights, packageVehicleOptions, vehiclesRepo } from "../db/content.js";
 import { touristTripSchema, breadcrumbSchema } from "../utils/schema.js";
 
 const router = Router();
@@ -58,6 +58,7 @@ router.get("/:slug", async (req, res, next) => {
     );
     const fallbackRelated =
       related.length > 0 ? related : (await packagesRepo.all()).filter((p) => p.id !== pkg.id).slice(0, 3);
+    const vehicles = await vehiclesRepo.all();
 
     res.render("pages/package-detail", {
       title: `${pkg.title} | ${pkg.duration} Tour Package from Bangalore`,
@@ -71,6 +72,7 @@ router.get("/:slug", async (req, res, next) => {
       pkg,
       highlights: packageHighlights(pkg),
       vehicleOptions: packageVehicleOptions(pkg),
+      vehicles,
       related: fallbackRelated,
       schemas: [
         touristTripSchema({
