@@ -326,16 +326,9 @@
       <a href="/gallery" class="btn btn-outline shrink-0">View Full Gallery<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
     </div>
     <div class="grid grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
-      <% [
-        ["gallery-vehicle-innova-crysta","car","Vehicles"],
-        ["gallery-tour-coorg","mountain","Tours"],
-        ["gallery-group-family","users-group","Group Travel"],
-        ["gallery-corporate-offsite","building","Corporate"],
-        ["gallery-wedding-car","heart","Weddings"],
-        ["gallery-destination-kerala","map-pin","Destinations"]
-      ].forEach(function(g) { %>
-        <a href="/gallery?category=<%= encodeURIComponent(g[2]) %>" class="relative block aspect-square rounded-xl overflow-hidden group">
-          <%- include('../components/smart-image', { src: '', seed: g[0], icon: g[1], label: '', alt: g[2] + ' — Yogi Tours & Travels gallery', cls: 'w-full h-full group-hover:scale-110 transition-transform duration-500' }) %>
+      <% galleryTeaser.forEach(function(g) { %>
+        <a href="/gallery?category=<%= encodeURIComponent(g.category) %>" class="relative block aspect-square rounded-xl overflow-hidden group">
+          <%- include('../components/smart-image', { src: g.imageKey, seed: g.category, icon: g.icon, label: '', alt: g.altText || (g.category + ' — Yogi Tours & Travels gallery'), cls: 'w-full h-full group-hover:scale-110 transition-transform duration-500' }) %>
         </a>
       <% }); %>
     </div>

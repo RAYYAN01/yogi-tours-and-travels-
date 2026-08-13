@@ -10,7 +10,8 @@ import {
   faqsRepo,
   testimonialsRepo,
   packagesRepo,
-  startingPriceByCategory
+  startingPriceByCategory,
+  galleryPreview
 } from "../db/content.js";
 import { faqSchema } from "../utils/schema.js";
 
@@ -21,13 +22,14 @@ const router = Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const [allFaqs, vehicles, services, packages, pricing, testimonials] = await Promise.all([
+    const [allFaqs, vehicles, services, packages, pricing, testimonials, galleryTeaser] = await Promise.all([
       faqsRepo.all(),
       vehiclesRepo.all(),
       featuredServices(6),
       featuredPackages(9),
       startingPriceByCategory(),
-      testimonialsRepo.all()
+      testimonialsRepo.all(),
+      galleryPreview()
     ]);
     const faqs = allFaqs.slice(0, 8);
     res.render("pages/home", {
@@ -43,6 +45,7 @@ router.get("/", async (req, res, next) => {
       pricing,
       faqs,
       testimonials,
+      galleryTeaser,
       schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
     });
   } catch (err) {

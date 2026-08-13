@@ -40,6 +40,34 @@ export async function galleryByCategory(category: GalleryCategory | "All"): Prom
   return galleryRepo.allWhere("category = ?", category);
 }
 
+const GALLERY_CATEGORY_ICONS: Record<GalleryCategory, string> = {
+  Vehicles: "car",
+  Tours: "mountain",
+  "Group Travel": "users-group",
+  Corporate: "building",
+  Weddings: "heart",
+  Destinations: "map-pin"
+};
+
+/**
+ * One real photo per gallery category, for the homepage teaser. Categories
+ * with no real photo yet (imageKey never set) are skipped entirely rather
+ * than shown as an empty placeholder tile — the "View Full Gallery" link
+ * covers the rest.
+ */
+export async function galleryPreview(): Promise<
+  Array<{ category: GalleryCategory; icon: string; imageKey: string; altText: string }>
+> {
+  const categories: GalleryCategory[] = ["Vehicles", "Tours", "Group Travel", "Corporate", "Weddings", "Destinations"];
+  const items = await Promise.all(
+    categories.map(async (category) => {
+      const [first] = await galleryRepo.allWhere('category = ? AND "imageKey" != \'\'', category);
+      return first ? { category, icon: GALLERY_CATEGORY_ICONS[category], imageKey: first.imageKey, altText: first.altText } : null;
+    })
+  );
+  return items.filter((i): i is NonNullable<typeof i> => i !== null);
+}
+
 export const VEHICLE_CATEGORY_LABELS: Record<VehicleCategory, string> = {
   car: "Cars",
   "tempo-traveller": "Tempo Travellers",
