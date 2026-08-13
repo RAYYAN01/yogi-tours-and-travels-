@@ -1,0 +1,52 @@
+<%
+const __title = typeof title !== "undefined" ? title : `${business.name} | Tours & Travels in Bangalore`;
+const __desc = typeof metaDescription !== "undefined" ? metaDescription : business.description;
+const __canonical = typeof canonicalPath !== "undefined" ? `${env.siteUrl}${canonicalPath}` : canonicalUrl;
+const __ogImage = typeof ogImage !== "undefined" ? ogImage : `${env.siteUrl}/assets/images/og-default.svg`;
+const __noindex = typeof noindex !== "undefined" ? noindex : false;
+const __schemas = typeof schemas !== "undefined" ? schemas : [];
+%><!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>document.documentElement.classList.add('js');</script>
+  <title><%= __title %></title>
+  <meta name="description" content="<%= __desc %>" />
+  <link rel="canonical" href="<%= __canonical %>" />
+  <% if (__noindex) { %>
+  <meta name="robots" content="noindex, nofollow" />
+  <% } else { %>
+  <meta name="robots" content="index, follow" />
+  <% } %>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="<%= business.name %>" />
+  <meta property="og:title" content="<%= __title %>" />
+  <meta property="og:description" content="<%= __desc %>" />
+  <meta property="og:url" content="<%= __canonical %>" />
+  <meta property="og:image" content="<%= __ogImage %>" />
+  <meta property="og:locale" content="en_IN" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= __title %>" />
+  <meta name="twitter:description" content="<%= __desc %>" />
+  <meta name="twitter:image" content="<%= __ogImage %>" />
+
+  <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="/assets/images/favicon-512.png" sizes="512x512" type="image/png" />
+  <link rel="apple-touch-icon" href="/assets/images/favicon-180.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/main.css" />
+
+  <script type="application/ld+json"><%- JSON.stringify(organizationSchema) %></script>
+  <% __schemas.forEach(function (s) { %>
+  <script type="application/ld+json"><%- JSON.stringify(s) %></script>
+  <% }); %>
+</head>

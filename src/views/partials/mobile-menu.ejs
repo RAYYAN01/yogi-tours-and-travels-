@@ -1,0 +1,50 @@
+<div id="mobile-menu-overlay" class="fixed inset-0 z-50 bg-ink-950/50 opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true"></div>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-y-0 right-0 z-50 w-[86%] max-w-sm bg-white shadow-popover translate-x-full transition-transform duration-300 ease-out flex flex-col"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site navigation"
+  aria-hidden="true"
+>
+  <div class="flex items-center justify-between h-16 px-5 border-b border-ink-100 shrink-0">
+    <%- include('logo') %>
+    <button
+      id="mobile-menu-close"
+      type="button"
+      class="inline-flex items-center justify-center w-11 h-11 -mr-2 rounded-lg text-ink-700 hover:bg-ink-50 active:scale-95 transition"
+      aria-label="Close menu"
+    >
+      <%- include('icon', { name: 'close', cls: 'w-6 h-6' }) %>
+    </button>
+  </div>
+
+  <nav aria-label="Mobile primary navigation" class="flex-1 overflow-y-auto px-3 py-4">
+    <ul class="space-y-1">
+      <% mainNav.forEach(function(link) {
+        const isActive = link.match === "/" ? currentPath === "/" : currentPath.startsWith(link.match);
+      %>
+      <li>
+        <a
+          href="<%= link.href %>"
+          class="flex items-center justify-between px-4 py-3.5 rounded-xl text-[15.5px] font-medium transition-colors <%= isActive ? 'text-brand-700 bg-brand-50' : 'text-ink-700 hover:bg-ink-50' %>"
+          <% if (isActive) { %>aria-current="page"<% } %>
+        >
+          <%= link.label %>
+          <%- include('icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300' }) %>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+  </nav>
+
+  <div class="p-5 border-t border-ink-100 space-y-2.5 shrink-0">
+    <a href="<%= telHref %>" class="btn btn-outline w-full">
+      <%- include('icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Call <%= business.phone %></span>
+    </a>
+    <button type="button" class="btn btn-primary w-full" data-enquiry-trigger data-enquiry-type="quote" data-enquiry-context="General Enquiry">
+      <%- include('icon', { name: 'whatsapp', cls: 'w-4 h-4' }) %><span>WhatsApp Us</span>
+    </button>
+  </div>
+</div>

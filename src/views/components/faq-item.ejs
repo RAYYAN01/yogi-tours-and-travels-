@@ -1,0 +1,32 @@
+<%
+const __f = faq;
+const __idx = typeof idx !== "undefined" ? idx : 0;
+%>
+<div class="faq-item border-b border-ink-100 last:border-b-0" data-faq-item>
+  <h3>
+    <button
+      type="button"
+      class="faq-trigger flex items-center justify-between w-full gap-4 py-5 text-left"
+      aria-expanded="false"
+      aria-controls="faq-panel-<%= __idx %>"
+      id="faq-trigger-<%= __idx %>"
+      data-faq-trigger
+    >
+      <span class="font-medium text-[15px] sm:text-base text-ink-900"><%= __f.question %></span>
+      <span class="faq-icon shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-ink-50 text-ink-500 transition-transform duration-300">
+        <%- include('../partials/icon', { name: 'chevron-down', cls: 'w-4 h-4' }) %>
+      </span>
+    </button>
+  </h3>
+  <div
+    id="faq-panel-<%= __idx %>"
+    role="region"
+    aria-labelledby="faq-trigger-<%= __idx %>"
+    class="faq-panel grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+    data-faq-panel
+  >
+    <div class="overflow-hidden">
+      <p class="text-[14.5px] sm:text-[15px] text-ink-500 leading-relaxed pb-5 pr-12"><%= __f.answer %></p>
+    </div>
+  </div>
+</div>

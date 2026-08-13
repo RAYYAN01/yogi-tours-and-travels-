@@ -1,0 +1,56 @@
+{
+  "name": "yogi-tours-and-travels",
+  "version": "1.0.0",
+  "description": "Yogi Tours & Travels — dynamic, database-backed Tours & Travels website for a Bangalore travel agency. Express + EJS + SQLite (node:sqlite) + Tailwind CSS + TypeScript.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "seed": "tsx src/server/db/seed.ts",
+    "dev:server": "tsx watch src/server/app.ts",
+    "dev:css": "tailwindcss -i ./src/styles/main.css -o ./public/css/main.css --watch",
+    "dev:client": "node esbuild.config.mjs --watch",
+    "dev": "npm run build:css && npm run build:client && concurrently -k -n SERVER,CSS,CLIENT -c green,cyan,yellow \"npm:dev:server\" \"npm:dev:css\" \"npm:dev:client\"",
+    "build:css": "tailwindcss -i ./src/styles/main.css -o ./public/css/main.css --minify",
+    "build:client": "node esbuild.config.mjs",
+    "build:server": "tsc -p tsconfig.server.json",
+    "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.scripts.json --noEmit",
+    "build": "npm run typecheck && npm run build:css && npm run build:client && npm run build:server",
+    "start": "node dist/server/app.js",
+    "smoke": "tsx scripts/smoke-test.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.1",
+    "nodemailer": "^9.0.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.7.5",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.1",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.2",
+    "@types/nodemailer": "^6.4.17",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
+    "esbuild": "^0.28.1",
+    "postcss": "^8.4.49",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

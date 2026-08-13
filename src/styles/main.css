@@ -1,0 +1,382 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    /* The off-canvas mobile-menu drawer sits translate-x-full off the right
+       edge when closed; being position:fixed, that still extends the
+       document's scrollable area and lets the page scroll sideways into
+       blank space (dragging fixed elements like the WhatsApp button along
+       with the viewport edge, away from the visible content). Clipping
+       horizontal overflow at the root is the standard fix. */
+    overflow-x: hidden;
+  }
+  body {
+    /* "Pearl white" page background — cards/sections that layer on top keep
+       true bg-white so they still read as a distinct surface. */
+    background-color: #f6f8f0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: theme("fontFamily.display");
+  }
+  ::selection {
+    background-color: theme("colors.brand.200");
+    color: theme("colors.brand.900");
+  }
+  :focus-visible {
+    outline: 2px solid theme("colors.brand.500");
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* A fixed 4px radius clips outside a fully-rounded element's own curve
+     (e.g. the circular logo/WhatsApp button), leaving a squared-off corner
+     of the outline visible past the circle. Match the outline's radius to
+     the element's own shape instead. */
+  .rounded-full:focus-visible {
+    border-radius: 9999px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-8xl mx-auto px-5 sm:px-6 lg:px-8 xl:px-10;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-brand-700 focus:text-white focus:px-4 focus:py-2.5 focus:rounded-lg focus:text-sm focus:font-medium;
+  }
+
+  /* Buttons */
+  /* Every button gets a periodic light-sweep "shine" (via ::after) so the
+     whole site's CTAs read as active/attention-grabbing rather than static.
+     --btn-shine-color defaults to a white streak for solid/dark buttons;
+     light-background variants (outline, white) override it to a dark tint
+     below since a white sweep is invisible on a white background. */
+  .btn,
+  .shine {
+    @apply relative overflow-hidden;
+    --btn-shine-color: rgba(255, 255, 255, 0.55);
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold px-5 py-3 min-h-[46px] transition-all duration-200 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none whitespace-nowrap;
+  }
+  .btn::after,
+  .shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    left: -75%;
+    width: 50%;
+    background: linear-gradient(115deg, transparent, var(--btn-shine-color), transparent);
+    transform: skewX(-20deg);
+    animation: btn-shine-sweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .btn-sm {
+    @apply px-3.5 py-2.5 min-h-[40px] text-[13px];
+  }
+  .btn-primary {
+    @apply bg-brand-700 text-white shadow-sm hover:bg-brand-800;
+    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
+  }
+  .btn-accent {
+    @apply bg-brand-500 text-white hover:bg-brand-600;
+    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
+  }
+  .btn-outline {
+    @apply bg-white text-ink-700 ring-1 ring-inset ring-ink-200 hover:bg-ink-50 hover:ring-ink-300;
+    --btn-shine-color: rgba(148, 33, 6, 0.12);
+  }
+  .btn-ghost {
+    @apply text-ink-500 hover:bg-ink-50 hover:text-ink-800;
+    --btn-shine-color: rgba(148, 33, 6, 0.1);
+  }
+  .btn-white {
+    @apply bg-white text-brand-800 hover:bg-brand-50;
+    --btn-shine-color: rgba(148, 33, 6, 0.12);
+  }
+  /* For non-.btn elements (mobile sticky-bar links, etc.) sitting on a light
+     background, where the default white sweep would be invisible. */
+  .shine-dark {
+    --btn-shine-color: rgba(148, 33, 6, 0.12);
+  }
+  .btn-outline-white {
+    @apply text-white ring-1 ring-inset ring-white/30 hover:bg-white/10;
+  }
+  /* "Get Quote" CTA — the one action we want to visually stand out everywhere it appears
+     (vehicle cards, service cards, mobile action bar), so it's a bright red,
+     pill-shaped and uppercase to match the header's "Enquire Now" button. */
+  .btn-quote {
+    @apply bg-brand-500 text-white hover:bg-brand-600 !rounded-full font-bold uppercase tracking-[0.06em];
+    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
+  }
+  @keyframes btn-shine-sweep {
+    0%, 15% {
+      left: -75%;
+    }
+    40%,
+    100% {
+      left: 125%;
+    }
+  }
+  @keyframes btn-glow-pulse-strong {
+    0%,
+    100% {
+      box-shadow: 0 4px 14px -2px rgba(194, 44, 9, 0.5);
+    }
+    50% {
+      box-shadow: 0 4px 22px 2px rgba(194, 44, 9, 0.75);
+    }
+  }
+
+  /* Forms */
+  .form-label {
+    @apply block text-[13px] font-medium text-ink-600 mb-1.5;
+  }
+  .form-input {
+    @apply block w-full rounded-lg border-0 ring-1 ring-inset ring-ink-200 bg-white px-3.5 py-2.5 text-[14.5px] text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-shadow min-h-[46px];
+  }
+  .form-input:disabled {
+    @apply bg-ink-50 text-ink-400;
+  }
+  .form-error {
+    @apply text-[12.5px] text-error mt-1 min-h-[1em] empty:hidden;
+  }
+  .form-input.field-invalid {
+    @apply ring-error focus:ring-error;
+  }
+
+  /* Custom select: replaces the native <select> popup (inconsistent/ugly
+     across browsers) with a listbox we fully control. See customSelect.ts. */
+  .custom-select-wrap {
+    @apply relative;
+  }
+  .custom-select-trigger {
+    @apply flex w-full items-center justify-between gap-2 text-left;
+  }
+  .custom-select-trigger .custom-select-value[data-placeholder="true"] {
+    @apply text-ink-400;
+  }
+  .custom-select-trigger svg {
+    @apply w-4 h-4 text-ink-400 shrink-0 transition-transform;
+  }
+  .custom-select-trigger[aria-expanded="true"] svg {
+    @apply rotate-180;
+  }
+  .custom-select-panel {
+    @apply absolute z-20 mt-1.5 w-full max-h-64 overflow-y-auto rounded-lg bg-white py-1.5 shadow-popover ring-1 ring-ink-100;
+  }
+  .custom-select-optgroup-label {
+    @apply px-3.5 pt-2.5 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-400;
+  }
+  .custom-select-option {
+    @apply block w-full px-3.5 py-2 text-left text-[14px] text-ink-700 cursor-pointer hover:bg-ink-50;
+  }
+  .custom-select-option[aria-selected="true"] {
+    @apply bg-brand-50 text-brand-700 font-medium;
+  }
+  .custom-select-option:focus {
+    @apply bg-ink-50 outline-none;
+  }
+
+  .trip-type-option {
+    @apply flex-1 flex items-center justify-center gap-1.5 text-[13px] font-medium rounded-lg ring-1 ring-inset ring-ink-200 text-ink-500 py-2.5 cursor-pointer transition-colors hover:bg-ink-50;
+  }
+  .trip-type-option:has(input:checked) {
+    @apply bg-brand-50 ring-brand-400 text-brand-700;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium leading-none;
+  }
+  .badge-outline {
+    @apply ring-1 ring-inset ring-ink-200 text-ink-600 bg-white;
+  }
+  .badge-dark {
+    @apply bg-ink-950/80 text-white backdrop-blur-sm;
+  }
+  .badge-light {
+    @apply bg-white/95 text-ink-800 shadow-sm;
+  }
+  .badge-accent {
+    @apply bg-sun-100 text-sun-800;
+  }
+  .badge-brand {
+    @apply bg-brand-100 text-brand-800;
+  }
+
+  /* Booking widget tabs */
+  .booking-tab {
+    @apply flex items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-[13px] sm:text-sm font-semibold text-ink-500 transition-colors hover:text-brand-700;
+  }
+  .booking-tab[aria-selected="true"] {
+    @apply bg-white text-brand-700 shadow-sm;
+  }
+
+  /*
+    Glass variant, scoped to #booking-widget only — the hero's transparent,
+    frosted booking card. form-input/form-label/etc. are shared with the
+    contact page, enquiry modal and admin forms, so these overrides are kept
+    strictly descendant-scoped rather than changed globally.
+  */
+  #booking-widget .form-label {
+    @apply text-white/85;
+  }
+  #booking-widget .form-input {
+    @apply bg-white/10 text-white ring-white/25 placeholder:text-white/45;
+  }
+  #booking-widget .form-input:focus {
+    @apply ring-2 ring-white/70 bg-white/15;
+  }
+  #booking-widget .form-input:disabled {
+    @apply bg-white/5 text-white/60;
+  }
+  #booking-widget .form-error {
+    @apply text-red-300;
+  }
+  #booking-widget [role="tablist"] {
+    @apply bg-white/5 border-b border-white/10;
+  }
+  #booking-widget .booking-tab {
+    @apply text-white/70;
+  }
+  #booking-widget .booking-tab[aria-selected="true"] {
+    @apply bg-white/15 text-white shadow-none;
+  }
+  #booking-widget .trip-type-option {
+    @apply ring-white/25 text-white/70;
+  }
+  #booking-widget .trip-type-option:has(input:checked) {
+    @apply bg-white ring-white text-ink-900 shadow-sm;
+  }
+  #booking-widget [data-form-state] h3 {
+    @apply text-white;
+  }
+  #booking-widget [data-form-state] p:not(.form-error) {
+    @apply text-white/70;
+  }
+  /* Native date/time picker icons default to black — invert so they're visible on the glass panel. */
+  #booking-widget input[type="date"]::-webkit-calendar-picker-indicator,
+  #booking-widget input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+  }
+
+  /* Placeholder "photo" system: gradient + subtle route/dot pattern + icon */
+  .ph {
+    @apply relative flex items-center justify-center overflow-hidden;
+  }
+  .ph::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0.55;
+  }
+  .ph::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 16, 23, 0) 40%, rgba(11, 16, 23, 0.28) 100%);
+  }
+  .ph-content {
+    @apply relative z-10 flex flex-col items-center gap-2 px-4 text-center;
+  }
+  .ph-label {
+    @apply text-white/90 text-xs sm:text-[13px] font-semibold tracking-wide;
+  }
+  .ph-tone-0 { background-image: linear-gradient(135deg, theme("colors.brand.700"), theme("colors.brand.900")); }
+  .ph-tone-1 { background-image: linear-gradient(135deg, theme("colors.brand.500"), theme("colors.brand.800")); }
+  .ph-tone-2 { background-image: linear-gradient(135deg, theme("colors.sun.600"), theme("colors.brand.800")); }
+  .ph-tone-3 { background-image: linear-gradient(135deg, theme("colors.ink.700"), theme("colors.brand.900")); }
+  .ph-tone-4 { background-image: linear-gradient(135deg, theme("colors.brand.600"), theme("colors.ink.900")); }
+
+  .ph-pattern-overlay {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Minimal hand-rolled "prose" styling for legal pages and blog content */
+  .prose-legal h2, .prose-content h2 {
+    @apply font-display font-bold text-ink-900 text-xl mt-2;
+  }
+  .prose-legal ul, .prose-content ul {
+    @apply list-disc pl-5 space-y-1.5;
+  }
+  .prose-legal li, .prose-content li {
+    @apply pl-1;
+  }
+  .prose-content p {
+    @apply mb-4;
+  }
+  .prose-content h2 {
+    @apply mt-8 mb-3;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-nav-btn {
+    @apply flex items-center justify-center w-10 h-10 rounded-full bg-white ring-1 ring-inset ring-ink-200 text-ink-600 hover:bg-ink-50 hover:text-brand-700 transition-colors disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  /* Admin panel */
+  .admin-nav-link {
+    @apply flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-ink-300 hover:bg-white/5 hover:text-white transition-colors;
+  }
+  .admin-nav-link.is-active {
+    @apply bg-brand-600/20 text-white;
+  }
+  .admin-card {
+    @apply bg-white rounded-2xl border border-ink-100 shadow-card;
+  }
+  .admin-table {
+    @apply w-full text-sm text-left;
+  }
+  .admin-table th {
+    @apply px-4 py-3 font-semibold text-ink-500 text-xs uppercase tracking-wide bg-ink-50 whitespace-nowrap;
+  }
+  .admin-table td {
+    @apply px-4 py-3 border-t border-ink-100 align-middle;
+  }
+  .admin-status-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold;
+  }
+
+  /*
+    Reveal-on-scroll (progressive enhancement, see revealOnScroll.ts).
+    [data-reveal] elements are fully visible by default — nothing here hides
+    them. Only revealOnScroll.ts adds "reveal-pending" (and only to elements
+    confirmed to be below the fold at the time it runs), so content can never
+    end up permanently invisible just because JS was slow, errored, or never
+    ran. This is deliberately the inverse of a "hide by default, JS reveals"
+    approach, which is what let a timing issue render the hero blank.
+  */
+  [data-reveal].reveal-pending {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  [data-reveal].is-revealed {
+    animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}

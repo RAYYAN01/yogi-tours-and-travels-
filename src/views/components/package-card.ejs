@@ -1,0 +1,42 @@
+<%
+const __p = pkg;
+const __detailUrl = `/tour-packages/${__p.slug}`;
+const __highlights = parseJsonArray(__p.highlights);
+%>
+<article class="card-package group flex flex-col h-full bg-white rounded-2xl border border-ink-100 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
+  <a href="<%= __detailUrl %>" class="relative block aspect-[4/3] overflow-hidden rounded-t-2xl">
+    <%- include('smart-image', {
+      src: __p.imageKey, seed: __p.slug, icon: 'mountain', label: __p.destination,
+      alt: `${__p.title} — tour package from Bangalore`,
+      cls: 'w-full h-full group-hover:scale-[1.04] transition-transform duration-500'
+    }) %>
+    <span class="absolute top-3 left-3 badge badge-dark"><%= __p.travelCategory %></span>
+    <span class="absolute bottom-3 right-3 badge badge-light"><%- include('../partials/icon', { name: 'clock', cls: 'w-3 h-3' }) %><%= __p.duration %></span>
+  </a>
+  <div class="p-5 flex flex-col flex-1">
+    <h3 class="font-display font-semibold text-[17px] text-ink-900 leading-snug">
+      <a href="<%= __detailUrl %>" class="hover:text-brand-700 transition-colors"><%= __p.title %></a>
+    </h3>
+    <p class="flex items-center gap-1.5 text-[13px] text-ink-500 mt-1.5">
+      <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5 text-brand-500' }) %><%= __p.destination %>
+    </p>
+    <p class="text-sm text-ink-500 mt-3 leading-relaxed line-clamp-2"><%= __p.idealFor %></p>
+
+    <% if (__highlights.length) { %>
+    <ul class="mt-3.5 space-y-1.5">
+      <% __highlights.slice(0, 3).forEach(function(h) { %>
+      <li class="flex items-start gap-1.5 text-[13px] text-ink-600">
+        <%- include('../partials/icon', { name: 'check', cls: 'w-3.5 h-3.5 text-brand-500 mt-0.5 shrink-0' }) %><span><%= h %></span>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+    <div class="mt-auto pt-5 flex gap-2">
+      <a href="<%= __detailUrl %>" class="btn btn-outline btn-sm flex-1">View Itinerary</a>
+      <button type="button" class="btn btn-quote btn-sm flex-1" data-enquiry-trigger data-enquiry-type="package" data-enquiry-context="Tour Package: <%= __p.title %>">
+        Request Package
+      </button>
+    </div>
+  </div>
+</article>

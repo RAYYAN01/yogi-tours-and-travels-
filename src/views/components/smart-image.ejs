@@ -1,0 +1,49 @@
+<%
+/*
+  Consistent image slot used everywhere a photo would normally go.
+  If `src` is a real uploaded/admin-set path it renders a normal <img>.
+  Otherwise it renders a tasteful branded placeholder (gradient + subtle
+  pattern + icon + label) instead of a broken image or an unrelated stock
+  photo — see PLACEHOLDER_DATA.md for how to swap these for real photography.
+
+  Locals:
+    src      - string | null/empty  (real image URL, e.g. /assets/uploads/x.webp)
+    seed     - string  (any stable string, used to pick a consistent gradient tone)
+    icon     - string  (icon name from partials/icon.ejs)
+    label    - string  (optional short caption shown on the placeholder)
+    alt      - string  (required accessible description)
+    cls      - string  (tailwind classes for sizing/aspect ratio/rounding)
+    eager    - boolean (default false; set true only for the single above-the-fold
+                         hero image — lazy-loading the LCP candidate hurts, not helps)
+*/
+const __src = typeof src !== "undefined" ? src : "";
+const __seed = typeof seed !== "undefined" ? String(seed) : "placeholder";
+const __icon = typeof icon !== "undefined" ? icon : "image";
+const __label = typeof label !== "undefined" ? label : "";
+const __alt = typeof alt !== "undefined" ? alt : __label;
+const __cls = typeof cls !== "undefined" ? cls : "w-full h-full";
+const __eager = typeof eager !== "undefined" ? eager : false;
+
+let __hash = 0;
+for (let i = 0; i < __seed.length; i++) {
+  __hash = (__hash * 31 + __seed.charCodeAt(i)) >>> 0;
+}
+const __tone = __hash % 5;
+%>
+<% if (__src) { %>
+  <img
+    src="<%= __src %>"
+    alt="<%= __alt %>"
+    loading="<%= __eager ? 'eager' : 'lazy' %>"
+    <% if (__eager) { %>fetchpriority="high"<% } %>
+    decoding="async"
+    class="<%= __cls %> object-cover"
+  />
+<% } else { %>
+  <div class="<%= __cls %> ph ph-tone-<%= __tone %>" role="img" aria-label="<%= __alt %>">
+    <span class="ph-content">
+      <%- include('../partials/icon', { name: __icon, cls: 'w-7 h-7 sm:w-9 sm:h-9 text-white/85' }) %>
+      <% if (__label) { %><span class="ph-label"><%= __label %></span><% } %>
+    </span>
+  </div>
+<% } %>

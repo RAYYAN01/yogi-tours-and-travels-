@@ -1,0 +1,81 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container grid lg:grid-cols-5 gap-8 lg:gap-12">
+    <div class="lg:col-span-3">
+      <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-50 text-brand-600 mb-4">
+        <%- include('../partials/icon', { name: service.icon, cls: 'w-6 h-6' }) %>
+      </span>
+      <h1 class="font-display font-bold text-3xl text-ink-900 tracking-tight"><%= service.name %> in Bangalore</h1>
+      <p class="text-ink-500 text-[15px] leading-relaxed mt-3"><%= service.shortDescription %></p>
+
+      <div class="rounded-2xl overflow-hidden shadow-card aspect-[16/9] mt-8">
+        <%- include('../components/smart-image', { src: service.imageKey, seed: service.slug, icon: service.icon, label: service.name, alt: `${service.name} — Yogi Tours & Travels Bangalore`, cls: 'w-full h-full', eager: true }) %>
+      </div>
+
+      <div class="mt-8">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-3">What's Included</h2>
+        <p class="text-[15px] text-ink-600 leading-relaxed"><%= service.description %></p>
+      </div>
+
+      <% if (highlights.length) { %>
+      <div class="mt-8">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Highlights</h2>
+        <ul class="grid sm:grid-cols-2 gap-3">
+          <% highlights.forEach(function(h) { %>
+          <li class="flex items-start gap-2.5 text-sm text-ink-700 bg-ink-50/70 rounded-lg px-3.5 py-3">
+            <%- include('../partials/icon', { name: 'check-circle', cls: 'w-4 h-4 text-brand-500 mt-0.5 shrink-0' }) %><span><%= h %></span>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+
+      <% if (relatedFaqs.length) { %>
+      <div class="mt-10">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Common Questions</h2>
+        <div class="bg-white rounded-2xl shadow-card px-5 sm:px-6 border border-ink-100">
+          <% relatedFaqs.forEach(function(f, i) { %>
+            <%- include('../components/faq-item', { faq: f, idx: 'svc-' + i }) %>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div class="admin-card !border-ink-100 p-6 sticky top-24">
+        <h2 class="font-display font-semibold text-ink-900 mb-1">Request This Service</h2>
+        <p class="text-sm text-ink-500 mb-5">Tell us your requirement and we'll share a clear quotation.</p>
+        <div class="space-y-2.5">
+          <button type="button" class="btn btn-accent w-full" data-enquiry-trigger data-enquiry-type="quote" data-enquiry-context="Service: <%= service.name %>">
+            <%- include('../partials/icon', { name: 'send', cls: 'w-4 h-4' }) %><span>Get Best Quote</span>
+          </button>
+          <a href="https://wa.me/<%= whatsappDigits %>?text=<%= encodeURIComponent('Hi, I would like to enquire about ' + service.name + '.') %>" target="_blank" rel="noopener" class="btn btn-outline w-full">
+            <%- include('../partials/icon', { name: 'whatsapp', cls: 'w-4 h-4' }) %><span>WhatsApp Us</span>
+          </a>
+          <a href="<%= telHref %>" class="btn btn-ghost w-full"><%- include('../partials/icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Or Call <%= business.phone %></span></a>
+        </div>
+
+        <% if (related.length) { %>
+        <div class="mt-7 pt-6 border-t border-ink-100">
+          <h3 class="text-sm font-semibold text-ink-900 mb-3">Related Services</h3>
+          <ul class="space-y-2">
+            <% related.forEach(function(r) { %>
+            <li>
+              <a href="/services/<%= r.slug %>" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+                <span><%= r.name %></span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

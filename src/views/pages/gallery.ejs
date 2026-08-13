@@ -1,0 +1,75 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container">
+    <div class="max-w-2xl">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase text-brand-600 mb-3">
+        <span class="w-6 h-px bg-brand-500"></span>Gallery
+      </span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Vehicles, Tours &amp; Group Travel</h1>
+      <p class="text-ink-500 text-[15px] sm:text-base leading-relaxed mt-4">
+        A look at our fleet and the trips we've supported — filter by category below.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2.5 mt-8" role="tablist" aria-label="Gallery categories" data-gallery-filters>
+      <button type="button" class="badge <%= activeCategory === 'All' ? 'bg-brand-700 text-white' : 'badge-outline' %> !py-2 !px-3.5 text-[13px] transition-colors" data-gallery-filter="All" aria-pressed="<%= activeCategory === 'All' %>">All</button>
+      <% categories.forEach(function(c) { %>
+        <button type="button" class="badge <%= activeCategory === c ? 'bg-brand-700 text-white' : 'badge-outline' %> !py-2 !px-3.5 text-[13px] transition-colors" data-gallery-filter="<%= c %>" aria-pressed="<%= activeCategory === c %>"><%= c %></button>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="pb-16 lg:pb-24">
+  <div class="container">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4" data-gallery-grid>
+      <% allItems.forEach(function(item, i) {
+        const isVisible = activeCategory === "All" || activeCategory === item.category;
+      %>
+      <button
+        type="button"
+        class="gallery-item relative block aspect-square rounded-xl overflow-hidden group text-left <%= isVisible ? '' : 'hidden' %>"
+        data-gallery-item
+        data-gallery-category="<%= item.category %>"
+        data-gallery-index="<%= i %>"
+        data-caption="<%= item.caption %>"
+        data-alt="<%= item.altText %>"
+        data-seed="<%= item.id %>"
+        data-icon="<%= { Vehicles: 'car', Tours: 'mountain', 'Group Travel': 'users-group', Corporate: 'building', Weddings: 'heart', Destinations: 'map-pin' }[item.category] || 'image' %>"
+        aria-label="Open photo: <%= item.caption || item.altText %>"
+      >
+        <%- include('../components/smart-image', {
+          src: item.imageKey, seed: String(item.id), icon: ({ Vehicles: 'car', Tours: 'mountain', 'Group Travel': 'users-group', Corporate: 'building', Weddings: 'heart', Destinations: 'map-pin' })[item.category] || 'image',
+          label: '', alt: item.altText, cls: 'w-full h-full group-hover:scale-110 transition-transform duration-500'
+        }) %>
+        <div class="absolute inset-0 bg-ink-950/0 group-hover:bg-ink-950/30 transition-colors flex items-end p-3 opacity-0 group-hover:opacity-100">
+          <span class="text-white text-xs font-medium"><%= item.caption %></span>
+        </div>
+      </button>
+      <% }); %>
+    </div>
+    <p class="text-center text-ink-400 text-sm mt-10 hidden" data-gallery-empty>No photos in this category yet.</p>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox" class="fixed inset-0 z-[70] bg-ink-950/95 opacity-0 pointer-events-none transition-opacity duration-200" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+  <button type="button" id="lightbox-close" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors" aria-label="Close photo viewer">
+    <%- include('../partials/icon', { name: 'close', cls: 'w-5 h-5' }) %>
+  </button>
+  <button type="button" id="lightbox-prev" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors" aria-label="Previous photo">
+    <%- include('../partials/icon', { name: 'chevron-left', cls: 'w-6 h-6' }) %>
+  </button>
+  <button type="button" id="lightbox-next" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors" aria-label="Next photo">
+    <%- include('../partials/icon', { name: 'chevron-right', cls: 'w-6 h-6' }) %>
+  </button>
+  <div class="h-full flex flex-col items-center justify-center p-6 sm:p-16">
+    <div id="lightbox-image-wrap" class="w-full max-w-2xl aspect-[4/3] rounded-2xl overflow-hidden"></div>
+    <p id="lightbox-caption" class="text-white/80 text-sm mt-4 text-center max-w-md"></p>
+  </div>
+</div>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

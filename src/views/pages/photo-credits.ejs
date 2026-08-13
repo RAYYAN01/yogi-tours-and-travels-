@@ -1,0 +1,30 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container max-w-3xl">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Photo Credits</h1>
+    <p class="text-ink-500 text-[15px] leading-relaxed mt-4">
+      Destination and vehicle photography on this site that isn't a branded placeholder comes from
+      Wikimedia Commons, used under free-culture licenses that permit commercial reuse with attribution.
+      Every photo is credited below.
+    </p>
+
+    <div class="mt-10 divide-y divide-ink-100 border-t border-b border-ink-100">
+      <% credits.forEach(function(c) { %>
+      <div class="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
+        <div>
+          <p class="text-sm font-medium text-ink-900"><%= c.slug.replace(/-/g, ' ') %></p>
+          <p class="text-xs text-ink-500">Photo by <%= c.artist %> &middot; <%= c.license %></p>
+        </div>
+        <div class="flex items-center gap-4 text-xs">
+          <a href="<%= c.commonsFile %>" target="_blank" rel="noopener" class="text-brand-700 font-medium hover:text-brand-800">Source</a>
+          <% if (c.licenseUrl) { %><a href="<%= c.licenseUrl %>" target="_blank" rel="noopener" class="text-ink-400 hover:text-ink-600">License</a><% } %>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/page-end') %>

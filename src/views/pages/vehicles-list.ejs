@@ -1,0 +1,50 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container">
+    <div class="max-w-2xl">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase text-brand-600 mb-3">
+        <span class="w-6 h-px bg-brand-500"></span>Our Fleet
+      </span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Cars, Tempo Travellers, Mini Buses &amp; Tourist Buses</h1>
+      <p class="text-ink-500 text-[15px] sm:text-base leading-relaxed mt-4">
+        Every vehicle is matched to a group size and travel type — browse by category below, or tell us your headcount and we'll suggest the right fit.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2.5 mt-8">
+      <% categories.forEach(function(c) { %>
+        <a href="#cat-<%= c.slug %>" class="badge badge-outline hover:border-brand-400 hover:text-brand-700 transition-colors !py-2 !px-3.5 text-[13px]">
+          <%- include('../partials/icon', { name: vehicleCategoryIcon(c.slug), cls: 'w-3.5 h-3.5' }) %><%= c.label %> <span class="text-ink-400">(<%= c.vehicles.length %>)</span>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<% categories.forEach(function(c, idx) { %>
+<section id="cat-<%= c.slug %>" class="pb-16 lg:pb-20 scroll-mt-24">
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+      <div>
+        <h2 class="font-display font-bold text-2xl text-ink-900 flex items-center gap-2.5">
+          <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50 text-brand-600"><%- include('../partials/icon', { name: vehicleCategoryIcon(c.slug), cls: 'w-[1.125rem] h-[1.125rem]' }) %></span>
+          <%= c.label %>
+        </h2>
+        <p class="text-sm text-ink-500 mt-2 max-w-xl"><%= c.intro %></p>
+      </div>
+      <a href="/fleet/<%= c.slug %>" class="btn btn-outline shrink-0">View All <%= c.label %><%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+      <% c.vehicles.forEach(function(v) { %>
+        <%- include('../components/vehicle-card', { vehicle: v, showCategory: false }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% if (idx < categories.length - 1) { %><hr class="border-ink-100" /><% } %>
+<% }); %>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

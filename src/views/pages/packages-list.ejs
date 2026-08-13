@@ -1,0 +1,62 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container">
+    <div class="max-w-2xl">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase text-brand-600 mb-3">
+        <span class="w-6 h-px bg-brand-500"></span>Tours &amp; Packages
+      </span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">
+        <% if (activeRegion === "karnataka") { %>Karnataka Tour Packages
+        <% } else if (activeRegion === "south-india") { %>South India Tour Packages
+        <% } else { %>Tour Packages From Bangalore<% } %>
+      </h1>
+      <p class="text-ink-500 text-[15px] sm:text-base leading-relaxed mt-4">
+        Ready-made itineraries across Karnataka and South India — Mysore, Coorg, Wayanad, Ooty, Kodaikanal, Munnar, Alleppey, Trivandrum, Goa, Tirupati, Mantralaya, Pondicherry, Rameshwaram and Kanyakumari. Every package can be adjusted to your dates, stops and vehicle choice.
+      </p>
+    </div>
+
+    <%
+      function pkgUrl(overrides) {
+        const params = new URLSearchParams();
+        const cat = overrides.category !== undefined ? overrides.category : activeCategory;
+        const reg = overrides.region !== undefined ? overrides.region : activeRegion;
+        if (cat) params.set("category", cat);
+        if (reg) params.set("region", reg);
+        const qs = params.toString();
+        return "/tour-packages" + (qs ? "?" + qs : "");
+      }
+    %>
+
+    <div class="flex flex-wrap gap-2.5 mt-8">
+      <a href="<%= pkgUrl({ region: "" }) %>" class="badge <%= !activeRegion ? 'bg-brand-700 text-white' : 'badge-outline hover:border-brand-400 hover:text-brand-700' %> !py-2 !px-3.5 text-[13px] transition-colors">All Regions</a>
+      <a href="<%= pkgUrl({ region: "karnataka" }) %>" class="badge <%= activeRegion === 'karnataka' ? 'bg-brand-700 text-white' : 'badge-outline hover:border-brand-400 hover:text-brand-700' %> !py-2 !px-3.5 text-[13px] transition-colors">Karnataka</a>
+      <a href="<%= pkgUrl({ region: "south-india" }) %>" class="badge <%= activeRegion === 'south-india' ? 'bg-brand-700 text-white' : 'badge-outline hover:border-brand-400 hover:text-brand-700' %> !py-2 !px-3.5 text-[13px] transition-colors">South India</a>
+    </div>
+
+    <div class="flex flex-wrap gap-2.5 mt-3">
+      <a href="<%= pkgUrl({ category: "" }) %>" class="badge <%= !activeCategory ? 'bg-ink-800 text-white' : 'badge-outline hover:border-brand-400 hover:text-brand-700' %> !py-2 !px-3.5 text-[13px] transition-colors">All Types</a>
+      <% categories.forEach(function(c) { %>
+        <a href="<%= pkgUrl({ category: c }) %>" class="badge <%= activeCategory === c ? 'bg-ink-800 text-white' : 'badge-outline hover:border-brand-400 hover:text-brand-700' %> !py-2 !px-3.5 text-[13px] transition-colors"><%= c %></a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="pb-16 lg:pb-24">
+  <div class="container">
+    <% if (packages.length === 0) { %>
+      <p class="text-ink-500">No packages found in this category yet — <a href="/contact" class="text-brand-700 font-semibold">contact us</a> to build a custom itinerary.</p>
+    <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+      <% packages.forEach(function(p) { %>
+        <%- include('../components/package-card', { pkg: p }) %>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/cta-section', { ctaHeading: 'Don\'t See What You\'re Looking For?', ctaSub: 'Tell us your destination, dates and group size — we\'ll put together a custom itinerary and vehicle recommendation for you.' }) %>
+<%- include('../partials/page-end') %>

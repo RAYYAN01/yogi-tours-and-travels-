@@ -1,0 +1,47 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<article class="py-10 lg:py-16">
+  <div class="container max-w-3xl">
+    <header class="mb-8">
+      <p class="text-xs text-ink-400 mb-2"><%= new Date(post.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %> &middot; <%= post.author %></p>
+      <h1 class="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-ink-900 tracking-tight leading-tight"><%= post.title %></h1>
+      <p class="text-ink-500 text-[15px] leading-relaxed mt-4"><%= post.excerpt %></p>
+    </header>
+
+    <div class="rounded-2xl overflow-hidden shadow-card aspect-[16/9] mb-10">
+      <%- include('../components/smart-image', { src: post.coverImageKey, seed: post.slug, icon: 'route', label: '', alt: post.title, cls: 'w-full h-full', eager: true }) %>
+    </div>
+
+    <div class="prose-content text-[15.5px] text-ink-700"><%- post.content %></div>
+
+    <div class="mt-10 pt-8 border-t border-ink-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-ink-500">Planning a trip? We can help you pick the right vehicle.</p>
+      <button type="button" class="btn btn-primary shrink-0" data-enquiry-trigger data-enquiry-type="quote" data-enquiry-context="Blog: <%= post.title %>">
+        <%- include('../partials/icon', { name: 'send', cls: 'w-4 h-4' }) %><span>Get a Free Quote</span>
+      </button>
+    </div>
+  </div>
+</article>
+
+<% if (related.length) { %>
+<section class="py-16 lg:py-20 bg-ink-50/60">
+  <div class="container">
+    <%- include('../components/section-heading', { eyebrow: 'Keep Reading', heading: 'More From the Blog' }) %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 mt-8">
+      <% related.forEach(function(p) { %>
+      <article class="flex flex-col h-full bg-white rounded-2xl border border-ink-100 shadow-card">
+        <a href="/blog/<%= p.slug %>" class="relative block aspect-[16/10] overflow-hidden rounded-t-2xl">
+          <%- include('../components/smart-image', { src: p.coverImageKey, seed: p.slug, icon: 'route', label: '', alt: p.title, cls: 'w-full h-full' }) %>
+        </a>
+        <div class="p-5">
+          <h3 class="font-display font-semibold text-[15px] text-ink-900 leading-snug"><a href="/blog/<%= p.slug %>" class="hover:text-brand-700"><%= p.title %></a></h3>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/page-end') %>

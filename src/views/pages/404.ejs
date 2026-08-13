@@ -1,0 +1,18 @@
+<%- include('../partials/page-start') %>
+
+<section class="py-24 lg:py-32">
+  <div class="container max-w-lg text-center">
+    <span class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-50 text-brand-600 mb-6">
+      <%- include('../partials/icon', { name: 'compass', cls: 'w-8 h-8' }) %>
+    </span>
+    <p class="font-display text-sm font-semibold tracking-widest text-brand-600 uppercase mb-2">404</p>
+    <h1 class="font-display font-bold text-2xl sm:text-3xl text-ink-900">Looks Like You've Taken a Wrong Turn</h1>
+    <p class="text-ink-500 text-[15px] leading-relaxed mt-3">The page you're looking for doesn't exist or may have moved. Let's get you back on route.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+      <a href="/" class="btn btn-primary">Back to Home</a>
+      <a href="/contact" class="btn btn-outline">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/page-end') %>

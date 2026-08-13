@@ -1,0 +1,58 @@
+<%
+/* Only pages that open on a full-bleed dark hero (e.g. home) can afford a
+   transparent header; everywhere else it needs a solid dark bar so the white
+   nav text/logo stay legible over ordinary (light) page content. */
+const __transparentHeader = typeof transparentHeader !== "undefined" && transparentHeader;
+%>
+<header class="sticky top-0 z-40 w-full">
+  <div
+    id="main-header-bar"
+    data-transparent-header="<%= __transparentHeader ? 'true' : 'false' %>"
+    class="transition-colors <%= __transparentHeader
+      ? 'bg-transparent border-b border-transparent'
+      : 'bg-ink-900/95 backdrop-blur-xl backdrop-saturate-150 border-b border-white/10' %>"
+  >
+    <div class="container flex items-center justify-between h-14 lg:h-16">
+      <%- include('logo') %>
+
+      <nav aria-label="Primary navigation" class="hidden lg:flex items-center gap-8">
+        <% [mainNav[0], mainNav[2], mainNav[3], mainNav[4], mainNav[5]].forEach(function(link) {
+          const isActive = link.match === "/" ? currentPath === "/" : currentPath.startsWith(link.match);
+        %>
+          <a
+            href="<%= link.href %>"
+            class="text-[13px] font-semibold uppercase tracking-[0.12em] transition-colors <%= isActive ? 'text-sun-400' : 'text-white/80 hover:text-white' %>"
+            <% if (isActive) { %>aria-current="page"<% } %>
+          ><%= link.label %></a>
+        <% }); %>
+      </nav>
+
+      <div class="flex items-center gap-3 sm:gap-5">
+        <a href="<%= telHref %>" class="hidden md:flex items-center gap-2 text-white/90 hover:text-white text-[13px] font-semibold tracking-wide transition-colors">
+          <%- include('icon', { name: 'phone', cls: 'w-4 h-4' }) %><span><%= business.phone %></span>
+        </a>
+
+        <button
+          type="button"
+          class="shine hidden sm:inline-flex items-center gap-2 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold uppercase tracking-[0.08em] px-4 py-2 transition-colors shadow-[0_4px_14px_-2px_rgba(194,44,9,0.5)]"
+          data-enquiry-trigger
+          data-enquiry-type="quote"
+          data-enquiry-context="General Enquiry"
+        >
+          <span>Enquire Now</span>
+        </button>
+
+        <button
+          id="mobile-menu-toggle"
+          type="button"
+          class="inline-flex items-center justify-center w-11 h-11 -mr-2 rounded-lg text-white hover:bg-white/10 active:scale-95 transition"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="Open menu"
+        >
+          <%- include('icon', { name: 'menu', cls: 'w-6 h-6' }) %>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

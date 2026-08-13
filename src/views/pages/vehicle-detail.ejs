@@ -1,0 +1,134 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container grid lg:grid-cols-5 gap-8 lg:gap-12">
+    <div class="lg:col-span-3">
+      <div class="rounded-2xl overflow-hidden shadow-card aspect-[4/3]">
+        <%- include('../components/smart-image', {
+          src: vehicle.imageKey, seed: vehicle.slug, icon: vehicleCategoryIcon(vehicle.category), label: vehicle.name, eager: true,
+          alt: `${vehicle.name} rental in Bangalore`, cls: 'w-full h-full'
+        }) %>
+      </div>
+
+      <% if (gallery.length) { %>
+      <div class="grid grid-cols-3 gap-3 mt-3">
+        <% gallery.forEach(function(img, i) { %>
+        <a href="<%= img %>" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden aspect-[4/3] ring-1 ring-ink-100 hover:ring-brand-300 transition-shadow">
+          <%- include('../components/smart-image', {
+            src: img, seed: `${vehicle.slug}-${i}`, icon: vehicleCategoryIcon(vehicle.category), label: '',
+            alt: `${vehicle.name} — additional photo ${i + 1}`, cls: 'w-full h-full'
+          }) %>
+        </a>
+        <% }); %>
+      </div>
+      <% } %>
+
+      <div class="mt-8">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-3">About the <%= vehicle.name %></h2>
+        <p class="text-[15px] text-ink-600 leading-relaxed"><%= vehicle.description %></p>
+      </div>
+
+      <% if (features.length) { %>
+      <div class="mt-8">
+        <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Features</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <% features.forEach(function(f) { %>
+          <div class="flex items-center gap-2 text-sm text-ink-700 bg-ink-50/70 rounded-lg px-3 py-2.5">
+            <%- include('../partials/icon', { name: 'check-circle', cls: 'w-4 h-4 text-brand-500 shrink-0' }) %><span><%= f %></span>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="mt-8 rounded-2xl bg-ink-50/70 p-5 sm:p-6">
+        <h2 class="font-display font-semibold text-ink-900 mb-2">Is the <%= vehicle.name %> right for your trip?</h2>
+        <p class="text-sm text-ink-600 leading-relaxed">
+          The <%= vehicle.name %> comfortably seats <%= vehicle.seats %> passengers with room for <%= vehicle.luggage.toLowerCase() %>.
+          It's a good fit for groups of this size travelling together, whether for a city trip, airport transfer or outstation journey.
+          If your group is larger or you're carrying significantly more luggage, our team can suggest a better-suited vehicle from the same enquiry.
+        </p>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div class="admin-card !border-ink-100 p-6 sticky top-24">
+        <span class="badge badge-brand mb-3"><%= label %></span>
+        <h1 class="font-display font-bold text-2xl text-ink-900 leading-tight"><%= vehicle.name %></h1>
+        <% if (vehicle.rating || vehicle.vehicleClass) { %>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2.5">
+          <% if (vehicle.rating) { %>
+          <span class="inline-flex items-center gap-1 bg-ink-900 text-white rounded-md px-2 py-1 text-[12px] font-semibold">
+            <span class="flex items-center gap-0.5" aria-hidden="true">
+              <% const __fullStars = Math.floor(vehicle.rating); const __halfStar = vehicle.rating - __fullStars >= 0.5;
+                 for (let i = 0; i < 5; i++) {
+                   const filled = i < __fullStars;
+                   const half = !filled && i === __fullStars && __halfStar;
+              %>
+                <%- include('../partials/icon', { name: 'star', cls: `w-3 h-3 ${filled ? 'text-sun-400' : half ? 'text-sun-400/50' : 'text-white/30'}` }) %>
+              <% } %>
+            </span>
+            <span><%= vehicle.rating.toFixed(1) %><% if (vehicle.vehicleClass) { %> - <%= vehicle.vehicleClass %><% } %></span>
+          </span>
+          <% } else if (vehicle.vehicleClass) { %>
+          <span class="badge badge-outline"><%= vehicle.vehicleClass %></span>
+          <% } %>
+        </div>
+        <% } %>
+        <p class="text-ink-500 text-sm mt-2 leading-relaxed"><%= vehicle.tagline %></p>
+
+        <% if (vehicle.ratePerKm) { %>
+        <div class="mt-4 rounded-xl bg-sun-50 ring-1 ring-inset ring-sun-200 px-4 py-3">
+          <p class="font-display font-bold text-2xl text-sun-700">₹<%= vehicle.ratePerKm %><span class="text-sm font-medium text-sun-600">/km onwards</span></p>
+          <p class="text-[12px] text-ink-500 mt-0.5">Tolls, parking, driver allowance &amp; GST as applicable — confirmed in your quotation.</p>
+        </div>
+        <% } %>
+
+        <div class="grid grid-cols-3 gap-3 mt-5 pt-5 border-t border-ink-100">
+          <div class="text-center">
+            <%- include('../partials/icon', { name: 'users', cls: 'w-5 h-5 text-brand-500 mx-auto mb-1.5' }) %>
+            <p class="text-sm font-semibold text-ink-900"><%= vehicle.category === 'car' ? vehicle.seats : `${vehicle.seats}+1` %></p>
+            <p class="text-[11px] text-ink-500">Seats</p>
+          </div>
+          <div class="text-center">
+            <%- include('../partials/icon', { name: 'luggage', cls: 'w-5 h-5 text-brand-500 mx-auto mb-1.5' }) %>
+            <p class="text-sm font-semibold text-ink-900 leading-tight"><%= vehicle.luggage %></p>
+            <p class="text-[11px] text-ink-500">Luggage</p>
+          </div>
+          <div class="text-center">
+            <%- include('../partials/icon', { name: vehicle.ac ? 'snowflake' : 'x-circle', cls: 'w-5 h-5 text-brand-500 mx-auto mb-1.5' }) %>
+            <p class="text-sm font-semibold text-ink-900"><%= vehicle.ac ? "AC" : "Non-AC" %></p>
+            <p class="text-[11px] text-ink-500">Comfort</p>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-5 border-t border-ink-100 space-y-2.5">
+          <button type="button" class="btn btn-accent w-full" data-enquiry-trigger data-enquiry-type="vehicle" data-enquiry-context="Vehicle: <%= vehicle.name %>" data-vehicle-type="<%= vehicle.name %>">
+            <%- include('../partials/icon', { name: 'send', cls: 'w-4 h-4' }) %><span>Get Best Quote</span>
+          </button>
+          <a href="https://wa.me/<%= whatsappDigits %>?text=<%= encodeURIComponent('Hi, I would like a quote for the ' + vehicle.name + '.') %>" target="_blank" rel="noopener" class="btn btn-outline w-full">
+            <%- include('../partials/icon', { name: 'whatsapp', cls: 'w-4 h-4' }) %><span>WhatsApp About This Vehicle</span>
+          </a>
+          <a href="<%= telHref %>" class="btn btn-ghost w-full"><%- include('../partials/icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Or Call <%= business.phone %></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (related.length) { %>
+<section class="py-16 lg:py-20 bg-ink-50/60">
+  <div class="container">
+    <%- include('../components/section-heading', { eyebrow: 'You Might Also Consider', heading: `More ${label}` }) %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 mt-8">
+      <% related.forEach(function(v) { %>
+        <%- include('../components/vehicle-card', { vehicle: v, showCategory: false }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

@@ -1,0 +1,89 @@
+<%
+const __isEdit = mode === "edit";
+const __action = __isEdit ? `/admin/${resource.key}/${item.id}` : `/admin/${resource.key}`;
+const __item = item || {};
+%>
+<%- include('_partials/admin-start', { pageTitle: (__isEdit ? 'Edit' : 'Add') + ' ' + resource.singular }) %>
+
+<a href="/admin/<%= resource.key %>" class="inline-flex items-center gap-1.5 text-sm text-ink-500 hover:text-brand-700 mb-4">
+  <%- include('../partials/icon', { name: 'arrow-left', cls: 'w-4 h-4' }) %>Back to <%= resource.label %>
+</a>
+
+<div class="max-w-2xl">
+  <% if (errors) { %>
+  <div class="mb-5 rounded-lg bg-error/10 text-error text-sm font-medium px-3.5 py-2.5 flex items-center gap-2">
+    <%- include('../partials/icon', { name: 'alert-circle', cls: 'w-4 h-4 shrink-0' }) %><%= errors %>
+  </div>
+  <% } %>
+
+  <form action="<%= __action %>" method="post" enctype="multipart/form-data" class="admin-card p-5 sm:p-6 space-y-5">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+    <% resource.fields.forEach(function(field) {
+      const value = __item[field.name] !== undefined && __item[field.name] !== null ? __item[field.name] : (field.defaultValue !== undefined ? field.defaultValue : "");
+    %>
+      <div>
+        <% if (field.type === "checkbox") { %>
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" name="<%= field.name %>" value="1" class="w-4 h-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500" <%= (value === 1 || value === "1" || value === true) ? "checked" : "" %> />
+            <span class="text-sm font-medium text-ink-700"><%= field.label %></span>
+          </label>
+          <% if (field.help) { %><p class="text-xs text-ink-400 mt-1 ml-6"><%= field.help %></p><% } %>
+
+        <% } else if (field.type === "select") { %>
+          <label for="field-<%= field.name %>" class="form-label"><%= field.label %><% if (field.required) { %> <span class="text-error">*</span><% } %></label>
+          <select id="field-<%= field.name %>" name="<%= field.name %>" class="form-input" <%= field.required ? "required" : "" %>>
+            <% field.options.forEach(function(opt) { %>
+              <option value="<%= opt.value %>" <%= String(value) === opt.value ? "selected" : "" %>><%= opt.label %></option>
+            <% }); %>
+          </select>
+
+        <% } else if (field.type === "textarea" || field.type === "lines") { %>
+          <label for="field-<%= field.name %>" class="form-label"><%= field.label %><% if (field.required) { %> <span class="text-error">*</span><% } %></label>
+          <textarea id="field-<%= field.name %>" name="<%= field.name %>" rows="<%= field.type === 'lines' ? 4 : 5 %>" class="form-input resize-y" <%= field.required ? "required" : "" %> placeholder="<%= field.placeholder || '' %>"><%= value %></textarea>
+          <% if (field.help) { %><p class="text-xs text-ink-400 mt-1"><%= field.help %></p><% } %>
+
+        <% } else if (field.type === "image") { %>
+          <label class="form-label"><%= field.label %></label>
+          <div class="flex items-center gap-4">
+            <div class="w-24 h-20 rounded-lg overflow-hidden shrink-0 ring-1 ring-ink-200">
+              <%- include('../components/smart-image', { src: value, seed: String(__item.id || field.name), icon: 'image', label: '', alt: 'Current photo preview', cls: 'w-full h-full' }) %>
+            </div>
+            <div class="flex-1">
+              <input type="file" name="imageFile" accept="image/*" class="form-input file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:bg-brand-50 file:text-brand-700 file:text-xs file:font-medium" />
+              <input type="text" name="<%= field.name %>" value="<%= typeof value === 'string' ? value : '' %>" class="form-input mt-2 text-xs" placeholder="or paste an image URL" />
+              <p class="text-xs text-ink-400 mt-1">Upload a photo, or leave blank to keep the branded placeholder graphic.</p>
+            </div>
+          </div>
+
+        <% } else { %>
+          <label for="field-<%= field.name %>" class="form-label"><%= field.label %><% if (field.required) { %> <span class="text-error">*</span><% } %></label>
+          <input
+            type="<%= field.type === 'number' ? 'number' : 'text' %>"
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            value="<%= value %>"
+            class="form-input"
+            <%= field.required ? "required" : "" %>
+            placeholder="<%= field.placeholder || '' %>"
+          />
+          <% if (field.help) { %><p class="text-xs text-ink-400 mt-1"><%= field.help %></p><% } %>
+        <% } %>
+      </div>
+    <% }); %>
+
+    <% if (resource.slugSource) { %>
+    <div>
+      <label for="field-slug" class="form-label">URL Slug <span class="text-ink-400 font-normal">(optional — auto-generated if blank)</span></label>
+      <input type="text" id="field-slug" name="slug" value="<%= __item.slug || '' %>" class="form-input" placeholder="auto-generated-from-title" />
+    </div>
+    <% } %>
+
+    <div class="flex items-center gap-3 pt-2">
+      <button type="submit" class="btn btn-primary"><%= __isEdit ? "Save Changes" : "Create " + resource.singular %></button>
+      <a href="/admin/<%= resource.key %>" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<%- include('_partials/admin-end') %>

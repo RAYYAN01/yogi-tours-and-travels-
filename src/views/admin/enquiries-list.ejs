@@ -1,0 +1,51 @@
+<%- include('_partials/admin-start', { pageTitle: 'Enquiries' }) %>
+
+<div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+  <div class="flex items-center gap-2">
+    <% ["all", "new", "contacted", "closed"].forEach(function(s) { %>
+      <a href="/admin/enquiries<%= s === 'all' ? '' : '?status=' + s %>"
+         class="btn btn-sm <%= statusFilter === s ? 'btn-primary' : 'btn-outline' %>">
+        <%= s.charAt(0).toUpperCase() + s.slice(1) %>
+      </a>
+    <% }); %>
+  </div>
+  <p class="text-sm text-ink-500"><%= enquiries.length %> enquir<%= enquiries.length === 1 ? 'y' : 'ies' %></p>
+</div>
+
+<div class="admin-card overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Route / Requirement</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (enquiries.length === 0) { %>
+      <tr><td colspan="7" class="text-center text-ink-400 py-10">No enquiries yet.</td></tr>
+      <% } %>
+      <% enquiries.forEach(function(e) { %>
+      <tr class="hover:bg-ink-50/60">
+        <td class="whitespace-nowrap text-ink-500 text-xs"><%= e.createdAt %></td>
+        <td class="whitespace-nowrap"><span class="badge badge-brand capitalize"><%= e.type %></span></td>
+        <td class="font-medium text-ink-900 whitespace-nowrap"><%= e.name %></td>
+        <td class="whitespace-nowrap"><a href="tel:<%= e.phone %>" class="hover:text-brand-700"><%= e.phone %></a></td>
+        <td class="max-w-xs truncate text-ink-500"><%= e.destination || e.pickupLocation || e.message || '—' %></td>
+        <td class="whitespace-nowrap">
+          <span class="admin-status-pill <%= e.status === 'new' ? 'bg-brand-100 text-brand-800' : e.status === 'contacted' ? 'bg-sun-100 text-sun-800' : 'bg-ink-100 text-ink-600' %>">
+            <%= e.status %>
+          </span>
+        </td>
+        <td class="whitespace-nowrap"><a href="/admin/enquiries/<%= e.id %>" class="text-brand-700 font-medium hover:text-brand-800">View →</a></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('_partials/admin-end') %>

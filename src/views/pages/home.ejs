@@ -1,0 +1,390 @@
+<%- include('../partials/page-start') %>
+
+<!-- HERO -->
+<section class="relative isolate overflow-hidden bg-ink-950 min-h-screen -mt-14 lg:-mt-16 flex items-center">
+  <div class="absolute inset-0 z-0 bg-ink-950" aria-hidden="true">
+    <img
+      src="/assets/images/destinations/hero-bangalore.jpg"
+      alt=""
+      class="w-full h-full object-cover lg:hidden"
+    />
+    <video
+      class="hidden lg:block w-full h-full object-cover"
+      style="background-color: #2f0e04;"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/assets/images/destinations/hero-bangalore.jpg"
+      data-hero-video
+    >
+      <source src="/assets/video/hero-background.mp4" type="video/mp4" />
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/60 to-ink-950/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-ink-950/75 via-ink-950/25 to-ink-950/10"></div>
+  </div>
+
+  <div class="container relative z-10 pt-28 pb-16 lg:pt-24 lg:pb-16 w-full">
+    <div class="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-12 lg:gap-14 items-center">
+      <div data-reveal>
+        <h1 class="font-display font-bold text-white text-[2.1rem] leading-[1.12] sm:text-5xl lg:text-[3.1rem] lg:leading-[1.1] tracking-tight">
+          Travel Comfortably.<br /> Explore Freely <span class="text-sun-400">Across Bangalore.</span>
+        </h1>
+        <p class="text-white/80 text-[15px] sm:text-lg leading-relaxed mt-5 max-w-lg">
+          From airport transfers and city rides to outstation getaways and large group tours — Yogi Tours &amp; Travels connects you with the right car, Tempo Traveller or bus, backed by experienced drivers and clear, upfront pricing.
+        </p>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-8">
+          <button type="button" class="btn btn-accent" data-enquiry-trigger data-enquiry-type="quote" data-enquiry-context="General Enquiry">
+            <%- include('../partials/icon', { name: 'send', cls: 'w-4 h-4' }) %><span>Get a Free Quote</span>
+          </button>
+          <a href="<%= telHref %>" class="btn btn-outline-white">
+            <%- include('../partials/icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Call Now</span>
+          </a>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-8 text-white/70 text-[13px]">
+          <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'shield-check', cls: 'w-4 h-4' }) %>Verified Drivers</span>
+          <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'wallet', cls: 'w-4 h-4' }) %>Transparent Pricing</span>
+          <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'headset', cls: 'w-4 h-4' }) %>24/7 Support</span>
+        </div>
+      </div>
+
+      <div data-reveal>
+        <%- include('../partials/booking-widget') %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE HIGHLIGHTS (overlaps the hero's bottom edge) -->
+<section class="relative z-20 -mt-10 lg:-mt-12" data-reveal>
+  <div class="container">
+    <div class="bg-white rounded-2xl shadow-card grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 px-6 sm:px-8 py-7 sm:py-8">
+      <% [
+        ["wallet", "Best Prices", "Guaranteed"],
+        ["calendar", "Easy Booking", "Hassle Free"],
+        ["shield-check", "Secure & Safe", "Journey"],
+        ["car", "Well-Maintained", "Vehicles"]
+      ].forEach(function(h) { %>
+        <div class="flex items-center gap-3">
+          <span class="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-brand-500 text-white shrink-0"><%- include('../partials/icon', { name: h[0], cls: 'w-5 h-5 sm:w-6 sm:h-6' }) %></span>
+          <div>
+            <p class="font-display font-bold text-ink-900 text-sm sm:text-[15px] leading-tight"><%= h[1] %></p>
+            <p class="text-ink-500 text-xs sm:text-[13px]"><%= h[2] %></p>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="bg-white py-10 lg:py-12 border-b border-ink-100" data-reveal>
+  <div class="container grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7">
+    <% [
+      ["car", "Well-Maintained Vehicles"],
+      ["user", "Professional Drivers"],
+      ["headset", "24/7 Support"],
+      ["check-circle", "Clean & Comfortable"],
+      ["wallet", "Transparent Pricing"],
+      ["shield-check", "Safe Travel"]
+    ].forEach(function(t) { %>
+      <div class="flex flex-col items-center text-center gap-2">
+        <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-brand-50 text-brand-600"><%- include('../partials/icon', { name: t[0], cls: 'w-5 h-5' }) %></span>
+        <span class="text-xs sm:text-[13px] font-medium text-ink-600 leading-snug"><%= t[1] %></span>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- ABOUT TEASER -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <div class="rounded-2xl overflow-hidden shadow-card aspect-[4/3] order-2 lg:order-1">
+      <%- include('../components/smart-image', {
+        src: '/assets/images/destinations/vidhana-soudha.jpg', seed: 'about-teaser', icon: 'users-group', label: 'Family & Group Travel',
+        alt: 'Vidhana Soudha, Bangalore — Yogi Tours & Travels serves families, corporates and groups across the city',
+        cls: 'w-full h-full'
+      }) %>
+    </div>
+    <div class="order-1 lg:order-2">
+      <%- include('../components/section-heading', {
+        eyebrow: 'About Us',
+        heading: 'A Bangalore Travel Partner for Families, Corporates & Groups',
+        sub: ''
+      }) %>
+      <p class="text-[15px] text-ink-600 leading-relaxed mt-5">
+        Yogi Tours &amp; Travels was built around a simple idea — travel arrangements should be easy to trust. Whether it's a family heading to Coorg for the weekend, a corporate team travelling to an offsite, or a wedding party that needs guests moved between venues on schedule, we match the trip to the right vehicle and an experienced driver.
+      </p>
+      <p class="text-[15px] text-ink-600 leading-relaxed mt-4">
+        We operate across Bangalore — Whitefield, Koramangala, HSR Layout, Indiranagar, Electronic City, Jayanagar and beyond — with a fleet that ranges from compact sedans to full-size tourist coaches, so group size is never a constraint.
+      </p>
+      <ul class="grid sm:grid-cols-2 gap-3 mt-6">
+        <% ["Airport transfers, day &amp; night", "Outstation & multi-day tours", "Corporate & event logistics", "Customised group itineraries"].forEach(function(b) { %>
+        <li class="flex items-start gap-2 text-sm text-ink-700">
+          <%- include('../partials/icon', { name: 'check-circle', cls: 'w-4 h-4 text-brand-500 mt-0.5 shrink-0' }) %><span><%- b %></span>
+        </li>
+        <% }); %>
+      </ul>
+      <a href="/about" class="btn btn-primary mt-7">
+        <span>More About Us</span><%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10">
+      <%- include('../components/section-heading', {
+        eyebrow: 'Our Fleet',
+        heading: 'A Vehicle for Every Group Size',
+        sub: 'From a compact sedan for two to a 50 seater coach for a full group tour — pick a category to see what fits.'
+      }) %>
+      <a href="/fleet" class="btn btn-outline shrink-0">View Full Fleet<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+
+    <div class="flex flex-wrap gap-2.5 mb-8">
+      <% Object.entries(vehicleCategoryLabels).forEach(function(entry) { %>
+        <a href="/fleet/<%= entry[0] %>" class="badge badge-outline hover:border-brand-400 hover:text-brand-700 transition-colors !py-2 !px-3.5 text-[13px]">
+          <%- include('../partials/icon', { name: vehicleCategoryIcon(entry[0]), cls: 'w-3.5 h-3.5' }) %><%= entry[1] %>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+      <% vehicles.forEach(function(v) { %>
+        <%- include('../components/vehicle-card', { vehicle: v }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container">
+    <%- include('../components/section-heading', {
+      eyebrow: 'Pricing',
+      heading: 'Straightforward, Category-Wise Pricing',
+      sub: 'Outstation rates start here — local, airport and multi-day quotes depend on your exact trip, so we share those after a quick check.',
+      align: 'center'
+    }) %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mt-10">
+      <% pricing.forEach(function(p) { %>
+        <div class="rounded-2xl border border-ink-100 bg-white shadow-card p-6 text-center flex flex-col">
+          <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-50 text-brand-600 mx-auto"><%- include('../partials/icon', { name: vehicleCategoryIcon(p.category), cls: 'w-6 h-6' }) %></span>
+          <h3 class="font-display font-semibold text-ink-900 text-[15px] mt-4"><%= vehicleCategoryLabels[p.category] %></h3>
+          <p class="mt-3">
+            <% if (p.startingFrom) { %>
+              <span class="font-display font-bold text-2xl text-ink-900">₹<%= p.startingFrom %></span><span class="text-ink-500 text-sm">/km onwards</span>
+            <% } else { %>
+              <span class="text-ink-500 text-sm">Contact for price</span>
+            <% } %>
+          </p>
+          <p class="text-ink-400 text-xs mt-1">Outstation trips, per km</p>
+          <a href="/fleet/<%= p.category %>" class="btn btn-outline btn-sm mt-5 mx-auto">View <%= vehicleCategoryLabels[p.category] %></a>
+        </div>
+      <% }); %>
+    </div>
+    <p class="text-center text-ink-400 text-xs mt-6">*Starting rates shown per category — final pricing depends on route, duration and vehicle chosen. Get a free quote for an exact price.</p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10">
+      <%- include('../components/section-heading', {
+        eyebrow: 'What We Offer',
+        heading: 'Travel Services Built Around You',
+        sub: 'Whichever type of trip you\'re planning, there\'s a service designed around it.'
+      }) %>
+      <a href="/services" class="btn btn-outline shrink-0">View All Services<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+      <% services.forEach(function(s) { %>
+        <%- include('../components/service-card', { service: s }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS -->
+<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+  <div class="container">
+    <%- include('../components/section-heading', {
+      eyebrow: 'Popular Destinations',
+      heading: 'Where Will You Go Next?',
+      sub: 'Weekend hill stations, heritage towns and coastal getaways — all reachable from Bangalore by road.',
+      align: 'center'
+    }) %>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-10">
+      <% packages.slice(0, 9).forEach(function(p) { %>
+        <a href="/tour-packages/<%= p.slug %>" class="group relative rounded-2xl overflow-hidden aspect-[4/5] sm:aspect-[4/3] shadow-card hover:shadow-card-hover transition-shadow">
+          <%- include('../components/smart-image', {
+            src: p.imageKey, seed: p.slug, icon: 'mountain', label: '',
+            alt: `${p.destination} tour from Bangalore`,
+            cls: 'absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-500'
+          }) %>
+          <div class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/10 to-transparent"></div>
+          <div class="absolute inset-x-0 bottom-0 p-4">
+            <span class="badge bg-white/15 text-white ring-1 ring-inset ring-white/20 mb-2"><%= p.travelCategory %></span>
+            <h3 class="text-white font-display font-semibold text-[15px] sm:text-base leading-snug"><%= p.destination %></h3>
+            <span class="inline-flex items-center gap-1 text-white/80 text-xs font-medium mt-1">Explore <%- include('../partials/icon', { name: 'arrow-right', cls: 'w-3 h-3' }) %></span>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- TOUR PACKAGES -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10">
+      <%- include('../components/section-heading', {
+        eyebrow: 'Tour Packages',
+        heading: 'Handpicked Getaways From Bangalore',
+        sub: 'Ready-made itineraries you can customise — pick a package or tell us your own plan.'
+      }) %>
+      <a href="/tour-packages" class="btn btn-outline shrink-0">View All Packages<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+      <% packages.forEach(function(p) { %>
+        <%- include('../components/package-card', { pkg: p }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="py-16 lg:py-24 bg-gradient-to-br from-brand-900 via-brand-800 to-ink-950 relative overflow-hidden" data-reveal>
+  <div class="absolute inset-0 ph-pattern-overlay opacity-[0.05]" aria-hidden="true"></div>
+  <div class="container relative">
+    <%- include('../components/section-heading', {
+      eyebrow: 'Why Choose Us',
+      heading: 'Travel Planning Made Straightforward',
+      sub: 'The details that make booking with us easy to trust.',
+      align: 'center',
+      light: true
+    }) %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      <% [
+        ["user", "Experienced Drivers", "Drivers familiar with city routes, highways and hill roads alike."],
+        ["car", "Well-Maintained Vehicles", "Regular maintenance checks across every category in our fleet."],
+        ["sliders", "Flexible Travel Plans", "Custom routes, durations and stops built around your itinerary."],
+        ["wallet", "Transparent Quotations", "Itemised pricing shared upfront — no surprises at drop-off."],
+        ["headset", "24/7 Assistance", "Support before, during and after your trip."],
+        ["users-group", "Family & Group Friendly", "Vehicles sized right for everyone from couples to large groups."]
+      ].forEach(function(w) { %>
+        <div class="bg-white/5 ring-1 ring-inset ring-white/10 rounded-2xl p-6 hover:bg-white/[0.08] transition-colors">
+          <span class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/10 text-sun-300 mb-4"><%- include('../partials/icon', { name: w[0], cls: 'w-5 h-5' }) %></span>
+          <h3 class="font-display font-semibold text-white text-[15px]"><%= w[1] %></h3>
+          <p class="text-brand-100/70 text-sm leading-relaxed mt-1.5"><%= w[2] %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container">
+    <%- include('../components/section-heading', {
+      eyebrow: 'How It Works',
+      heading: 'Book in Four Simple Steps',
+      align: 'center'
+    }) %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-5 mt-12 relative">
+      <div class="hidden lg:block absolute top-7 left-[12.5%] right-[12.5%] h-px bg-ink-200" aria-hidden="true"></div>
+      <% [
+        ["Choose Your Service", "Outstation, local, airport transfer or a custom tour — pick what fits your trip."],
+        ["Select a Vehicle", "Sedan to tourist bus — sized to your group and luggage."],
+        ["Get Your Quote", "We share a clear, itemised quotation before you confirm anything."],
+        ["Travel Comfortably", "Your driver arrives on time, and we're a call or message away throughout."]
+      ].forEach(function(step, i) { %>
+        <div class="relative text-center">
+          <span class="relative z-10 mx-auto flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-700 text-white font-display font-bold text-lg shadow-sm"><%= String(i + 1).padStart(2, '0') %></span>
+          <h3 class="font-display font-semibold text-ink-900 text-[15px] mt-4"><%= step[0] %></h3>
+          <p class="text-ink-500 text-sm leading-relaxed mt-1.5 max-w-[220px] mx-auto"><%= step[1] %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY TEASER -->
+<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+  <div class="container">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-8">
+      <%- include('../components/section-heading', {
+        eyebrow: 'Gallery',
+        heading: 'A Glimpse of Our Journeys',
+        sub: ''
+      }) %>
+      <a href="/gallery" class="btn btn-outline shrink-0">View Full Gallery<%- include('../partials/icon', { name: 'arrow-right', cls: 'w-4 h-4' }) %></a>
+    </div>
+    <div class="grid grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+      <% [
+        ["gallery-vehicle-innova-crysta","car","Vehicles"],
+        ["gallery-tour-coorg","mountain","Tours"],
+        ["gallery-group-family","users-group","Group Travel"],
+        ["gallery-corporate-offsite","building","Corporate"],
+        ["gallery-wedding-car","heart","Weddings"],
+        ["gallery-destination-kerala","map-pin","Destinations"]
+      ].forEach(function(g) { %>
+        <a href="/gallery?category=<%= encodeURIComponent(g[2]) %>" class="relative block aspect-square rounded-xl overflow-hidden group">
+          <%- include('../components/smart-image', { src: '', seed: g[0], icon: g[1], label: '', alt: g[2] + ' — Yogi Tours & Travels gallery', cls: 'w-full h-full group-hover:scale-110 transition-transform duration-500' }) %>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-16 lg:py-24" data-reveal>
+  <div class="container">
+    <%- include('../components/section-heading', {
+      eyebrow: 'Testimonials',
+      heading: 'What Travellers Say',
+      align: 'center'
+    }) %>
+    <div class="relative mt-10">
+      <div class="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 sm:mx-0 sm:px-0 scrollbar-hide" data-carousel-track>
+        <% testimonials.forEach(function(t) { %>
+          <div class="snap-start shrink-0 w-[85%] sm:w-[360px]">
+            <%- include('../components/testimonial-card', { testimonial: t }) %>
+          </div>
+        <% }); %>
+      </div>
+      <div class="hidden sm:flex justify-center gap-2.5 mt-2">
+        <button type="button" class="carousel-nav-btn" data-carousel-prev aria-label="Previous testimonials"><%- include('../partials/icon', { name: 'chevron-left', cls: 'w-4 h-4' }) %></button>
+        <button type="button" class="carousel-nav-btn" data-carousel-next aria-label="Next testimonials"><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4' }) %></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+  <div class="container max-w-3xl">
+    <%- include('../components/section-heading', {
+      eyebrow: 'FAQs',
+      heading: 'Frequently Asked Questions',
+      align: 'center'
+    }) %>
+    <div class="bg-white rounded-2xl shadow-card px-5 sm:px-7 mt-10">
+      <% faqs.forEach(function(f, i) { %>
+        <%- include('../components/faq-item', { faq: f, idx: i }) %>
+      <% }); %>
+    </div>
+    <p class="text-center text-sm text-ink-500 mt-6">
+      Still have questions? <a href="/contact" class="text-brand-700 font-semibold hover:text-brand-800">Contact us</a> and we'll help directly.
+    </p>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+
+<%- include('../partials/page-end') %>

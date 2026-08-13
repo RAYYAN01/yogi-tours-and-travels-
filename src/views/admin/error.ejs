@@ -1,0 +1,12 @@
+<%- include('_partials/admin-start', { pageTitle: title || 'Error' }) %>
+
+<div class="max-w-md mx-auto text-center py-12">
+  <div class="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-error/10 text-error mb-4">
+    <%- include('../partials/icon', { name: 'alert-circle', cls: 'w-7 h-7' }) %>
+  </div>
+  <h1 class="font-display text-xl font-bold text-ink-900"><%= title || 'Something went wrong' %></h1>
+  <p class="text-sm text-ink-500 mt-2"><%= message %></p>
+  <a href="/admin" class="btn btn-primary mt-6">Back to Dashboard</a>
+</div>
+
+<%- include('_partials/admin-end') %>

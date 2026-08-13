@@ -1,0 +1,104 @@
+<div id="enquiry-modal-overlay" class="fixed inset-0 z-[60] bg-ink-950/55 opacity-0 pointer-events-none transition-opacity duration-200" aria-hidden="true"></div>
+
+<div
+  id="enquiry-modal"
+  class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 opacity-0 pointer-events-none"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="enquiry-modal-title"
+  aria-hidden="true"
+>
+  <div id="enquiry-modal-panel" class="relative w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-popover max-h-[92vh] overflow-y-auto translate-y-6 sm:translate-y-0 sm:scale-95 opacity-0 transition-all duration-200">
+    <button
+      type="button"
+      id="enquiry-modal-close"
+      class="absolute top-4 right-4 inline-flex items-center justify-center w-9 h-9 rounded-full text-ink-400 hover:bg-ink-50 hover:text-ink-700 transition"
+      aria-label="Close enquiry form"
+    >
+      <%- include('icon', { name: 'close', cls: 'w-5 h-5' }) %>
+    </button>
+
+    <div class="p-6 sm:p-7" data-enquiry-root>
+      <!-- STATE: idle (the form itself) -->
+      <div data-form-state="idle">
+        <h2 id="enquiry-modal-title" class="font-display text-xl font-bold text-ink-900 pr-8">Get a Free Quote</h2>
+        <p id="enquiry-modal-subtitle" class="text-sm text-ink-500 mt-1 mb-5">Tell us a little about your trip and we'll get back to you shortly.</p>
+
+        <form id="enquiry-form" data-enquiry-form novalidate>
+          <input type="hidden" name="type" value="quote" />
+          <input type="hidden" name="sourcePage" value="" />
+          <input type="hidden" name="vehicleType" value="" />
+          <!-- honeypot -->
+          <div class="hidden" aria-hidden="true">
+            <label for="enquiry-website">Leave blank</label>
+            <input type="text" id="enquiry-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="enquiry-name" class="form-label">Full Name <span class="text-error">*</span></label>
+              <input type="text" id="enquiry-name" name="name" class="form-input" autocomplete="name" required />
+              <p class="form-error" data-error-for="name"></p>
+            </div>
+            <div>
+              <label for="enquiry-phone" class="form-label">Phone Number <span class="text-error">*</span></label>
+              <input type="tel" id="enquiry-phone" name="phone" class="form-input" autocomplete="tel" inputmode="tel" required />
+              <p class="form-error" data-error-for="phone"></p>
+            </div>
+            <div>
+              <label for="enquiry-email" class="form-label">Email <span class="text-ink-400 font-normal">(optional)</span></label>
+              <input type="email" id="enquiry-email" name="email" class="form-input" autocomplete="email" />
+              <p class="form-error" data-error-for="email"></p>
+            </div>
+            <div>
+              <label for="enquiry-message" class="form-label">Your Requirement</label>
+              <textarea id="enquiry-message" name="message" rows="3" class="form-input resize-none"></textarea>
+              <p class="form-error" data-error-for="message"></p>
+            </div>
+          </div>
+
+          <p class="form-error mt-3" data-error-for="_form"></p>
+
+          <button type="submit" class="btn btn-primary w-full mt-5" data-submit-button>
+            <span data-btn-label>Send Enquiry</span>
+            <%- include('icon', { name: 'loader', cls: 'w-4 h-4 ml-1 animate-spin hidden' }) %>
+          </button>
+          <p class="text-xs text-ink-400 text-center mt-3">We'll open WhatsApp with your details pre-filled so you can send it instantly — no booking is confirmed until we reply.</p>
+        </form>
+      </div>
+
+      <!-- STATE: success -->
+      <div data-form-state="success" class="hidden text-center py-2">
+        <div class="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-success/10 text-success mb-4">
+          <%- include('icon', { name: 'check-circle', cls: 'w-7 h-7' }) %>
+        </div>
+        <h2 class="font-display text-xl font-bold text-ink-900">Enquiry Ready to Send</h2>
+        <p class="text-sm text-ink-500 mt-1.5 mb-6">Your enquiry has been saved. Tap below to continue on WhatsApp and send it to our team — that's the fastest way to reach us.</p>
+        <div class="space-y-2.5">
+          <a href="#" data-success-whatsapp target="_blank" rel="noopener" class="btn btn-primary w-full">
+            <%- include('icon', { name: 'whatsapp', cls: 'w-4 h-4' }) %><span>Continue on WhatsApp</span>
+          </a>
+          <a href="<%= telHref %>" class="btn btn-outline w-full">
+            <%- include('icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Call Us Instead</span>
+          </a>
+          <button type="button" class="btn btn-ghost w-full" data-modal-close>Done</button>
+        </div>
+      </div>
+
+      <!-- STATE: error -->
+      <div data-form-state="error" class="hidden text-center py-2">
+        <div class="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-error/10 text-error mb-4">
+          <%- include('icon', { name: 'alert-circle', cls: 'w-7 h-7' }) %>
+        </div>
+        <h2 class="font-display text-xl font-bold text-ink-900">Something Went Wrong</h2>
+        <p class="text-sm text-ink-500 mt-1.5 mb-6">We couldn't submit your enquiry right now. Please try again, or reach us directly.</p>
+        <div class="space-y-2.5">
+          <button type="button" class="btn btn-primary w-full" data-form-retry>Try Again</button>
+          <a href="<%= telHref %>" class="btn btn-outline w-full">
+            <%- include('icon', { name: 'phone', cls: 'w-4 h-4' }) %><span>Call <%= business.phone %></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

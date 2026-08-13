@@ -1,0 +1,33 @@
+<%- include('_partials/admin-start', { pageTitle: 'Settings' }) %>
+
+<div class="max-w-md">
+  <div class="admin-card p-5 sm:p-6">
+    <h2 class="font-display font-semibold text-ink-900 mb-1">Change Password</h2>
+    <p class="text-sm text-ink-500 mb-5">Update your admin login password. This is stored securely (hashed) and is separate from the .env file used only for the very first setup.</p>
+
+    <% if (error) { %>
+    <div class="mb-4 rounded-lg bg-error/10 text-error text-sm font-medium px-3.5 py-2.5 flex items-center gap-2">
+      <%- include('../partials/icon', { name: 'alert-circle', cls: 'w-4 h-4 shrink-0' }) %><%= error %>
+    </div>
+    <% } %>
+
+    <form action="/admin/settings/password" method="post" class="space-y-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div>
+        <label for="currentPassword" class="form-label">Current Password</label>
+        <input type="password" id="currentPassword" name="currentPassword" class="form-input" autocomplete="current-password" required />
+      </div>
+      <div>
+        <label for="newPassword" class="form-label">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" class="form-input" autocomplete="new-password" minlength="8" required />
+      </div>
+      <div>
+        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" autocomplete="new-password" minlength="8" required />
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Update Password</button>
+    </form>
+  </div>
+</div>
+
+<%- include('_partials/admin-end') %>

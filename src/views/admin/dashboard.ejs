@@ -1,0 +1,46 @@
+<%- include('_partials/admin-start', { pageTitle: 'Dashboard' }) %>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+  <a href="/admin/enquiries" class="admin-card p-4 sm:p-5 hover:shadow-card-hover transition-shadow">
+    <p class="text-xs font-medium text-ink-500">New Enquiries</p>
+    <p class="font-display text-2xl sm:text-3xl font-bold text-brand-700 mt-1"><%= enquiryStats.new %></p>
+  </a>
+  <a href="/admin/enquiries?status=contacted" class="admin-card p-4 sm:p-5 hover:shadow-card-hover transition-shadow">
+    <p class="text-xs font-medium text-ink-500">Contacted</p>
+    <p class="font-display text-2xl sm:text-3xl font-bold text-ink-900 mt-1"><%= enquiryStats.contacted %></p>
+  </a>
+  <a href="/admin/enquiries?status=closed" class="admin-card p-4 sm:p-5 hover:shadow-card-hover transition-shadow">
+    <p class="text-xs font-medium text-ink-500">Closed</p>
+    <p class="font-display text-2xl sm:text-3xl font-bold text-ink-900 mt-1"><%= enquiryStats.closed %></p>
+  </a>
+  <a href="/admin/enquiries" class="admin-card p-4 sm:p-5 hover:shadow-card-hover transition-shadow">
+    <p class="text-xs font-medium text-ink-500">Total Enquiries</p>
+    <p class="font-display text-2xl sm:text-3xl font-bold text-ink-900 mt-1"><%= enquiryStats.total %></p>
+  </a>
+</div>
+
+<div class="admin-card p-5 sm:p-6 mb-6">
+  <h2 class="font-display font-semibold text-ink-900 mb-4">Content Overview</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+    <% resourceStats.forEach(function(r) { %>
+    <a href="/admin/<%= r.key %>" class="flex items-center justify-between rounded-xl border border-ink-100 px-4 py-3.5 hover:border-brand-300 hover:bg-brand-50/40 transition-colors">
+      <span class="text-sm font-medium text-ink-700"><%= r.label %></span>
+      <span class="font-display font-bold text-ink-900"><%= r.count %></span>
+    </a>
+    <% }); %>
+  </div>
+</div>
+
+<div class="admin-card p-5 sm:p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-display font-semibold text-ink-900">Quick Actions</h2>
+  </div>
+  <div class="flex flex-wrap gap-2.5">
+    <a href="/admin/vehicles/new" class="btn btn-outline btn-sm"><%- include('../partials/icon', { name: 'plus', cls: 'w-4 h-4' }) %>Add Vehicle</a>
+    <a href="/admin/packages/new" class="btn btn-outline btn-sm"><%- include('../partials/icon', { name: 'plus', cls: 'w-4 h-4' }) %>Add Tour Package</a>
+    <a href="/admin/blog/new" class="btn btn-outline btn-sm"><%- include('../partials/icon', { name: 'plus', cls: 'w-4 h-4' }) %>Add Blog Post</a>
+    <a href="/admin/testimonials/new" class="btn btn-outline btn-sm"><%- include('../partials/icon', { name: 'plus', cls: 'w-4 h-4' }) %>Add Testimonial</a>
+  </div>
+</div>
+
+<%- include('_partials/admin-end') %>

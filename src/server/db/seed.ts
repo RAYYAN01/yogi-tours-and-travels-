@@ -1,0 +1,621 @@
+// Idempotent database seed: populates every content table with original,
+// non-fabricated copy so the site launches fully populated. Re-running this
+// script is safe — tables that already have rows are left untouched.
+import "dotenv/config";
+import bcrypt from "bcryptjs";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { db } from "./connection.js";
+import { vehiclesRepo, servicesRepo, packagesRepo, faqsRepo, testimonialsRepo, galleryRepo, blogRepo } from "./content.js";
+import { adminUserCount, createAdminUser } from "./adminUsers.js";
+import type { VehicleCategory, GalleryCategory } from "../types/models.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.resolve(__dirname, "../../../public");
+
+/**
+ * Real photos (Wikimedia Commons free-licensed fetches, or supplied directly —
+ * see IMAGE_CREDITS.json) live in public/assets/images/<dir>/<slug>.<ext>,
+ * under whichever extension they were saved as. Falls back to "" (branded
+ * placeholder) if a photo hasn't been added yet, so a missing file never
+ * renders a broken <img>.
+ */
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".webp", ".png"];
+function findImagePath(dir: string, slug: string): string {
+  for (const ext of IMAGE_EXTENSIONS) {
+    if (fs.existsSync(path.join(publicDir, "assets/images", dir, `${slug}${ext}`))) {
+      return `/assets/images/${dir}/${slug}${ext}`;
+    }
+  }
+  return "";
+}
+function destinationImagePath(slug: string): string {
+  return findImagePath("destinations", slug);
+}
+
+/** Same idea for the handful of vehicles with a real fetched/supplied photo. */
+function vehicleImagePath(slug: string): string {
+  return findImagePath("vehicles", slug);
+}
+
+/** Same idea for services (public/assets/images/services/<slug>.<ext>). */
+function serviceImagePath(slug: string): string {
+  return findImagePath("services", slug);
+}
+
+function seedVehicles(): void {
+  if (vehiclesRepo.count() > 0) {
+    console.log("• vehicles already seeded, skipping");
+    return;
+  }
+  const commonCarFeatures = ["Air Conditioning", "Music System", "Charging Points", "Experienced Driver", "Sanitised Cabin"];
+  const commonTTFeatures = ["Air Conditioning", "Push-back Seats", "Reading Lights", "Charging Points", "Ample Luggage Space", "Experienced Driver"];
+  const commonBusFeatures = ["Air Conditioning", "Push-back Seats", "Reading Lights", "PA System", "First-Aid Kit", "Overhead Luggage Racks"];
+
+  type Row = {
+    category: VehicleCategory; name: string; slug: string; seats: number; luggage: string;
+    tagline: string; description: string; features: string[]; featured: 0 | 1; sortOrder: number; ratePerKm?: number;
+  };
+
+  const rows: Row[] = [
+    // CARS
+    { category: "car", name: "Maruti Swift Dzire", slug: "maruti-swift-dzire", seats: 4, luggage: "2 medium bags",
+      tagline: "A compact, fuel-efficient sedan for city rides, airport runs and short outstation hops.",
+      description: "The Swift Dzire is our most-booked sedan — the practical choice for solo travellers, couples and small families. Ideal for airport transfers, local city travel and short one-way or round-trip outstation journeys where you want a comfortable, economical ride without compromising on punctuality.",
+      features: commonCarFeatures, featured: 1, sortOrder: 1, ratePerKm: 11 },
+    { category: "car", name: "Toyota Etios", slug: "toyota-etios", seats: 4, luggage: "2 medium bags",
+      tagline: "A roomier alternative to the Dzire, with a bigger boot for the same compact-sedan comfort.",
+      description: "The Toyota Etios covers the same compact-sedan role as the Dzire with a slightly larger cabin and boot — a good fit when you want a bit more luggage room without stepping up to an MUV. Well suited to airport transfers, local city travel and short outstation trips.",
+      features: commonCarFeatures, featured: 0, sortOrder: 2, ratePerKm: 11 },
+    { category: "car", name: "Maruti Ertiga", slug: "maruti-ertiga", seats: 6, luggage: "3 medium bags",
+      tagline: "A spacious MUV that comfortably seats small families with extra luggage room.",
+      description: "The Maruti Ertiga is our recommended pick for small families and groups of five to six travelling together with moderate luggage. It offers noticeably more shoulder and legroom than a sedan while remaining nimble and economical on longer outstation drives.",
+      features: commonCarFeatures, featured: 0, sortOrder: 3, ratePerKm: 16 },
+    { category: "car", name: "Toyota Innova", slug: "toyota-innova", seats: 7, luggage: "4 bags",
+      tagline: "The dependable seven-seater for family trips and longer outstation journeys.",
+      description: "A long-standing favourite for Karnataka road trips, the Toyota Innova offers a stable ride, generous cabin space and a proven track record on hill routes like Coorg, Chikmagalur and Ooty. A solid choice when comfort over long distances matters more than frills.",
+      features: commonCarFeatures, featured: 0, sortOrder: 4, ratePerKm: 18 },
+    { category: "car", name: "Innova Crysta", slug: "innova-crysta", seats: 7, luggage: "4 bags + extra boot space",
+      tagline: "A premium, more refined step up from the Innova with a quieter, plusher cabin.",
+      description: "The Innova Crysta is our most requested vehicle for family holidays, corporate travel and airport transfers where presentation matters. It combines the practicality of a seven-seater MUV with noticeably better ride quality, cabin insulation and captain-seat comfort in the middle row.",
+      features: commonCarFeatures, featured: 1, sortOrder: 5, ratePerKm: 18 },
+    { category: "car", name: "Innova Hycross", slug: "innova-hycross", seats: 7, luggage: "4 bags",
+      tagline: "The newest-generation Innova with a modern cabin and a smoother, refined drive.",
+      description: "For clients who want the latest available vehicle in the Innova line-up, the Hycross offers an updated interior, improved comfort features and a smoother ride — well suited to corporate travel, premium family holidays and long outstation itineraries.",
+      features: commonCarFeatures, featured: 0, sortOrder: 6 },
+
+    // TEMPO TRAVELLERS
+    { category: "tempo-traveller", name: "9 Seater Tempo Traveller", slug: "tempo-traveller-9-seater", seats: 9, luggage: "9 bags + roof carrier option",
+      tagline: "A compact group vehicle that's easier to manoeuvre while still seating nine.",
+      description: "Right-sized for extended families or small friend groups who've outgrown an Innova but don't need a full-size Tempo Traveller. Individually reclining seats and dedicated luggage space make it a comfortable option for weekend getaways.",
+      features: commonTTFeatures, featured: 0, sortOrder: 1, ratePerKm: 30 },
+    { category: "tempo-traveller", name: "12 Seater Tempo Traveller", slug: "tempo-traveller-12-seater", seats: 12, luggage: "12 bags + roof carrier",
+      tagline: "Our most-booked Tempo Traveller for group outstation trips and pilgrimage tours.",
+      description: "The 12 Seater Tempo Traveller is a dependable middle-ground choice for office outings, pilgrimage groups, and multi-family trips. Forward-facing push-back seats, individual windows and a dedicated luggage boot make it well suited to multi-day itineraries.",
+      features: commonTTFeatures, featured: 1, sortOrder: 2, ratePerKm: 21 },
+    { category: "tempo-traveller", name: "14 Seater Tempo Traveller", slug: "tempo-traveller-14-seater", seats: 14, luggage: "14 bags + roof carrier",
+      tagline: "Extra seating capacity for slightly larger groups without stepping up to a mini bus.",
+      description: "A practical option when your group is a little larger than 12 but a mini bus feels like overkill. Commonly booked for college friend-group trips, extended family functions and group pilgrimage travel.",
+      features: commonTTFeatures, featured: 0, sortOrder: 3 },
+    { category: "tempo-traveller", name: "Luxury Tempo Traveller (17 Seater)", slug: "luxury-tempo-traveller-17-seater", seats: 17, luggage: "17 bags + roof carrier",
+      tagline: "Premium recliner seating, better cabin finish and extra legroom for longer routes.",
+      description: "Built for multi-day outstation tours where comfort matters as much as capacity. The Luxury Tempo Traveller upgrades to plusher recliner seating, improved cabin insulation and a more refined finish — a popular choice for corporate offsites and premium family tours.",
+      ratePerKm: 35,
+      features: [...commonTTFeatures, "Premium Recliner Seats", "Curtains"], featured: 1, sortOrder: 4 },
+    { category: "tempo-traveller", name: "Maharaja Tempo Traveller", slug: "maharaja-tempo-traveller", seats: 12, luggage: "12 bags + roof carrier",
+      tagline: "Wide, sofa-style 'Maharaja' seating for a relaxed, lounge-like group travel experience.",
+      description: "The Maharaja configuration trades a few seats for significantly more width and legroom per passenger, arranged in a lounge-style layout. A favourite for family celebrations, milestone trips and groups who prioritise comfort over headcount.",
+      features: [...commonTTFeatures, "Wide Sofa-style Seating", "Curtains"], featured: 0, sortOrder: 5 },
+    { category: "tempo-traveller", name: "Force Urbania", slug: "force-urbania", seats: 17, luggage: "17 bags + rear storage",
+      tagline: "A modern, van-style group vehicle with a smoother ride and contemporary cabin design.",
+      description: "The Force Urbania is a newer-generation alternative to the traditional Tempo Traveller body, offering a more car-like ride, a modern interior and strong performance on both city roads and highway stretches — well suited to corporate group travel and premium tours.",
+      features: [...commonTTFeatures, "Modern Cabin Design"], featured: 1, sortOrder: 6 },
+
+    // MINI BUSES
+    { category: "mini-bus", name: "20 Seater Mini Bus", slug: "mini-bus-20-seater", seats: 20, luggage: "Overhead racks + rear boot",
+      tagline: "The entry point into our mini bus range for mid-sized groups.",
+      description: "Suited to office teams, wedding guest groups and mid-sized school outings that need more capacity than a Tempo Traveller but don't require a full-size coach.",
+      features: commonBusFeatures, featured: 0, sortOrder: 1 },
+    { category: "mini-bus", name: "21 Seater Mini Bus", slug: "mini-bus-21-seater", seats: 21, luggage: "Overhead racks + rear boot",
+      tagline: "A close variant of our 20 seater with slightly different seating layouts available.",
+      description: "Depending on operator availability, our 21 seater mini buses offer a similar experience to the 20 seater with minor layout differences — a good fallback option when your preferred configuration is already booked.",
+      features: commonBusFeatures, featured: 0, sortOrder: 2, ratePerKm: 33 },
+    { category: "mini-bus", name: "25 Seater Mini Bus", slug: "mini-bus-25-seater", seats: 25, luggage: "Overhead racks + rear boot",
+      tagline: "A popular choice for corporate offsites, wedding functions and group pilgrimage tours.",
+      description: "Our most frequently requested mini bus size — large enough for a full department or wedding party, while still comfortable to manoeuvre through city routes and hill roads alike.",
+      features: commonBusFeatures, featured: 1, sortOrder: 3 },
+    { category: "mini-bus", name: "27 Seater Mini Bus", slug: "mini-bus-27-seater", seats: 27, luggage: "Overhead racks + rear boot",
+      tagline: "Slightly larger capacity for growing groups without moving up to a full-size coach.",
+      description: "A good fit for school groups, community trips and larger family functions that need a handful of extra seats over our 25 seater option.",
+      features: commonBusFeatures, featured: 0, sortOrder: 4 },
+    { category: "mini-bus", name: "29 Seater Mini Bus", slug: "mini-bus-29-seater", seats: 29, luggage: "Overhead racks + rear boot",
+      tagline: "The largest vehicle in our mini bus range, just under full tourist-coach capacity.",
+      description: "Bridges the gap between mini buses and full-size tourist coaches — a practical option for larger office teams, wedding groups and educational tours travelling together.",
+      features: commonBusFeatures, featured: 0, sortOrder: 5 },
+
+    // TOURIST BUSES
+    { category: "tourist-bus", name: "33 Seater Tourist Bus", slug: "tourist-bus-33-seater", seats: 33, luggage: "Under-bus cargo hold",
+      tagline: "Our entry-level tourist coach for large group tours and events.",
+      description: "A full-size coach suited to large school and college trips, big wedding parties and corporate events, with a dedicated under-bus luggage hold for group baggage.",
+      features: commonBusFeatures, featured: 0, sortOrder: 1 },
+    { category: "tourist-bus", name: "40 Seater Tourist Bus", slug: "tourist-bus-40-seater", seats: 40, luggage: "Under-bus cargo hold",
+      tagline: "A commonly booked coach size for multi-day pilgrimage and group tour packages.",
+      description: "Our most requested tourist bus size for multi-day group tours, pilgrimage travel and large corporate events — balancing capacity with manageable on-road handling.",
+      features: commonBusFeatures, featured: 1, sortOrder: 2 },
+    { category: "tourist-bus", name: "45 Seater Tourist Bus", slug: "tourist-bus-45-seater", seats: 45, luggage: "Under-bus cargo hold",
+      tagline: "Extra capacity for larger institutional and corporate group movements.",
+      description: "Suited to larger educational institutions, big corporate teams and community or religious group travel that needs more seating than our 40 seater option.",
+      features: commonBusFeatures, featured: 0, sortOrder: 3 },
+    { category: "tourist-bus", name: "49 Seater Tourist Bus", slug: "tourist-bus-49-seater", seats: 49, luggage: "Under-bus cargo hold",
+      tagline: "A near-maximum capacity coach for the largest group movements we handle.",
+      description: "Ideal for very large tour groups, institutional travel and big event logistics where a single coach covering the whole group is more practical than splitting across multiple vehicles.",
+      features: commonBusFeatures, featured: 0, sortOrder: 4 },
+    { category: "tourist-bus", name: "50 Seater Tourist Bus", slug: "tourist-bus-50-seater", seats: 50, luggage: "Under-bus cargo hold",
+      tagline: "The largest vehicle in our fleet for full-scale group and institutional travel.",
+      description: "Our maximum-capacity coach option, typically booked for the largest school, college, corporate and community group tours where a single large vehicle is the most efficient way to move everyone together.",
+      features: commonBusFeatures, featured: 0, sortOrder: 5 }
+  ];
+
+  for (const r of rows) {
+    vehiclesRepo.insert({
+      category: r.category,
+      name: r.name,
+      slug: r.slug,
+      seats: r.seats,
+      luggage: r.luggage,
+      ac: 1,
+      tagline: r.tagline,
+      description: r.description,
+      features: JSON.stringify(r.features),
+      imageKey: vehicleImagePath(r.slug), // real photo where fetched, else "" (branded placeholder) until one is uploaded via /admin
+      ratePerKm: r.ratePerKm ?? null, // only set where a real published rate was confirmed — never invented
+      featured: r.featured,
+      sortOrder: r.sortOrder
+    });
+  }
+  console.log(`• seeded ${rows.length} vehicles`);
+}
+
+function seedServices(): void {
+  if (servicesRepo.count() > 0) {
+    console.log("• services already seeded, skipping");
+    return;
+  }
+  const rows = [
+    { name: "Outstation Travel", slug: "outstation-travel", icon: "route", featured: 1,
+      shortDescription: "One-way and round-trip cabs for journeys beyond Bangalore, with an upfront quotation before you travel.",
+      description: "Whether you're heading to Coorg for the weekend or driving down to Goa for a longer break, our outstation service covers one-way drops and full round trips across Karnataka and neighbouring states. You choose the vehicle — sedan, SUV, Tempo Traveller or bus — and we take care of the driver, fuel and route planning.",
+      highlights: ["One-way and round-trip options", "Experienced outstation drivers", "Karnataka & neighbouring states", "Upfront, itemised quotation"] },
+    { name: "Airport Transfer", slug: "airport-transfer", icon: "plane", featured: 1,
+      shortDescription: "Reliable pickup and drop to Kempegowda International Airport, tracked against your flight timing.",
+      description: "Flights don't wait, and neither should your cab. Our airport transfer service covers pickup and drop across Bangalore to and from Kempegowda International Airport, with drivers briefed on your flight time so you're neither rushed nor left waiting at arrivals.",
+      highlights: ["Covers all Bangalore localities", "Flight-time aware scheduling", "Sedan to SUV options", "Meet-and-greet at arrivals on request"] },
+    { name: "Local & Intercity Travel", slug: "local-intercity-travel", icon: "map-pin", featured: 1,
+      shortDescription: "Hourly and per-kilometre packages for city errands, sightseeing and short intercity hops.",
+      description: "For days when you need a car on standby — client visits across town, a full day of city sightseeing, or a short hop to a neighbouring town — our local and intercity packages are billed by hours and kilometres so you know the cost before you start.",
+      highlights: ["8 hrs/80 km and 12 hrs/120 km packages", "Custom duration on request", "City sightseeing friendly", "Transparent per-km billing"] },
+    { name: "Corporate Travel", slug: "corporate-travel", icon: "building", featured: 1,
+      shortDescription: "Dependable transportation for employee commutes, client visits, offsites and corporate events.",
+      description: "We work with businesses across Bangalore on both one-off bookings and recurring travel needs — airport pickups for visiting clients, staff transportation for offsites, and event-day logistics. Vehicles range from executive sedans to full coaches for large teams.",
+      highlights: ["Executive sedans to full coaches", "Offsite & event-day logistics", "Recurring booking support", "Professionally presented drivers"] },
+    { name: "Wedding Transportation", slug: "wedding-transportation", icon: "heart", featured: 1,
+      shortDescription: "Guest shuttles, family cars and decorated vehicles for wedding functions and baraat routes.",
+      description: "From ferrying guests between the venue and hotels to arranging a well-presented car for the couple, our wedding transportation service is planned around your function schedule so every vehicle is in the right place at the right time.",
+      highlights: ["Guest shuttle coordination", "Multi-vehicle event-day planning", "Decoration-ready car options", "Coordinated multi-day scheduling"] },
+    { name: "Educational Tours", slug: "educational-tours", icon: "graduation-cap", featured: 0,
+      shortDescription: "Buses and mini buses for school and college excursions, industrial visits and study tours.",
+      description: "Educational institutions trust us for the added coordination that student travel requires — headcount-matched vehicles, punctual scheduling and drivers experienced with group student travel for day trips and multi-day educational tours alike.",
+      highlights: ["Mini bus to full coach capacity", "Headcount-matched vehicle sizing", "Day trips & multi-day tours", "Coordination with faculty in-charge"] },
+    { name: "Pilgrimage Tours", slug: "pilgrimage-tours", icon: "landmark", featured: 0,
+      shortDescription: "Group vehicles for temple and pilgrimage circuits across Karnataka and neighbouring states.",
+      description: "Pilgrimage travel often means early starts, multiple stops and larger families travelling together. Our Tempo Travellers and mini buses are well suited to popular circuits, with drivers familiar with common pilgrimage routes and timings.",
+      highlights: ["Familiar with popular pilgrimage circuits", "Early-start scheduling", "Group-friendly vehicle sizes", "Multi-family travel coordination"] },
+    { name: "Family Tours", slug: "family-tours", icon: "users", featured: 0,
+      shortDescription: "Comfortable, well-paced vehicle options for family holidays and multi-generational trips.",
+      description: "From grandparents to toddlers, family trips have different comfort needs than a solo business trip. We help you pick a vehicle with the right seating, luggage space and legroom so the whole family arrives relaxed, not cramped.",
+      highlights: ["Seating suited to multi-generational groups", "Extra luggage space for holidays", "Flexible multi-stop itineraries", "Child-seat friendly cars on request"] },
+    { name: "Resort Trips", slug: "resort-trips", icon: "mountain", featured: 0,
+      shortDescription: "Round-trip cabs to resorts and getaway destinations around Bangalore for a day or a weekend.",
+      description: "Whether it's a day trip to a resort near Bangalore or a weekend stay further out, we arrange round-trip transportation timed to your check-in and check-out, so you're not left arranging a return cab at the last minute.",
+      highlights: ["Timed to check-in/check-out", "Day-trip and weekend options", "Popular resort belts covered", "Return-journey pre-booked"] },
+    { name: "Customized Tours", slug: "customized-tours", icon: "sliders", featured: 1,
+      shortDescription: "Build your own multi-day itinerary — we match the route, vehicle and pace to your group.",
+      description: "Not every trip fits a standard package. Tell us your destinations, number of days and group size, and we'll put together a customised itinerary with a suitable vehicle, suggested routing and an upfront quotation for your review.",
+      highlights: ["Fully custom itinerary planning", "Multi-destination routing", "Vehicle matched to group size", "No-obligation quotation"] },
+    { name: "Group Transportation", slug: "group-transportation", icon: "users-group", featured: 0,
+      shortDescription: "Coordinated multi-vehicle transportation for large groups, associations and community events.",
+      description: "For groups too large for a single vehicle, we coordinate multiple cars, Tempo Travellers or buses to move together on a shared schedule, keeping the whole group's travel logistics simple to manage from one point of contact.",
+      highlights: ["Multi-vehicle coordination", "Single point of contact", "Scales from 20 to 200+ travellers", "Suited to associations & community groups"] },
+    { name: "Event Transportation", slug: "event-transportation", icon: "calendar", featured: 0,
+      shortDescription: "On-time vehicle logistics for conferences, exhibitions, sports events and private functions.",
+      description: "Event days run on tight schedules. We plan vehicle allocation and driver timing around your event agenda — guest arrivals, shuttle loops and return drops — so transportation is one less thing to manage on the day.",
+      highlights: ["Agenda-based scheduling", "Guest shuttle loops", "Multi-vehicle event-day support", "Backup vehicle planning on request"] }
+  ];
+
+  rows.forEach((r, idx) => {
+    servicesRepo.insert({
+      name: r.name,
+      slug: r.slug,
+      icon: r.icon,
+      shortDescription: r.shortDescription,
+      description: r.description,
+      highlights: JSON.stringify(r.highlights),
+      imageKey: serviceImagePath(r.slug),
+      featured: r.featured,
+      sortOrder: idx + 1
+    });
+  });
+  console.log(`• seeded ${rows.length} services`);
+}
+
+function seedPackages(): void {
+  if (packagesRepo.count() > 0) {
+    console.log("• packages already seeded, skipping");
+    return;
+  }
+  const rows = [
+    { title: "Coorg Getaway", slug: "coorg-getaway", destination: "Coorg, Karnataka", travelCategory: "Hill Station",
+      duration: "2 Days / 1 Night", idealFor: "Couples, small families and friend groups wanting a quick coffee-country escape",
+      highlights: ["Coffee estate visit", "Abbey Falls / Iruppu Falls", "Raja's Seat viewpoint", "Local Kodava cuisine stop"],
+      vehicleOptions: ["Sedan", "Innova Crysta", "9 Seater Tempo Traveller"],
+      description: "A short, scenic drive from Bangalore into Karnataka's coffee country. This itinerary is built around Coorg's misty hills, waterfalls and coffee estates, with a relaxed pace suited to a weekend trip.", featured: 1, sortOrder: 1 },
+    { title: "Ooty & Coonoor Hill Tour", slug: "ooty-coonoor-hill-tour", destination: "Ooty & Coonoor, Tamil Nadu", travelCategory: "Hill Station",
+      duration: "3 Days / 2 Nights", idealFor: "Families and groups wanting a classic Nilgiris hill-station holiday",
+      highlights: ["Botanical Garden & Ooty Lake", "Doddabetta Peak viewpoint", "Coonoor tea estates", "Nilgiri Mountain Railway (seasonal)"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A longer hill-station break covering both Ooty and neighbouring Coonoor, with time built in for the region's gardens, viewpoints and tea estates rather than a rushed single-day loop.", featured: 1, sortOrder: 2 },
+    { title: "Mysore Heritage Day Tour", slug: "mysore-heritage-day-tour", destination: "Mysore, Karnataka", travelCategory: "Heritage",
+      duration: "1 Day", idealFor: "Day-trippers, heritage enthusiasts and families wanting a quick city break",
+      highlights: ["Mysore Palace", "Chamundi Hills", "Brindavan Gardens", "Local silk & sandalwood shopping stop"],
+      vehicleOptions: ["Sedan", "Maruti Ertiga", "Innova Crysta"],
+      description: "A well-paced single-day loop from Bangalore covering Mysore's best-known heritage sites, timed to get you back home the same evening.", featured: 1, sortOrder: 3 },
+    { title: "Chikmagalur Coffee Trails", slug: "chikmagalur-coffee-trails", destination: "Chikmagalur, Karnataka", travelCategory: "Hill Station",
+      duration: "2 Days / 1 Night", idealFor: "Nature lovers, trekking groups and coffee-estate stay travellers",
+      highlights: ["Mullayanagiri viewpoint", "Coffee estate walk", "Hebbe Falls (seasonal)", "Baba Budangiri hills"],
+      vehicleOptions: ["Innova Crysta", "9 Seater Tempo Traveller"],
+      description: "Karnataka's highest hill town, best known for its coffee estates and trekking trails — this itinerary balances a scenic drive with time for outdoor exploration.", featured: 0, sortOrder: 4 },
+    { title: "Wayanad Nature Escape", slug: "wayanad-nature-escape", destination: "Wayanad, Kerala", travelCategory: "Wildlife & Nature",
+      duration: "3 Days / 2 Nights", idealFor: "Wildlife enthusiasts, families and groups wanting a nature-focused break",
+      highlights: ["Wayanad Wildlife Sanctuary", "Edakkal Caves", "Banasura Sagar Dam", "Chembra Peak viewpoint"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A cross-border trip into Kerala's Wayanad district, built around its wildlife sanctuary, viewpoints and cooler forested landscape.", featured: 0, sortOrder: 5 },
+    { title: "Hampi Heritage Trail", slug: "hampi-heritage-trail", destination: "Hampi, Karnataka", travelCategory: "Heritage",
+      duration: "2 Days / 1 Night", idealFor: "History and architecture enthusiasts, photography groups",
+      highlights: ["Virupaksha Temple", "Vittala Temple & Stone Chariot", "Hampi Bazaar ruins", "Sunset at Matanga Hill"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller", "25 Seater Mini Bus"],
+      description: "A UNESCO World Heritage site and one of Karnataka's most rewarding heritage trips, covering the ruins of the Vijayanagara Empire at a comfortable, unhurried pace.", featured: 1, sortOrder: 6 },
+    { title: "Goa Beach Holiday", slug: "goa-beach-holiday", destination: "Goa", travelCategory: "Beach",
+      duration: "4 Days / 3 Nights", idealFor: "Friend groups, couples and families wanting a beach holiday",
+      highlights: ["North & South Goa beach circuit", "Old Goa churches", "Local seafood trail", "Flexible free-day for leisure"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller", "Luxury Tempo Traveller"],
+      description: "A longer road trip itinerary to Goa with a mixed pace — sightseeing on the way in, and enough free time once there to enjoy the beaches at your own speed.", featured: 0, sortOrder: 7 },
+    { title: "Kerala Backwaters Tour", slug: "kerala-backwaters-tour", destination: "Alleppey & Kumarakom, Kerala", travelCategory: "Backwaters",
+      duration: "4 Days / 3 Nights", idealFor: "Couples, families and groups wanting a backwaters and houseboat experience",
+      highlights: ["Alleppey houseboat stay (optional add-on)", "Kumarakom backwaters", "Local spice plantation visit", "Fort Kochi day trip (optional)"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A Kerala road trip centred on the backwaters of Alleppey and Kumarakom, with the itinerary flexible enough to add a houseboat stay or a Fort Kochi extension.", featured: 1, sortOrder: 8 },
+    { title: "Tirupati Pilgrimage Tour", slug: "tirupati-pilgrimage-tour", destination: "Tirupati, Andhra Pradesh", travelCategory: "Pilgrimage",
+      duration: "2 Days / 1 Night", idealFor: "Families and groups travelling for darshan at Tirumala",
+      highlights: ["Tirumala temple darshan scheduling", "Overnight halt near Tirupati", "Return via Sri Kalahasti (optional)"],
+      vehicleOptions: ["Sedan", "Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A straightforward pilgrimage itinerary from Bangalore to Tirupati with an overnight halt, timed around typical darshan queues rather than a rushed same-day dash.", featured: 0, sortOrder: 9 },
+    { title: "Dharmasthala & Kukke Subramanya Pilgrimage", slug: "dharmasthala-kukke-pilgrimage", destination: "Dharmasthala & Kukke Subramanya, Karnataka", travelCategory: "Pilgrimage",
+      duration: "2 Days / 1 Night", idealFor: "Families and pilgrimage groups covering multiple temple towns",
+      highlights: ["Dharmasthala Manjunatha Temple", "Kukke Subramanya Temple", "Scenic Western Ghats driving route"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller", "20 Seater Mini Bus"],
+      description: "A two-temple pilgrimage circuit through Karnataka's Western Ghats, popular with multi-family groups travelling together for darshan at both Dharmasthala and Kukke Subramanya.", featured: 0, sortOrder: 10 },
+    { title: "Kodaikanal Hill Escape", slug: "kodaikanal-hill-escape", destination: "Kodaikanal, Tamil Nadu", travelCategory: "Hill Station",
+      duration: "3 Days / 2 Nights", idealFor: "Families and couples wanting a classic South Indian hill-station holiday",
+      highlights: ["Kodai Lake boating", "Coaker's Walk viewpoint", "Pillar Rocks", "Bryant Park"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A well-loved hill station on the southern edge of the Palani Hills, this itinerary is paced around Kodaikanal's lake, viewpoints and cool-climate gardens.", featured: 0, sortOrder: 11 },
+    { title: "Munnar Tea Garden Trail", slug: "munnar-tea-garden-trail", destination: "Munnar, Kerala", travelCategory: "Hill Station",
+      duration: "3 Days / 2 Nights", idealFor: "Nature lovers and couples wanting a tea-estate hill holiday",
+      highlights: ["Tea plantation walk", "Eravikulam National Park", "Mattupetty Dam", "Top Station viewpoint"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "Kerala's best-known tea country, with rolling estate views, a cooler climate and a slower pace than the coast — this itinerary leaves room to actually enjoy it rather than rush through.", featured: 1, sortOrder: 12 },
+    { title: "Trivandrum & Kovalam Beach Tour", slug: "trivandrum-kovalam-beach-tour", destination: "Trivandrum, Kerala", travelCategory: "Beach",
+      duration: "3 Days / 2 Nights", idealFor: "Families and couples wanting a capital-city and beach combination",
+      highlights: ["Kovalam Lighthouse Beach", "Napier Museum", "Shankumugham Beach", "Local heritage sites"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "Kerala's capital paired with the beaches of Kovalam — a mix of city sightseeing and coastal downtime on the same trip.", featured: 0, sortOrder: 13 },
+    { title: "Mantralaya Pilgrimage Tour", slug: "mantralaya-pilgrimage-tour", destination: "Mantralaya, Andhra Pradesh", travelCategory: "Pilgrimage",
+      duration: "2 Days / 1 Night", idealFor: "Devotees travelling for darshan at the Sri Raghavendra Swamy Mutt",
+      highlights: ["Mantralaya Mutt darshan", "Tungabhadra riverside", "Nearby temple stops"],
+      vehicleOptions: ["Sedan", "Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "A focused pilgrimage itinerary to Mantralaya, timed around darshan hours with a comfortable overnight halt rather than a rushed same-day round trip.", featured: 0, sortOrder: 14 },
+    { title: "Pondicherry Heritage & Beach Tour", slug: "pondicherry-heritage-beach-tour", destination: "Pondicherry", travelCategory: "Heritage",
+      duration: "3 Days / 2 Nights", idealFor: "Couples and friend groups wanting a French-quarter heritage and beach mix",
+      highlights: ["French Quarter walk", "Auroville", "Promenade Beach", "Sri Aurobindo Ashram (exterior)"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "Pondicherry's French Quarter, beachfront promenade and Auroville make it one of the more distinctive heritage trips from Bangalore — this itinerary balances walking and driving time evenly.", featured: 1, sortOrder: 15 },
+    { title: "Rameshwaram Pilgrimage Tour", slug: "rameshwaram-pilgrimage-tour", destination: "Rameshwaram, Tamil Nadu", travelCategory: "Pilgrimage",
+      duration: "2 Days / 1 Night", idealFor: "Pilgrimage groups and families visiting one of the char dham sites",
+      highlights: ["Ramanathaswamy Temple darshan", "Pamban Bridge", "Dhanushkodi"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller", "20 Seater Mini Bus"],
+      description: "A pilgrimage trip to Rameshwaram covering the Ramanathaswamy Temple and the dramatic Pamban Bridge and Dhanushkodi coastline, paced for group and family travel.", featured: 0, sortOrder: 16 },
+    { title: "Kanyakumari Tour", slug: "kanyakumari-tour", destination: "Kanyakumari, Tamil Nadu", travelCategory: "Beach",
+      duration: "2 Days / 1 Night", idealFor: "Travellers wanting to see India's southern tip",
+      highlights: ["Vivekananda Rock Memorial", "Thiruvalluvar Statue", "Sunrise & sunset viewpoint", "Kanyakumari beach"],
+      vehicleOptions: ["Innova Crysta", "12 Seater Tempo Traveller"],
+      description: "India's southernmost point, where the Arabian Sea, Bay of Bengal and Indian Ocean meet — this itinerary is timed to catch the well-known sunrise or sunset view.", featured: 1, sortOrder: 17 },
+    { title: "Gokarna Beach Getaway", slug: "gokarna-beach-getaway", destination: "Gokarna, Karnataka", travelCategory: "Beach",
+      duration: "2 Days / 1 Night", idealFor: "Friend groups wanting a laid-back coastal Karnataka trip",
+      highlights: ["Om Beach", "Kudle Beach", "Mahabaleshwar Temple", "Coastal drive"],
+      vehicleOptions: ["Sedan", "Innova Crysta", "9 Seater Tempo Traveller"],
+      description: "Karnataka's own coastal getaway — a quieter, less built-up alternative to Goa, with a string of beaches within easy reach of each other.", featured: 1, sortOrder: 18 },
+    { title: "Nandi Hills Sunrise Trip", slug: "nandi-hills-sunrise-trip", destination: "Nandi Hills, Karnataka", travelCategory: "Hill Station",
+      duration: "1 Day (early morning)", idealFor: "A quick early-morning getaway close to Bangalore",
+      highlights: ["Sunrise viewpoint", "Tipu's Drop", "Bhoga Nandeeshwara Temple"],
+      vehicleOptions: ["Sedan", "Maruti Ertiga", "Innova Crysta"],
+      description: "The closest hill escape to Bangalore, popular as an early-morning sunrise trip — we time pickup to get you there well before daybreak.", featured: 0, sortOrder: 19 },
+    { title: "Sakleshpur & Western Ghats Trail", slug: "sakleshpur-western-ghats-trail", destination: "Sakleshpur, Karnataka", travelCategory: "Wildlife & Nature",
+      duration: "2 Days / 1 Night", idealFor: "Nature and trekking groups wanting a Western Ghats escape",
+      highlights: ["Manjarabad Fort", "Coffee estate trail", "Bisle viewpoint", "Western Ghats scenery"],
+      vehicleOptions: ["Innova Crysta", "9 Seater Tempo Traveller"],
+      description: "A Western Ghats trip built around Sakleshpur's star-shaped fort, coffee estates and forest viewpoints — a good fit for smaller nature-focused groups.", featured: 0, sortOrder: 20 }
+  ];
+
+  for (const r of rows) {
+    packagesRepo.insert({
+      title: r.title,
+      slug: r.slug,
+      destination: r.destination,
+      travelCategory: r.travelCategory,
+      duration: r.duration,
+      startLocation: "Bangalore",
+      idealFor: r.idealFor,
+      highlights: JSON.stringify(r.highlights),
+      vehicleOptions: JSON.stringify(r.vehicleOptions),
+      description: r.description,
+      imageKey: destinationImagePath(r.slug),
+      featured: r.featured,
+      sortOrder: r.sortOrder
+    });
+  }
+  console.log(`• seeded ${rows.length} tour packages`);
+}
+
+function seedFaqs(): void {
+  if (faqsRepo.count() > 0) {
+    console.log("• faqs already seeded, skipping");
+    return;
+  }
+  const rows: Array<{ q: string; a: string; category: string }> = [
+    { q: "How do I book a vehicle with Yogi Tours & Travels?", category: "Booking",
+      a: "Use the booking widget on our homepage, call or WhatsApp us directly, or fill in the enquiry form on any vehicle, service or tour package page. We'll confirm vehicle availability and share a quotation before you make any payment." },
+    { q: "Do you provide airport transfers in Bangalore?", category: "Services",
+      a: "Yes. We offer pickup and drop to Kempegowda International Airport across Bangalore, with drivers briefed on your flight timing for both arrivals and departures." },
+    { q: "Do you provide vehicles for outstation trips?", category: "Services",
+      a: "Yes. Our outstation service covers destinations across Karnataka and neighbouring states, with sedans, SUVs, Tempo Travellers and buses available depending on your group size." },
+    { q: "Do you offer one-way outstation trips?", category: "Booking",
+      a: "Yes, one-way drops are available on most outstation routes. Select “One Way” in the booking widget's trip type field and we'll quote accordingly." },
+    { q: "Do you offer round trip packages?", category: "Booking",
+      a: "Yes. Round trips are our most common outstation booking type, with the vehicle and driver staying with you for the full itinerary until you're dropped back." },
+    { q: "Can I book a Tempo Traveller for a group?", category: "Fleet",
+      a: "Yes. We offer 9, 12, 14 and 17 seater Tempo Travellers, including Maharaja seating and Force Urbania options, suited to family groups, pilgrimage trips and corporate outings." },
+    { q: "Do you provide buses for weddings?", category: "Services",
+      a: "Yes. We arrange guest shuttles, family cars and multi-vehicle transportation planned around your wedding function schedule — see our Wedding Transportation service for details." },
+    { q: "Do you provide vehicles for corporate transportation?", category: "Services",
+      a: "Yes. We support both one-off corporate bookings (client visits, airport pickups) and recurring needs like offsite transportation and event-day logistics, with vehicles ranging from executive sedans to full coaches." },
+    { q: "Can I customize a tour package?", category: "Tour Packages",
+      a: "Yes. Every package listed on our site can be adjusted for duration, stops and vehicle type. Use the “Request Package” button or contact us with your requirements and we'll tailor an itinerary." },
+    { q: "What is included in the quotation?", category: "Pricing",
+      a: "Our quotations are itemised to show the vehicle category, estimated distance/duration charges, driver allowance and applicable taxes, so you know what you're paying for before confirming." },
+    { q: "Are tolls and parking included in the quote?", category: "Pricing",
+      a: "Toll charges, parking fees and interstate permit charges (where applicable) are typically billed separately, at actuals. This is confirmed clearly in your quotation before you book." },
+    { q: "Can I request a specific vehicle?", category: "Fleet",
+      a: "You're welcome to request a specific vehicle category or model when enquiring. We'll confirm availability for your travel dates and let you know if a suitable alternative is needed." },
+    { q: "How early should I book?", category: "Booking",
+      a: "For local and airport transfers, a few hours' notice is usually enough. For outstation trips, weekend getaways and larger vehicles (Tempo Travellers, mini buses, tourist buses), we recommend booking at least 2–3 days in advance, and earlier during festival or peak travel season." },
+    { q: "Do you provide vehicles for school or college educational tours?", category: "Services",
+      a: "Yes. We work with educational institutions on day trips and multi-day educational tours, with mini buses and tourist buses sized to match student headcounts and coordinated with faculty in-charge." },
+    { q: "What safety measures are followed during trips?", category: "Safety",
+      a: "Our drivers are experienced with the routes they operate, vehicles undergo regular maintenance checks, and we share driver and vehicle details ahead of every trip so you know exactly who is picking you up." }
+  ];
+  rows.forEach((r, idx) => {
+    faqsRepo.insert({ question: r.q, answer: r.a, category: r.category, sortOrder: idx + 1 });
+  });
+  console.log(`• seeded ${rows.length} faqs`);
+}
+
+function seedTestimonials(): void {
+  if (testimonialsRepo.count() > 0) {
+    console.log("• testimonials already seeded, skipping");
+    return;
+  }
+  const rows = [
+    { name: "Ramesh K.", rating: 5, tripType: "Family Trip to Coorg", review: "Booking was straightforward and the driver was on time on both days of our trip." },
+    { name: "Ananya S.", rating: 5, tripType: "Airport Transfer", review: "The cab arrived well ahead of my flight and the driver kept track of the timing closely." },
+    { name: "Deepak R.", rating: 4, tripType: "Corporate Offsite", review: "Coordinated well for a 20-person team offsite — the mini bus was clean and the driver knew the route." },
+    { name: "Priya M.", rating: 5, tripType: "Wedding Transportation", review: "Multiple vehicles were arranged smoothly across two wedding function days without any last-minute issues." },
+    { name: "Suresh N.", rating: 5, tripType: "Outstation to Hampi", review: "Comfortable Tempo Traveller for our group trip, with good communication throughout the booking." },
+    { name: "Kavitha J.", rating: 4, tripType: "Group Pilgrimage Tour", review: "The driver was familiar with the temple route and timings, which made the whole day easier to plan around." }
+  ];
+  rows.forEach((r, idx) => {
+    testimonialsRepo.insert({ name: r.name, rating: r.rating, review: r.review, tripType: r.tripType, isPlaceholder: 1, sortOrder: idx + 1 });
+  });
+  console.log(`• seeded ${rows.length} placeholder testimonials (clearly marked isPlaceholder=1)`);
+}
+
+function seedGallery(): void {
+  if (galleryRepo.count() > 0) {
+    console.log("• gallery already seeded, skipping");
+    return;
+  }
+  const cats: GalleryCategory[] = ["Vehicles", "Tours", "Group Travel", "Corporate", "Weddings", "Destinations"];
+  let sortOrder = 1;
+  const rows: Array<{ category: GalleryCategory; caption: string; altText: string }> = [];
+  const items: Record<GalleryCategory, Array<{ key: string; caption: string; alt: string; photo?: string }>> = {
+    Vehicles: [
+      { key: "gallery-vehicle-innova-crysta", caption: "Innova Crysta ready for an outstation trip", alt: "Innova Crysta parked and ready for a Bangalore outstation trip" },
+      { key: "gallery-vehicle-tempo-traveller", caption: "12 Seater Tempo Traveller for group travel", alt: "12 seater Tempo Traveller used for group travel from Bangalore", photo: "tempo-traveller-exterior-view.jpg" },
+      { key: "gallery-vehicle-tourist-bus", caption: "Tourist bus prepared for a group tour", alt: "Tourist bus prepared for a large group tour departure", photo: "tour-coach-exterior-view.jpg" }
+    ],
+    Tours: [
+      { key: "gallery-tour-coorg", caption: "Coffee estate stop during a Coorg tour", alt: "Coffee estate stop on a Coorg tour from Bangalore" },
+      { key: "gallery-tour-hampi", caption: "Heritage sightseeing stop in Hampi", alt: "Heritage sightseeing stop during a Hampi tour" },
+      { key: "gallery-tour-ooty", caption: "Hill-station drive on the Ooty route", alt: "Scenic hill-station drive on the way to Ooty", photo: "ooty-tea-garden-panorama-01.jpg" }
+    ],
+    "Group Travel": [
+      { key: "gallery-group-college", caption: "College friend group on an outstation trip", alt: "College friend group boarding a Tempo Traveller for an outstation trip" },
+      { key: "gallery-group-family", caption: "Extended family group travelling together", alt: "Extended family group travelling together for a weekend trip" },
+      { key: "gallery-group-pilgrimage", caption: "Pilgrimage group departure", alt: "Pilgrimage group departing for a temple tour" }
+    ],
+    Corporate: [
+      { key: "gallery-corporate-offsite", caption: "Corporate team departing for an offsite", alt: "Corporate team boarding a mini bus for a company offsite" },
+      { key: "gallery-corporate-event", caption: "Event-day transportation coordination", alt: "Event-day transportation coordination for a corporate event" },
+      { key: "gallery-corporate-airport", caption: "Executive airport pickup", alt: "Executive sedan arranged for a corporate airport pickup" }
+    ],
+    Weddings: [
+      { key: "gallery-wedding-car", caption: "Decorated car for the wedding couple", alt: "Decorated wedding car arranged for the couple" },
+      { key: "gallery-wedding-guests", caption: "Guest shuttle for a wedding function", alt: "Guest shuttle vehicle arranged for a wedding function" },
+      { key: "gallery-wedding-baraat", caption: "Multi-vehicle coordination for a wedding event", alt: "Multiple vehicles coordinated for a wedding event day" }
+    ],
+    Destinations: [
+      { key: "gallery-destination-chikmagalur", caption: "Misty hills of Chikmagalur", alt: "Misty hills and coffee estates in Chikmagalur" },
+      { key: "gallery-destination-goa", caption: "Coastal stop on a Goa road trip", alt: "Coastal stop during a Goa road trip from Bangalore" },
+      { key: "gallery-destination-kerala", caption: "Backwaters of Kerala", alt: "Backwaters near Alleppey, Kerala" }
+    ]
+  };
+  for (const cat of cats) {
+    for (const item of items[cat]) {
+      rows.push({ category: cat, caption: item.caption, altText: item.alt });
+    }
+  }
+  rows.forEach((r) => {
+    // No real photo yet (imageKey: "") — smart-image.ejs shows a branded
+    // placeholder, seeded by the row's own id (set via generic-list.ejs's
+    // edit/re-order flow) rather than a fake path string.
+    galleryRepo.insert({ category: r.category, imageKey: "", caption: r.caption, altText: r.altText, sortOrder: sortOrder++ });
+  });
+  console.log(`• seeded ${rows.length} gallery items`);
+}
+
+function seedBlog(): void {
+  if (blogRepo.count() > 0) {
+    console.log("• blog posts already seeded, skipping");
+    return;
+  }
+  const rows = [
+    {
+      title: "How to Choose the Right Vehicle for Your Bangalore Group Trip",
+      slug: "how-to-choose-the-right-vehicle-for-group-trip",
+      excerpt: "Sedan, Innova, Tempo Traveller or bus? A quick guide to matching vehicle type to group size, luggage and route.",
+      coverImageKey: "",
+      content: `<p>The most common question we get before a trip isn't about pricing — it's "which vehicle should we book?" The right answer depends on three things: how many people are travelling, how much luggage you're carrying, and how far you're going.</p>
+<h2>Groups of 1–4</h2>
+<p>A sedan is usually enough for airport runs, city travel and short outstation trips with light luggage. If you're carrying more than two medium bags, consider a Maruti Ertiga for the extra boot space.</p>
+<h2>Groups of 5–7</h2>
+<p>This is Innova and Innova Crysta territory. For longer drives — Coorg, Chikmagalur, Ooty — the Crysta's better cabin insulation and captain seats make a real difference over four or more hours on the road.</p>
+<h2>Groups of 9–17</h2>
+<p>Once you're past what a single MUV can comfortably seat, a Tempo Traveller is the natural next step. The 12 seater is our most-booked size for family and pilgrimage groups, while the Luxury and Maharaja variants trade a few seats for noticeably more comfort on multi-day trips.</p>
+<h2>Groups of 20+</h2>
+<p>Mini buses (20–29 seater) and tourist buses (33–50 seater) are built for office teams, wedding parties, school groups and large pilgrimage tours where moving everyone together on one vehicle is more practical than splitting across cars.</p>
+<p>If you're unsure, tell us your group size and route when you enquire — we'll suggest a vehicle rather than leave you to guess.</p>`,
+      author: "Yogi Tours & Travels", sortOrder: 1
+    },
+    {
+      title: "Bangalore Airport Transfer: What to Expect When Booking a Cab to Kempegowda International Airport",
+      slug: "bangalore-airport-transfer-what-to-expect",
+      excerpt: "A practical look at booking an airport cab in Bangalore — timing, pickup points and what a good transfer service should offer.",
+      coverImageKey: "",
+      content: `<p>Kempegowda International Airport sits well outside central Bangalore, which means traffic timing matters more than distance when planning an airport transfer.</p>
+<h2>How early should you book?</h2>
+<p>For a scheduled departure, we recommend booking your cab at least the evening before, and confirming pickup time based on your flight's departure and typical traffic on your route — earlier during peak morning and evening hours.</p>
+<h2>What should a good airport transfer include?</h2>
+<p>At minimum: a driver briefed on your flight number and timing, a vehicle that matches your group size and luggage, and a pickup location that's easy to find. For arrivals, we track your flight status so the driver adjusts for early or delayed landings.</p>
+<h2>Which vehicle should you pick?</h2>
+<p>A sedan comfortably handles one to two travellers with cabin baggage and a check-in bag each. For families or groups with more luggage, an Innova or Innova Crysta gives you both the seating and boot space to avoid a tight fit.</p>`,
+      author: "Yogi Tours & Travels", sortOrder: 2
+    },
+    {
+      title: "Tempo Traveller vs Mini Bus: Which One Should You Book for Your Next Outing?",
+      slug: "tempo-traveller-vs-mini-bus-which-to-book",
+      excerpt: "Both fit groups, but they're built for different trip sizes. Here's how to decide between a Tempo Traveller and a mini bus.",
+      coverImageKey: "",
+      content: `<p>Tempo Travellers and mini buses both serve group travel, but they're not interchangeable — the right choice depends mostly on group size and how much you value manoeuvrability versus raw capacity.</p>
+<h2>Tempo Traveller: 9–17 seats</h2>
+<p>Tempo Travellers are easier to manoeuvre on narrower hill roads and through city traffic, which makes them a strong choice for family trips, pilgrimage tours and friend-group getaways to destinations like Coorg or Chikmagalur.</p>
+<h2>Mini Bus: 20–29 seats</h2>
+<p>Once your group crosses about 18–20 people, a mini bus becomes the more practical option — it's purpose-built for larger headcounts and is commonly booked for corporate offsites, wedding guest groups and larger school outings.</p>
+<h2>Quick way to decide</h2>
+<p>If your group is under 17 and you're heading to a hill destination with winding roads, lean Tempo Traveller. If you're over 20 people or moving between city venues for an event, a mini bus will usually serve you better.</p>`,
+      author: "Yogi Tours & Travels", sortOrder: 3
+    },
+    {
+      title: "A Simple Guide to Planning a Weekend Trip to Coorg from Bangalore",
+      slug: "weekend-trip-to-coorg-from-bangalore-guide",
+      excerpt: "Distance, drive time and a simple two-day plan for a Coorg weekend getaway from Bangalore.",
+      coverImageKey: "",
+      content: `<p>Coorg is one of the most popular weekend escapes from Bangalore, and for good reason — coffee estates, waterfalls and hill views within a manageable drive.</p>
+<h2>How far is Coorg from Bangalore?</h2>
+<p>Coorg (Madikeri) is roughly 250–260 km from Bangalore, which typically works out to a 5–6 hour drive depending on your route and stops.</p>
+<h2>A simple two-day plan</h2>
+<p>Day one: leave early, arrive by early afternoon, check in, and use the remaining daylight for a coffee estate visit or a nearby waterfall. Day two: cover Raja's Seat and Abbey Falls or Iruppu Falls in the morning before starting the drive back, so you're not rushing the return leg after dark.</p>
+<h2>What vehicle works best?</h2>
+<p>For couples or small families, a sedan or Innova Crysta is comfortable for the drive. For larger friend groups, a 9 or 12 seater Tempo Traveller keeps everyone together and gives you space for luggage and coffee shopping on the way back.</p>`,
+      author: "Yogi Tours & Travels", sortOrder: 4
+    },
+    {
+      title: "Corporate Travel Checklist: Booking Reliable Transportation for Business Events",
+      slug: "corporate-travel-checklist-business-events",
+      excerpt: "A short checklist for booking dependable transportation for offsites, client visits and corporate events.",
+      coverImageKey: "",
+      content: `<p>Corporate travel has less room for error than a leisure trip — a late pickup can mean a missed flight connection or a delayed event start. Here's what we recommend confirming before you book.</p>
+<h2>Confirm headcount early</h2>
+<p>Vehicle sizing should be based on confirmed attendee numbers, not estimates. It's easier to size a mini bus correctly upfront than to arrange a second vehicle at the last minute.</p>
+<h2>Share the full day's schedule</h2>
+<p>For offsites and multi-stop event days, share your agenda — pickup points, timing between venues, and the return schedule — so vehicles and drivers can be planned around it rather than booked as a single point-to-point trip.</p>
+<h2>Ask about backup planning</h2>
+<p>For high-stakes events, ask whether a backup vehicle or driver is available. It's a reasonable question, and a transportation partner who takes corporate travel seriously should have an answer.</p>
+<h2>Get an itemised quotation</h2>
+<p>A clear quotation — vehicle category, estimated distance/duration charges, driver allowance and applicable taxes — makes it easier to get internal approval and avoids surprises on invoicing.</p>`,
+      author: "Yogi Tours & Travels", sortOrder: 5
+    }
+  ];
+  rows.forEach((r) => {
+    blogRepo.insert({
+      title: r.title, slug: r.slug, excerpt: r.excerpt, content: r.content,
+      coverImageKey: r.coverImageKey, author: r.author, published: 1,
+      publishedAt: new Date().toISOString().replace("T", " ").slice(0, 19), sortOrder: r.sortOrder
+    });
+  });
+  console.log(`• seeded ${rows.length} blog posts`);
+}
+
+function seedAdmin(): void {
+  if (adminUserCount() > 0) {
+    console.log("• admin user already exists, skipping (use the admin panel to change password)");
+    return;
+  }
+  const username = process.env.ADMIN_USERNAME || "admin";
+  const password = process.env.ADMIN_PASSWORD || "change-this-password";
+  const hash = bcrypt.hashSync(password, 10);
+  createAdminUser(username, hash);
+  console.log(`• created admin user "${username}" from .env (change ADMIN_PASSWORD before going live)`);
+}
+
+function run(): void {
+  console.log("Seeding database...");
+  db.exec("BEGIN");
+  try {
+    seedVehicles();
+    seedServices();
+    seedPackages();
+    seedFaqs();
+    seedTestimonials();
+    seedGallery();
+    seedBlog();
+    seedAdmin();
+    db.exec("COMMIT");
+    console.log("Seed complete.");
+  } catch (err) {
+    db.exec("ROLLBACK");
+    console.error("Seed failed, rolled back:", err);
+    process.exitCode = 1;
+  }
+}
+
+run();

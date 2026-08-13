@@ -1,0 +1,54 @@
+<%- include('_partials/admin-start', { pageTitle: resource.label }) %>
+
+<div class="flex items-center justify-between gap-3 mb-5">
+  <p class="text-sm text-ink-500"><%= items.length %> item<%= items.length === 1 ? '' : 's' %></p>
+  <a href="/admin/<%= resource.key %>/new" class="btn btn-primary btn-sm">
+    <%- include('../partials/icon', { name: 'plus', cls: 'w-4 h-4' }) %>Add <%= resource.singular %>
+  </a>
+</div>
+
+<div class="admin-card overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <% resource.listColumns.forEach(function(col) {
+          const field = resource.fields.find(function(f) { return f.name === col; });
+          const label = field ? field.label : (col.charAt(0).toUpperCase() + col.slice(1));
+        %>
+          <th><%= label %></th>
+        <% }); %>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (items.length === 0) { %>
+      <tr><td colspan="<%= resource.listColumns.length + 1 %>" class="text-center text-ink-400 py-10">No items yet — click "Add <%= resource.singular %>" to create one.</td></tr>
+      <% } %>
+      <% items.forEach(function(item) { %>
+      <tr class="hover:bg-ink-50/60">
+        <% resource.listColumns.forEach(function(col) {
+          const field = resource.fields.find(function(f) { return f.name === col; });
+          const value = item[col];
+        %>
+          <td class="max-w-[220px] truncate">
+            <% if (field && field.type === "checkbox") { %>
+              <span class="admin-status-pill <%= value ? 'bg-success/10 text-success' : 'bg-ink-100 text-ink-500' %>"><%= value ? "Yes" : "No" %></span>
+            <% } else { %>
+              <%= value %>
+            <% } %>
+          </td>
+        <% }); %>
+        <td class="text-right whitespace-nowrap">
+          <a href="/admin/<%= resource.key %>/<%= item.id %>/edit" class="text-brand-700 font-medium hover:text-brand-800 text-sm mr-3">Edit</a>
+          <form action="/admin/<%= resource.key %>/<%= item.id %>/delete" method="post" class="inline" data-confirm="Delete this <%= resource.singular.toLowerCase() %>? This cannot be undone.">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" class="text-error font-medium hover:text-red-700 text-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('_partials/admin-end') %>

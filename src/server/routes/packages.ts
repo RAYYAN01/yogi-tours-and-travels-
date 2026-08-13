@@ -1,0 +1,82 @@
+import { Router } from "express";
+import { packagesRepo, packageHighlights, packageVehicleOptions } from "../db/content.js";
+import { touristTripSchema, breadcrumbSchema } from "../utils/schema.js";
+
+const router = Router();
+
+const TRAVEL_CATEGORIES = ["Hill Station", "Heritage", "Wildlife & Nature", "Beach", "Backwaters", "Pilgrimage"] as const;
+
+router.get("/", (req, res) => {
+  const categoryFilter = typeof req.query.category === "string" ? req.query.category : "";
+  const regionFilter = typeof req.query.region === "string" ? req.query.region : "";
+
+  let packages = categoryFilter ? packagesRepo.allWhere("travelCategory = ?", categoryFilter) : packagesRepo.all();
+  if (regionFilter === "karnataka") {
+    packages = packages.filter((p) => p.destination.includes("Karnataka"));
+  } else if (regionFilter === "south-india") {
+    packages = packages.filter((p) => !p.destination.includes("Karnataka"));
+  }
+
+  res.render("pages/packages-list", {
+    title: "Tour Packages from Bangalore | Coorg, Ooty, Mysore, Goa & More",
+    metaDescription:
+      "Browse tour packages from Bangalore including Coorg, Ooty, Mysore, Chikmagalur, Hampi, Goa and Kerala backwaters. Customisable itineraries with your choice of vehicle.",
+    canonicalPath: "/tour-packages",
+    crumbs: [
+      { name: "Home", url: "/" },
+      { name: "Tours & Packages", url: "/tour-packages" }
+    ],
+    packages,
+    categories: TRAVEL_CATEGORIES,
+    activeCategory: categoryFilter,
+    activeRegion: regionFilter,
+    schemas: [
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Tours & Packages", url: "/tour-packages" }
+      ])
+    ]
+  });
+});
+
+router.get("/:slug", (req, res, next) => {
+  const pkg = packagesRepo.findBySlug(req.params.slug);
+  if (!pkg) {
+    next();
+    return;
+  }
+  const related = packagesRepo
+    .allWhere("travelCategory = ? AND id != ?", pkg.travelCategory, pkg.id)
+    .slice(0, 3);
+  const fallbackRelated = related.length > 0 ? related : packagesRepo.all().filter((p) => p.id !== pkg.id).slice(0, 3);
+
+  res.render("pages/package-detail", {
+    title: `${pkg.title} | ${pkg.duration} Tour Package from Bangalore`,
+    metaDescription: `${pkg.title} — ${pkg.duration} tour package from Bangalore to ${pkg.destination}. ${pkg.idealFor}`,
+    canonicalPath: `/tour-packages/${pkg.slug}`,
+    crumbs: [
+      { name: "Home", url: "/" },
+      { name: "Tours & Packages", url: "/tour-packages" },
+      { name: pkg.title, url: `/tour-packages/${pkg.slug}` }
+    ],
+    pkg,
+    highlights: packageHighlights(pkg),
+    vehicleOptions: packageVehicleOptions(pkg),
+    related: fallbackRelated,
+    schemas: [
+      touristTripSchema({
+        name: pkg.title,
+        description: pkg.description,
+        url: `/tour-packages/${pkg.slug}`,
+        duration: pkg.duration
+      }),
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Tours & Packages", url: "/tour-packages" },
+        { name: pkg.title, url: `/tour-packages/${pkg.slug}` }
+      ])
+    ]
+  });
+});
+
+export default router;

@@ -1,0 +1,29 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container">
+    <div class="max-w-2xl">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase text-brand-600 mb-3">
+        <span class="w-6 h-px bg-brand-500"></span>Services
+      </span>
+      <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Travel Services for Every Occasion</h1>
+      <p class="text-ink-500 text-[15px] sm:text-base leading-relaxed mt-4">
+        From daily airport runs to multi-day outstation tours and large event logistics — here's how we support each type of trip.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="pb-16 lg:pb-24">
+  <div class="container">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+      <% services.forEach(function(s) { %>
+        <%- include('../components/service-card', { service: s }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/cta-section') %>
+<%- include('../partials/page-end') %>

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+public/css/main.css
+public/js/
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+.env
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,37 @@
+<%- include('_partials/admin-head', { title: 'Admin Login | ' + business.name }) %>
+<body class="font-body text-ink-800 antialiased bg-ink-950 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-sm">
+    <div class="flex flex-col items-center mb-6">
+      <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white mb-3">
+        <svg viewBox="0 0 24 24" class="w-7 h-7" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" fill="currentColor"/></svg>
+      </span>
+      <h1 class="font-display font-bold text-white text-lg">Yogi Admin</h1>
+      <p class="text-ink-400 text-sm mt-0.5">Sign in to manage your website</p>
+    </div>
+
+    <div class="admin-card bg-white p-6 sm:p-7">
+      <% if (error) { %>
+      <div class="mb-4 rounded-lg bg-error/10 text-error text-sm font-medium px-3.5 py-2.5 flex items-center gap-2">
+        <%- include('../partials/icon', { name: 'alert-circle', cls: 'w-4 h-4 shrink-0' }) %><%= error %>
+      </div>
+      <% } %>
+      <form action="/admin/login" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="space-y-4">
+          <div>
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-input" autocomplete="username" required autofocus />
+          </div>
+          <div>
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-input" autocomplete="current-password" required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-full mt-6">Sign In</button>
+      </form>
+    </div>
+    <p class="text-center text-ink-500 text-xs mt-5"><a href="/" class="hover:text-ink-300">&larr; Back to website</a></p>
+  </div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

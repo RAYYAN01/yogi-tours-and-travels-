@@ -1,0 +1,47 @@
+<%
+const __resources = typeof resources !== "undefined" ? resources : [];
+const __path = currentPath;
+function isActive(prefix) { return __path === prefix || __path.startsWith(prefix + "/"); }
+%>
+<aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-ink-950 text-ink-300 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
+  <div class="h-16 flex items-center gap-2.5 px-5 border-b border-white/10 shrink-0">
+    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">
+      <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" fill="currentColor"/></svg>
+    </span>
+    <span class="text-white font-display font-semibold text-sm leading-tight">Yogi Admin</span>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5" aria-label="Admin navigation">
+    <a href="/admin" class="admin-nav-link <%= __path === '/admin' ? 'is-active' : '' %>">
+      <%- include('../../partials/icon', { name: 'grid', cls: 'w-4 h-4' }) %>Dashboard
+    </a>
+    <a href="/admin/enquiries" class="admin-nav-link <%= isActive('/admin/enquiries') ? 'is-active' : '' %>">
+      <%- include('../../partials/icon', { name: 'mail', cls: 'w-4 h-4' }) %>Enquiries
+    </a>
+
+    <p class="px-3 pt-4 pb-1.5 text-[11px] font-semibold tracking-wider uppercase text-ink-500">Content</p>
+    <% __resources.forEach(function(r) { %>
+    <a href="/admin/<%= r.key %>" class="admin-nav-link <%= isActive('/admin/' + r.key) ? 'is-active' : '' %>">
+      <%- include('../../partials/icon', { name: 'list', cls: 'w-4 h-4' }) %><%= r.label %>
+    </a>
+    <% }); %>
+
+    <p class="px-3 pt-4 pb-1.5 text-[11px] font-semibold tracking-wider uppercase text-ink-500">Account</p>
+    <a href="/admin/settings" class="admin-nav-link <%= isActive('/admin/settings') ? 'is-active' : '' %>">
+      <%- include('../../partials/icon', { name: 'lock', cls: 'w-4 h-4' }) %>Settings
+    </a>
+    <a href="/" target="_blank" rel="noopener" class="admin-nav-link">
+      <%- include('../../partials/icon', { name: 'external-link', cls: 'w-4 h-4' }) %>View Site
+    </a>
+  </nav>
+
+  <div class="p-3 border-t border-white/10 shrink-0">
+    <form action="/admin/logout" method="post">
+      <button type="submit" class="admin-nav-link w-full text-left">
+        <%- include('../../partials/icon', { name: 'logout', cls: 'w-4 h-4' }) %>Log Out
+      </button>
+    </form>
+  </div>
+</aside>
+
+<div id="admin-sidebar-overlay" class="fixed inset-0 z-30 bg-ink-950/50 opacity-0 pointer-events-none transition-opacity lg:hidden" aria-hidden="true"></div>

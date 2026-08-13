@@ -1,0 +1,22 @@
+<%
+/* Locals: crumbs = [{ name, url }], last item is the current page (no link). */
+const __crumbs = typeof crumbs !== "undefined" ? crumbs : [];
+%>
+<% if (__crumbs.length > 1) { %>
+<nav aria-label="Breadcrumb" class="bg-ink-50 border-b border-ink-100">
+  <div class="container py-3">
+    <ol class="flex flex-wrap items-center gap-1.5 text-xs sm:text-[13px] text-ink-500">
+      <% __crumbs.forEach(function(c, i) { %>
+        <li class="flex items-center gap-1.5">
+          <% if (i > 0) { %><%- include('icon', { name: 'chevron-right', cls: 'w-3 h-3 text-ink-300' }) %><% } %>
+          <% if (i === __crumbs.length - 1) { %>
+            <span class="text-ink-700 font-medium" aria-current="page"><%= c.name %></span>
+          <% } else { %>
+            <a href="<%= c.url %>" class="hover:text-brand-700 transition-colors"><%= c.name %></a>
+          <% } %>
+        </li>
+      <% }); %>
+    </ol>
+  </div>
+</nav>
+<% } %>

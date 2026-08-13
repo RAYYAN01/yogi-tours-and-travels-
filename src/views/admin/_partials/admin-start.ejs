@@ -1,0 +1,20 @@
+<%- include('admin-head') %>
+<body class="font-body text-ink-800 antialiased bg-ink-50">
+  <%- include('admin-nav') %>
+
+  <div class="lg:pl-64 min-h-screen flex flex-col">
+    <header class="h-16 bg-white border-b border-ink-100 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-20">
+      <button id="admin-sidebar-toggle" type="button" class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-ink-600 hover:bg-ink-50" aria-label="Open admin menu" aria-controls="admin-sidebar" aria-expanded="false">
+        <%- include('../../partials/icon', { name: 'menu', cls: 'w-5 h-5' }) %>
+      </button>
+      <h1 class="font-display font-semibold text-ink-900 text-[15px] sm:text-base"><%= typeof pageTitle !== "undefined" ? pageTitle : "Dashboard" %></h1>
+      <span class="text-xs text-ink-400 hidden sm:inline">Signed in as <strong class="text-ink-600"><%= isAdmin ? (typeof adminUsername !== "undefined" ? adminUsername : "admin") : "" %></strong></span>
+    </header>
+
+    <main class="flex-1 p-4 sm:p-6 lg:p-8">
+      <% if (flash) { %>
+      <div class="mb-5 rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 <%= flash.type === 'success' ? 'bg-success/10 text-success' : 'bg-error/10 text-error' %>" role="status">
+        <%- include('../../partials/icon', { name: flash.type === 'success' ? 'check-circle' : 'alert-circle', cls: 'w-4 h-4 shrink-0' }) %>
+        <span><%= flash.message %></span>
+      </div>
+      <% } %>

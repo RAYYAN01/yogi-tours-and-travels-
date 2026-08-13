@@ -1,0 +1,376 @@
+[
+  {
+    "slug": "vidhana_soudha",
+    "file": "vidhana_soudha.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Vidhana_Soudha_Bangalore.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Wise Droid",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "coorg-getaway",
+    "file": "coorg-getaway.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Madikeri",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Raja's_Seat_View_Point.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Pawanrao",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "ooty-coonoor-hill-tour",
+    "file": "ooty-coonoor-hill-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Ooty",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Ooty_lake.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Vinayaraj",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "mysore-heritage-day-tour",
+    "file": "mysore-heritage-day-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Mysore_Palace",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Mysore_Palace_Morning.jpg",
+    "license": "GFDL 1.2",
+    "artist": "Muhammad Mahdi Karim",
+    "licenseUrl": "http://www.gnu.org/licenses/old-licenses/fdl-1.2.html"
+  },
+  {
+    "slug": "chikmagalur-coffee-trails",
+    "file": "chikmagalur-coffee-trails.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Chikmagalur",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Chikmagalur,_India._(7793316622).jpg",
+    "license": "CC BY-SA 2.0",
+    "artist": "Prof. Mohamed Shareef from Mysore",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "slug": "wayanad-nature-escape",
+    "file": "wayanad-nature-escape.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Wayanad",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Blue,_Green_&_White.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Karkiabhijeet",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "hampi-heritage-trail",
+    "file": "hampi-heritage-trail.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Hampi",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Wide_angle_of_Galigopuram_of_Virupaksha_Temple,_Hampi_(04)_(cropped).jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "iMahesh",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "goa-beach-holiday",
+    "file": "goa-beach-holiday.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Palolem_Beach",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Palolem_Beach,_South_Goa.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "iMahesh",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "kerala-backwaters-tour",
+    "file": "kerala-backwaters-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Alappuzha",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Alappuzha_Boat_Beauty_W.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Augustus Binu/ facebook",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "tirupati-pilgrimage-tour",
+    "file": "tirupati-pilgrimage-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Tirumala_Venkateswara_Temple",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Tirumala_090615.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Nikhilb239",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "dharmasthala-kukke-pilgrimage",
+    "file": "dharmasthala-kukke-pilgrimage.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Dharmasthala",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Dharmasthala_Temple.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Vedamurthy J",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "kodaikanal-hill-escape",
+    "file": "kodaikanal-hill-escape.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Kodaikanal",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Boating_in_Kodaikanal_Lake_with_Mist.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "KARTY JazZ",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "munnar-tea-garden-trail",
+    "file": "munnar-tea-garden-trail.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Munnar",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Munnar_Overview.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Kondephy",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "trivandrum-kovalam-beach-tour",
+    "file": "trivandrum-kovalam-beach-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Kovalam",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Kovalam_beach_trivandrum_kerala.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Georgeumartin",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "mantralaya-pilgrimage-tour",
+    "file": "mantralaya-pilgrimage-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Mantralayam",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Ragavendratemple.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Mohan Krishnan (talk)",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "pondicherry-heritage-beach-tour",
+    "file": "pondicherry-heritage-beach-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Puducherry_(city)",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Pondicherry-Rock_beach_aerial_view.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Karthik Easvur",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "rameshwaram-pilgrimage-tour",
+    "file": "rameshwaram-pilgrimage-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Ramanathaswamy_Temple",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Ramanathaswamy_temple7.JPG",
+    "license": "CC BY-SA 4.0",
+    "artist": "Ssriram mt",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "kanyakumari-tour",
+    "file": "kanyakumari-tour.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Kanyakumari",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Vivekananda_Rock_Memorial,_Kanyakumari.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Ravivg5",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "gokarna-beach-getaway",
+    "file": "gokarna-beach-getaway.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Gokarna,_Karnataka",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Delight_india.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Aleksriis",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "sakleshpur-western-ghats-trail",
+    "file": "sakleshpur-western-ghats-trail.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Sakleshpur",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Places_in_western_ghat_karntataka_between_subramanya_and_sakleshpur_14.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Iamg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "nandi-hills-sunrise-trip",
+    "file": "nandi-hills-sunrise-trip.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Nandi_Hills,_India",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Sunrise_at_Nandi_Hills.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "JzG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "hero-bangalore",
+    "file": "hero-bangalore.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Bangalore",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:View_from_Visvesvaraya_Industrial_and_Technological_Museum_(2025)_02.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Gpkp",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "sedan-dzire-etios",
+    "file": "sedan-dzire-etios.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Maruti_Suzuki_Swift_Dzire_(cropped).jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Aman Gupta",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "maruti-ertiga",
+    "file": "maruti-ertiga.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Suzuki_Ertiga",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Suzuki_Ertiga_NC_FL_1.5_GLX_Hybrid_Snow_White_Pearl.jpg"
+  },
+  {
+    "slug": "innova-crysta",
+    "file": "innova-crysta.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Toyota_Innova_Crysta_2.4_Z_front_right.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Premnath Kudva",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "tempo-traveller-12-seater",
+    "file": "tempo-traveller-12-seater.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Force_Traveller_Luxury.jpg",
+    "license": "CC BY-SA 2.0",
+    "artist": "वंपायर;Cropped, minor redrawings, and levels adjusted by uploader Mr.choppers",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "slug": "luxury-tempo-traveller-17-seater",
+    "file": "luxury-tempo-traveller-17-seater.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Force_Motors_-_Traveller_26_-_Agra_2014-05-14_4222.JPG",
+    "license": "CC BY 3.0",
+    "artist": "Biswarup Ganguly",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  {
+    "slug": "mini-bus-25-seater",
+    "file": "mini-bus-25-seater.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:PMPML's_Tata_Marcopolo_CNG_Bus.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Armaan2808",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "tourist-bus-40-seater",
+    "file": "tourist-bus-40-seater.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:HoHo_-_Delhi_Tourism_Bus,_Sri_Laxminarayan_temple,_New_Delhi,_India_(2011).jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Contact.surojit",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "outstation-travel",
+    "file": "outstation-travel.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Bangalore-Mysore_road,_July_2014.JPG",
+    "license": "CC BY-SA 4.0",
+    "artist": "Sunnya343",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "airport-transfer",
+    "file": "airport-transfer.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Terminal_1_of_Kempegowda_International_Airport.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Sameer2905",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "local-intercity-travel",
+    "file": "local-intercity-travel.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:An_urban_road_and_traffic_in_Bangalore_Karnataka_India_April_2014.jpg",
+    "license": "CC BY-SA 2.0",
+    "artist": "Harsha K R from Bangalore, India",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "slug": "corporate-travel",
+    "file": "corporate-travel.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:ITPL-Whitefield-Bangalore1.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "PageImp",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "wedding-transportation",
+    "file": "wedding-transportation.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Car_Rent_For_Wedding_in_Delhi.JPG",
+    "license": "CC BY-SA 4.0",
+    "artist": "Ajaytravels",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "educational-tours",
+    "file": "educational-tours.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:School_bus,_Indore.jpg",
+    "license": "CC BY-SA 3.0",
+    "artist": "Bernard Gagnon",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "slug": "pilgrimage-tours",
+    "file": "pilgrimage-tours.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:A_900_year_old_Temple_in_South_India_(37892625552).jpg",
+    "license": "CC BY 2.0",
+    "artist": "Hari K  Patibanda",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "slug": "resort-trips",
+    "file": "resort-trips.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Resort_calicut_kerala.jpg",
+    "license": "CC BY 2.0",
+    "artist": "John Johnston",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "slug": "event-transportation",
+    "file": "event-transportation.jpg",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Sarji_Convention_hall,_Shivamogga,_Karnataka_(2026)_01.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Gpkp",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "group-transportation",
+    "file": "group-transportation.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Coach_(bus)",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Ausden_Clark_Executive_Coach_in_Black_and_Pink_Livery.jpg",
+    "license": "Public domain",
+    "artist": "Dom Darbyshire",
+    "licenseUrl": ""
+  },
+  {
+    "slug": "family-tours",
+    "file": "family-tours.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Suzuki_Ertiga",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Suzuki_Ertiga_NC_FL_1.5_GLX_Hybrid_Snow_White_Pearl.jpg",
+    "license": "CC BY-SA 4.0",
+    "artist": "Ethan Llamas",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "slug": "vidhana-soudha",
+    "file": "vidhana-soudha.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Vidhana_Soudha",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Vidhana_Soudha_2012.jpg",
+    "license": "GFDL 1.2",
+    "artist": "Muhammad Mahdi Karim www.micro2macro.net and Mydreamsparrow",
+    "licenseUrl": "http://www.gnu.org/licenses/old-licenses/fdl-1.2.html"
+  },
+  {
+    "slug": "mini-bus-21-seater",
+    "file": "mini-bus-21-seater.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Force_Traveller",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:IMG-20190215-WA0015.jpg"
+  },
+  {
+    "slug": "mini-bus-27-seater",
+    "file": "mini-bus-27-seater.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Tata_Starbus",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Best_cbd_wad.jpg"
+  },
+  {
+    "slug": "mini-bus-29-seater",
+    "file": "mini-bus-29-seater.JPG",
+    "sourcePage": "https://en.wikipedia.org/wiki/Ashok_Leyland_Viking",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:MTC_Bus_21G.JPG"
+  },
+  {
+    "slug": "tourist-bus-33-seater",
+    "file": "tourist-bus-33-seater.jpg",
+    "sourcePage": "https://en.wikipedia.org/wiki/Tata_Marcopolo_Bus",
+    "commonsFile": "https://commons.wikimedia.org/wiki/File:Tata_Marcopolo_Green_Chandigarh_Ind.jpg"
+  }
+]

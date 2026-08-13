@@ -1,0 +1,20 @@
+<%
+const __eyebrow = typeof eyebrow !== "undefined" ? eyebrow : "";
+const __heading = typeof heading !== "undefined" ? heading : "";
+const __sub = typeof sub !== "undefined" ? sub : "";
+const __align = typeof align !== "undefined" ? align : "left";
+const __light = typeof light !== "undefined" ? light : false;
+const __as = typeof as !== "undefined" ? as : "h2";
+const __wrapCls = __align === "center" ? "text-center mx-auto" : "text-left";
+%>
+<div class="max-w-2xl <%= __wrapCls %>">
+  <% if (__eyebrow) { %>
+  <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase <%= __light ? 'text-sun-300' : 'text-brand-600' %> mb-3">
+    <span class="w-6 h-px <%= __light ? 'bg-sun-300' : 'bg-brand-500' %>"></span><%= __eyebrow %>
+  </span>
+  <% } %>
+  <<%= __as %> class="font-display font-bold tracking-tight text-2xl sm:text-3xl lg:text-[2.375rem] leading-[1.15] <%= __light ? 'text-white' : 'text-ink-900' %>"><%= heading %></<%= __as %>>
+  <% if (__sub) { %>
+  <p class="mt-4 text-[15px] sm:text-base leading-relaxed <%= __light ? 'text-ink-300' : 'text-ink-500' %>"><%= __sub %></p>
+  <% } %>
+</div>

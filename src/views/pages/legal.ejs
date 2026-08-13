@@ -1,0 +1,85 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-14 lg:py-20">
+  <div class="container max-w-3xl">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight"><%= pageHeading %></h1>
+    <p class="text-sm text-ink-400 mt-3">Last updated: <%= lastUpdated %></p>
+
+    <div class="prose-legal mt-8 space-y-6 text-[15px] text-ink-600 leading-relaxed">
+      <% if (template === "privacy") { %>
+        <p><%= business.name %> ("we", "us", "our") operates this website. This policy explains what information we collect when you use it, and how we use it.</p>
+
+        <h2>Information We Collect</h2>
+        <p>When you submit a booking enquiry, contact form or the WhatsApp/quote widget, we collect the details you provide — typically your name, phone number, email address (if given), pickup/destination locations, travel dates and any message you include.</p>
+
+        <h2>How We Use It</h2>
+        <ul>
+          <li>To respond to your enquiry and prepare a travel quotation.</li>
+          <li>To coordinate vehicle and driver assignment for confirmed bookings.</li>
+          <li>To contact you about your enquiry via phone, WhatsApp or email.</li>
+        </ul>
+        <p>We do not sell your personal information to third parties. Enquiry details are stored securely and are accessible only to authorised staff managing bookings.</p>
+
+        <h2>WhatsApp &amp; Third-Party Links</h2>
+        <p>Where this site links you to WhatsApp to continue a conversation, that exchange is subject to WhatsApp's own privacy policy once you leave our site.</p>
+
+        <h2>Cookies</h2>
+        <p>This site uses only the minimal session cookie required for the admin panel to function. We do not use third-party advertising or tracking cookies.</p>
+
+        <h2>Your Choices</h2>
+        <p>You can ask us to delete enquiry information you've submitted by contacting us at <a href="<%= mailtoHref %>" class="text-brand-700 font-medium"><%= business.email %></a>.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about this policy can be sent to <a href="<%= mailtoHref %>" class="text-brand-700 font-medium"><%= business.email %></a> or <%= business.phone %>.</p>
+
+      <% } else if (template === "terms") { %>
+        <p>These terms govern your use of this website and your enquiries or bookings made with <%= business.name %>. By using this site, you agree to them.</p>
+
+        <h2>Enquiries &amp; Quotations</h2>
+        <p>Submitting a booking widget, quote or contact form on this site is an enquiry, not a confirmed booking. A booking is confirmed only once we've communicated availability, an itemised quotation and you've agreed to proceed.</p>
+
+        <h2>Pricing</h2>
+        <p>Quotations are based on the details you provide (route, dates, vehicle, passengers). Final pricing may be adjusted if trip details change, and typically excludes tolls, parking, interstate permits and driver allowance for multi-day trips unless stated otherwise in your quotation.</p>
+
+        <h2>Vehicle &amp; Driver Allocation</h2>
+        <p>We aim to provide the vehicle category confirmed in your booking. In rare cases (breakdown, unavailability), we may substitute a comparable or better vehicle and will inform you as early as possible.</p>
+
+        <h2>Passenger Conduct</h2>
+        <p>Passengers are expected to treat vehicles and drivers respectfully. We reserve the right to decline service for unsafe or abusive behaviour.</p>
+
+        <h2>Liability</h2>
+        <p>While we take reasonable care in vehicle maintenance and driver selection, travel involves inherent risk. We are not liable for delays caused by traffic, weather, road conditions or events outside our reasonable control.</p>
+
+        <h2>Changes to These Terms</h2>
+        <p>We may update these terms from time to time; the "last updated" date above reflects the latest revision.</p>
+
+      <% } else if (template === "cancellation") { %>
+        <p>We understand travel plans change. This page explains how cancellations and rescheduling are handled for bookings made with <%= business.name %>.</p>
+
+        <h2>Before a Booking Is Confirmed</h2>
+        <p>Enquiries and quotations are not chargeable — you can withdraw an enquiry at any point before confirming a booking with no cost.</p>
+
+        <h2>After a Booking Is Confirmed</h2>
+        <p>Once a booking is confirmed, cancellation terms depend on how close to the travel date the cancellation is made:</p>
+        <ul>
+          <li><strong>Early cancellation</strong> (well ahead of the travel date): minimal to no cancellation charge.</li>
+          <li><strong>Late cancellation</strong> (close to the travel date): a partial charge may apply to cover driver and vehicle allocation already committed.</li>
+          <li><strong>No-show or same-day cancellation</strong>: a higher charge may apply, particularly for outstation, Tempo Traveller, mini bus and tourist bus bookings where a vehicle has been reserved exclusively for you.</li>
+        </ul>
+        <p>Exact cancellation charges and notice windows are confirmed at the time of booking and stated clearly in your quotation — please ask us if anything is unclear before confirming.</p>
+
+        <h2>Rescheduling</h2>
+        <p>We're generally able to reschedule a confirmed booking to a new date free of charge, subject to vehicle availability, if you let us know with reasonable notice.</p>
+
+        <h2>Refunds</h2>
+        <p>Where an advance payment has been made and a cancellation charge applies, the balance is refunded to the original payment method within a reasonable timeframe.</p>
+
+        <h2>Our Cancellations</h2>
+        <p>In the rare event we need to cancel a confirmed booking (e.g. vehicle breakdown with no substitute available), we will inform you as early as possible and refund any advance paid in full.</p>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/page-end') %>
