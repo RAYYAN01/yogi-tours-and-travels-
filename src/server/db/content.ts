@@ -19,8 +19,47 @@ export const testimonialsRepo = createRepo<Testimonial>({ table: "testimonials" 
 export const galleryRepo = createRepo<GalleryItem>({ table: "gallery" });
 export const blogRepo = createRepo<BlogPost>({ table: "blog_posts", orderBy: '"publishedAt" DESC' });
 
+/**
+ * Vehicle names that carry their seat count as a leading number (our
+ * category-listing convention, e.g. "12 Seater Tempo Traveller", "21 Seater
+ * Mini Bus") would otherwise sort by that leading digit and scatter every
+ * seating variant apart from its siblings and from vehicles of the same
+ * type that don't happen to lead with a number (e.g. "Maharaja Tempo
+ * Traveller", "Force Urbania"). Stripping a leading "<n> Seater " token
+ * before comparing groups same-type variants together, exactly like
+ * comparing "Toyota Innova Crysta" vs "Toyota Innova Hycross" already does
+ * for name-first vehicles — the displayed name itself is never changed.
+ */
+const LEADING_SEAT_COUNT_RE = /^\d+\s*seater\s+/i;
+
+function vehicleSortBaseName(name: string): string {
+  return name.trim().replace(LEADING_SEAT_COUNT_RE, "").trim();
+}
+
+/**
+ * Reusable sort: alphabetical (case-insensitive, numeric-aware) by the
+ * vehicle's base name, with same-base-name variants ordered by seat count
+ * ascending. Apply this to any vehicle list right before rendering cards —
+ * never rely on sortOrder/id/insertion order for customer-facing display.
+ */
+export function sortVehiclesAlphabetically<T extends { name: string; seats: number }>(vehicles: T[]): T[] {
+  return [...vehicles].sort((a, b) => {
+    const baseA = vehicleSortBaseName(a.name);
+    const baseB = vehicleSortBaseName(b.name);
+    const baseComparison = baseA.localeCompare(baseB, undefined, { sensitivity: "base", numeric: true });
+    if (baseComparison !== 0) return baseComparison;
+
+    const seatComparison = a.seats - b.seats;
+    if (seatComparison !== 0) return seatComparison;
+
+    // Final deterministic tie-break for two vehicles with an identical base name and seat count.
+    return a.name.trim().localeCompare(b.name.trim(), undefined, { sensitivity: "base", numeric: true });
+  });
+}
+
 export async function vehiclesByCategory(category: VehicleCategory): Promise<Vehicle[]> {
-  return vehiclesRepo.allWhere("category = ?", category);
+  const vehicles = await vehiclesRepo.allWhere("category = ?", category);
+  return sortVehiclesAlphabetically(vehicles);
 }
 
 export async function featuredPackages(limit = 6): Promise<TourPackage[]> {

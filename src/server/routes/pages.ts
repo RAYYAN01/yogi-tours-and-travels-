@@ -11,7 +11,8 @@ import {
   testimonialsRepo,
   packagesRepo,
   startingPriceByCategory,
-  galleryPreview
+  galleryPreview,
+  sortVehiclesAlphabetically
 } from "../db/content.js";
 import { faqSchema } from "../utils/schema.js";
 
@@ -33,13 +34,13 @@ router.get("/", async (req, res, next) => {
     ]);
     const faqs = allFaqs.slice(0, 8);
     res.render("pages/home", {
+      vehicles: sortVehiclesAlphabetically(vehicles),
       title: "Yogi Tours & Travels | Tours & Travels in Bangalore — Cabs, Tempo Traveller & Bus Rental",
       metaDescription:
         "Car, Tempo Traveller & bus rental, airport transfers and custom tour packages in Bangalore. Get a free quote from Yogi Tours & Travels today.",
       canonicalPath: "/",
       // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
       transparentHeader: true,
-      vehicles,
       services,
       packages,
       pricing,
