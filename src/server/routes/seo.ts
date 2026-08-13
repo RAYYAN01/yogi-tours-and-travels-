@@ -18,22 +18,29 @@ const STATIC_PATHS = [
   { path: "/cancellation-policy", priority: "0.2", changefreq: "yearly" }
 ];
 
-router.get("/sitemap.xml", (req, res) => {
+router.get("/sitemap.xml", async (req, res, next) => {
+ try {
   const urls: Array<{ path: string; priority: string; changefreq: string }> = [...STATIC_PATHS];
 
   for (const cat of VEHICLE_CATEGORY_SLUGS) {
     urls.push({ path: `/fleet/${cat}`, priority: "0.8", changefreq: "weekly" });
   }
-  for (const v of vehiclesRepo.all()) {
+  const [vehicles, services, packages, blogPosts] = await Promise.all([
+    vehiclesRepo.all(),
+    servicesRepo.all(),
+    packagesRepo.all(),
+    publishedBlogPosts()
+  ]);
+  for (const v of vehicles) {
     urls.push({ path: `/fleet/${v.category}/${v.slug}`, priority: "0.7", changefreq: "monthly" });
   }
-  for (const s of servicesRepo.all()) {
+  for (const s of services) {
     urls.push({ path: `/services/${s.slug}`, priority: "0.8", changefreq: "monthly" });
   }
-  for (const p of packagesRepo.all()) {
+  for (const p of packages) {
     urls.push({ path: `/tour-packages/${p.slug}`, priority: "0.7", changefreq: "monthly" });
   }
-  for (const post of publishedBlogPosts()) {
+  for (const post of blogPosts) {
     urls.push({ path: `/blog/${post.slug}`, priority: "0.5", changefreq: "monthly" });
   }
 
@@ -51,6 +58,9 @@ ${urls
 </urlset>`;
 
   res.type("application/xml").send(body);
+ } catch (err) {
+  next(err);
+ }
 });
 
 router.get("/robots.txt", (req, res) => {

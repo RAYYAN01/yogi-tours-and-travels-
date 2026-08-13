@@ -11,6 +11,8 @@ export const env = {
   isProd: process.env.NODE_ENV === "production",
   siteUrl: required("SITE_URL", "http://localhost:3000"),
   sessionSecret: required("SESSION_SECRET", "dev-secret-change-me"),
+  /** Postgres connection string (e.g. from Vercel Postgres/Neon/Supabase). Required in production. */
+  databaseUrl: process.env.DATABASE_URL || "",
   smtp: {
     host: process.env.SMTP_HOST || "",
     port: Number(process.env.SMTP_PORT) || 587,

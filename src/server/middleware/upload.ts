@@ -3,6 +3,13 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import multer from "multer";
 
+// KNOWN LIMITATION ON VERCEL: this writes to local disk, which Vercel's
+// serverless functions serve read-only (only /tmp is writable, and it's
+// wiped between invocations). The admin "upload a photo" file input will
+// error there. The "or paste an image URL" text field next to it in every
+// admin image form still works — paste a path to an asset already in the
+// repo, or a URL from external image hosting — until this is swapped for a
+// real object-storage upload (Vercel Blob, S3, Cloudinary, etc).
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadDir = path.resolve(__dirname, "../../../public/assets/uploads");
 

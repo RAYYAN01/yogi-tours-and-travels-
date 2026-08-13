@@ -8,7 +8,7 @@ import type { EnquiryType } from "../types/models.js";
 
 const router = Router();
 
-router.post("/enquiry", (req, res) => {
+router.post("/enquiry", async (req, res) => {
   const body = req.body || {};
 
   // Honeypot: bots fill every field including the hidden one. Pretend success, store nothing.
@@ -50,7 +50,7 @@ router.post("/enquiry", (req, res) => {
   };
 
   try {
-    const id = createEnquiry(enquiry);
+    const id = await createEnquiry(enquiry);
     const whatsappUrl = buildWhatsAppLink(enquiry);
     void notifyNewEnquiry(enquiry);
     res.json({

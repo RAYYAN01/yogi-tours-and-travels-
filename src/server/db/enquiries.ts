@@ -1,5 +1,4 @@
-import { db } from "./connection.js";
-import { toPlain, toPlainList } from "./repo.js";
+import { query, queryOne, run } from "./connection.js";
 import type { Enquiry, EnquiryStatus } from "../types/models.js";
 
 export interface NewEnquiry {
@@ -18,55 +17,57 @@ export interface NewEnquiry {
   sourcePage?: string | null;
 }
 
-export function createEnquiry(data: NewEnquiry): number {
-  const stmt = db.prepare(`
+export async function createEnquiry(data: NewEnquiry): Promise<number> {
+  const row = await queryOne<{ id: number }>(
+    `
     INSERT INTO enquiries
-      (type, name, phone, email, pickupLocation, destination, tripType, pickupDate, returnDate, vehicleType, passengers, message, sourcePage, status)
+      (type, name, phone, email, "pickupLocation", destination, "tripType", "pickupDate", "returnDate", "vehicleType", passengers, message, "sourcePage", status)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new')
-  `);
-  const info = stmt.run(
-    data.type,
-    data.name,
-    data.phone,
-    data.email ?? null,
-    data.pickupLocation ?? null,
-    data.destination ?? null,
-    data.tripType ?? null,
-    data.pickupDate ?? null,
-    data.returnDate ?? null,
-    data.vehicleType ?? null,
-    data.passengers ?? null,
-    data.message ?? null,
-    data.sourcePage ?? null
+    RETURNING id
+  `,
+    [
+      data.type,
+      data.name,
+      data.phone,
+      data.email ?? null,
+      data.pickupLocation ?? null,
+      data.destination ?? null,
+      data.tripType ?? null,
+      data.pickupDate ?? null,
+      data.returnDate ?? null,
+      data.vehicleType ?? null,
+      data.passengers ?? null,
+      data.message ?? null,
+      data.sourcePage ?? null
+    ]
   );
-  return Number(info.lastInsertRowid);
+  return row?.id ?? 0;
 }
 
-export function allEnquiries(statusFilter?: EnquiryStatus): Enquiry[] {
+export async function allEnquiries(statusFilter?: EnquiryStatus): Promise<Enquiry[]> {
   if (statusFilter) {
-    return toPlainList<Enquiry>(
-      db.prepare("SELECT * FROM enquiries WHERE status = ? ORDER BY createdAt DESC").all(statusFilter)
-    );
+    return query<Enquiry>('SELECT * FROM enquiries WHERE status = ? ORDER BY "createdAt" DESC', [statusFilter]);
   }
-  return toPlainList<Enquiry>(db.prepare("SELECT * FROM enquiries ORDER BY createdAt DESC").all());
+  return query<Enquiry>('SELECT * FROM enquiries ORDER BY "createdAt" DESC');
 }
 
-export function findEnquiry(id: number): Enquiry | undefined {
-  return toPlain<Enquiry>(db.prepare("SELECT * FROM enquiries WHERE id = ?").get(id));
+export async function findEnquiry(id: number): Promise<Enquiry | undefined> {
+  return queryOne<Enquiry>("SELECT * FROM enquiries WHERE id = ?", [id]);
 }
 
-export function updateEnquiryStatus(id: number, status: EnquiryStatus): void {
-  db.prepare("UPDATE enquiries SET status = ? WHERE id = ?").run(status, id);
+export async function updateEnquiryStatus(id: number, status: EnquiryStatus): Promise<void> {
+  await run("UPDATE enquiries SET status = ? WHERE id = ?", [status, id]);
 }
 
-export function enquiryCounts(): { total: number; new: number; contacted: number; closed: number } {
-  const rows = toPlainList<{ status: EnquiryStatus; c: number }>(
-    db.prepare("SELECT status, COUNT(*) as c FROM enquiries GROUP BY status").all()
+export async function enquiryCounts(): Promise<{ total: number; new: number; contacted: number; closed: number }> {
+  const rows = await query<{ status: EnquiryStatus; c: string }>(
+    "SELECT status, COUNT(*) as c FROM enquiries GROUP BY status"
   );
   const counts = { total: 0, new: 0, contacted: 0, closed: 0 };
   for (const row of rows) {
-    counts[row.status] = row.c;
-    counts.total += row.c;
+    const c = Number(row.c);
+    counts[row.status] = c;
+    counts.total += c;
   }
   return counts;
 }

@@ -17,25 +17,25 @@ export const packagesRepo = createRepo<TourPackage>({ table: "packages" });
 export const faqsRepo = createRepo<Faq>({ table: "faqs" });
 export const testimonialsRepo = createRepo<Testimonial>({ table: "testimonials" });
 export const galleryRepo = createRepo<GalleryItem>({ table: "gallery" });
-export const blogRepo = createRepo<BlogPost>({ table: "blog_posts", orderBy: "publishedAt DESC" });
+export const blogRepo = createRepo<BlogPost>({ table: "blog_posts", orderBy: '"publishedAt" DESC' });
 
-export function vehiclesByCategory(category: VehicleCategory): Vehicle[] {
+export async function vehiclesByCategory(category: VehicleCategory): Promise<Vehicle[]> {
   return vehiclesRepo.allWhere("category = ?", category);
 }
 
-export function featuredPackages(limit = 6): TourPackage[] {
-  return packagesRepo.allWhere("featured = 1").slice(0, limit);
+export async function featuredPackages(limit = 6): Promise<TourPackage[]> {
+  return (await packagesRepo.allWhere("featured = 1")).slice(0, limit);
 }
 
-export function featuredServices(limit = 6): Service[] {
-  return servicesRepo.allWhere("featured = 1").slice(0, limit);
+export async function featuredServices(limit = 6): Promise<Service[]> {
+  return (await servicesRepo.allWhere("featured = 1")).slice(0, limit);
 }
 
-export function publishedBlogPosts(): BlogPost[] {
+export async function publishedBlogPosts(): Promise<BlogPost[]> {
   return blogRepo.allWhere("published = 1");
 }
 
-export function galleryByCategory(category: GalleryCategory | "All"): GalleryItem[] {
+export async function galleryByCategory(category: GalleryCategory | "All"): Promise<GalleryItem[]> {
   if (category === "All") return galleryRepo.all();
   return galleryRepo.allWhere("category = ?", category);
 }
@@ -55,13 +55,16 @@ export const VEHICLE_CATEGORY_SLUGS: VehicleCategory[] = ["car", "tempo-travelle
  * `startingFrom: null` so the view can show "Contact for price" instead of
  * a fabricated number.
  */
-export function startingPriceByCategory(): Array<{ category: VehicleCategory; startingFrom: number | null }> {
-  return VEHICLE_CATEGORY_SLUGS.map((category) => {
-    const rates = vehiclesByCategory(category)
-      .map((v) => v.ratePerKm)
-      .filter((r): r is number => typeof r === "number" && r > 0);
-    return { category, startingFrom: rates.length ? Math.min(...rates) : null };
-  });
+export async function startingPriceByCategory(): Promise<
+  Array<{ category: VehicleCategory; startingFrom: number | null }>
+> {
+  return Promise.all(
+    VEHICLE_CATEGORY_SLUGS.map(async (category) => {
+      const vehicles = await vehiclesByCategory(category);
+      const rates = vehicles.map((v) => v.ratePerKm).filter((r): r is number => typeof r === "number" && r > 0);
+      return { category, startingFrom: rates.length ? Math.min(...rates) : null };
+    })
+  );
 }
 
 /** Convenience accessors that deserialize JSON columns for view rendering. */

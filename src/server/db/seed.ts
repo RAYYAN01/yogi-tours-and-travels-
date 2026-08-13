@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { db } from "./connection.js";
+import { initSchema } from "./connection.js";
 import { vehiclesRepo, servicesRepo, packagesRepo, faqsRepo, testimonialsRepo, galleryRepo, blogRepo } from "./content.js";
 import { adminUserCount, createAdminUser } from "./adminUsers.js";
 import type { VehicleCategory, GalleryCategory } from "../types/models.js";
@@ -44,8 +44,8 @@ function serviceImagePath(slug: string): string {
   return findImagePath("services", slug);
 }
 
-function seedVehicles(): void {
-  if (vehiclesRepo.count() > 0) {
+async function seedVehicles(): Promise<void> {
+  if ((await vehiclesRepo.count()) > 0) {
     console.log("• vehicles already seeded, skipping");
     return;
   }
@@ -158,7 +158,7 @@ function seedVehicles(): void {
   ];
 
   for (const r of rows) {
-    vehiclesRepo.insert({
+    await vehiclesRepo.insert({
       category: r.category,
       name: r.name,
       slug: r.slug,
@@ -177,8 +177,8 @@ function seedVehicles(): void {
   console.log(`• seeded ${rows.length} vehicles`);
 }
 
-function seedServices(): void {
-  if (servicesRepo.count() > 0) {
+async function seedServices(): Promise<void> {
+  if ((await servicesRepo.count()) > 0) {
     console.log("• services already seeded, skipping");
     return;
   }
@@ -233,8 +233,9 @@ function seedServices(): void {
       highlights: ["Agenda-based scheduling", "Guest shuttle loops", "Multi-vehicle event-day support", "Backup vehicle planning on request"] }
   ];
 
-  rows.forEach((r, idx) => {
-    servicesRepo.insert({
+  for (let idx = 0; idx < rows.length; idx++) {
+    const r = rows[idx]!;
+    await servicesRepo.insert({
       name: r.name,
       slug: r.slug,
       icon: r.icon,
@@ -245,12 +246,12 @@ function seedServices(): void {
       featured: r.featured,
       sortOrder: idx + 1
     });
-  });
+  }
   console.log(`• seeded ${rows.length} services`);
 }
 
-function seedPackages(): void {
-  if (packagesRepo.count() > 0) {
+async function seedPackages(): Promise<void> {
+  if ((await packagesRepo.count()) > 0) {
     console.log("• packages already seeded, skipping");
     return;
   }
@@ -358,7 +359,7 @@ function seedPackages(): void {
   ];
 
   for (const r of rows) {
-    packagesRepo.insert({
+    await packagesRepo.insert({
       title: r.title,
       slug: r.slug,
       destination: r.destination,
@@ -377,8 +378,8 @@ function seedPackages(): void {
   console.log(`• seeded ${rows.length} tour packages`);
 }
 
-function seedFaqs(): void {
-  if (faqsRepo.count() > 0) {
+async function seedFaqs(): Promise<void> {
+  if ((await faqsRepo.count()) > 0) {
     console.log("• faqs already seeded, skipping");
     return;
   }
@@ -414,14 +415,15 @@ function seedFaqs(): void {
     { q: "What safety measures are followed during trips?", category: "Safety",
       a: "Our drivers are experienced with the routes they operate, vehicles undergo regular maintenance checks, and we share driver and vehicle details ahead of every trip so you know exactly who is picking you up." }
   ];
-  rows.forEach((r, idx) => {
-    faqsRepo.insert({ question: r.q, answer: r.a, category: r.category, sortOrder: idx + 1 });
-  });
+  for (let idx = 0; idx < rows.length; idx++) {
+    const r = rows[idx]!;
+    await faqsRepo.insert({ question: r.q, answer: r.a, category: r.category, sortOrder: idx + 1 });
+  }
   console.log(`• seeded ${rows.length} faqs`);
 }
 
-function seedTestimonials(): void {
-  if (testimonialsRepo.count() > 0) {
+async function seedTestimonials(): Promise<void> {
+  if ((await testimonialsRepo.count()) > 0) {
     console.log("• testimonials already seeded, skipping");
     return;
   }
@@ -433,14 +435,22 @@ function seedTestimonials(): void {
     { name: "Suresh N.", rating: 5, tripType: "Outstation to Hampi", review: "Comfortable Tempo Traveller for our group trip, with good communication throughout the booking." },
     { name: "Kavitha J.", rating: 4, tripType: "Group Pilgrimage Tour", review: "The driver was familiar with the temple route and timings, which made the whole day easier to plan around." }
   ];
-  rows.forEach((r, idx) => {
-    testimonialsRepo.insert({ name: r.name, rating: r.rating, review: r.review, tripType: r.tripType, isPlaceholder: 1, sortOrder: idx + 1 });
-  });
+  for (let idx = 0; idx < rows.length; idx++) {
+    const r = rows[idx]!;
+    await testimonialsRepo.insert({
+      name: r.name,
+      rating: r.rating,
+      review: r.review,
+      tripType: r.tripType,
+      isPlaceholder: 1,
+      sortOrder: idx + 1
+    });
+  }
   console.log(`• seeded ${rows.length} placeholder testimonials (clearly marked isPlaceholder=1)`);
 }
 
-function seedGallery(): void {
-  if (galleryRepo.count() > 0) {
+async function seedGallery(): Promise<void> {
+  if ((await galleryRepo.count()) > 0) {
     console.log("• gallery already seeded, skipping");
     return;
   }
@@ -484,17 +494,17 @@ function seedGallery(): void {
       rows.push({ category: cat, caption: item.caption, altText: item.alt });
     }
   }
-  rows.forEach((r) => {
+  for (const r of rows) {
     // No real photo yet (imageKey: "") — smart-image.ejs shows a branded
     // placeholder, seeded by the row's own id (set via generic-list.ejs's
     // edit/re-order flow) rather than a fake path string.
-    galleryRepo.insert({ category: r.category, imageKey: "", caption: r.caption, altText: r.altText, sortOrder: sortOrder++ });
-  });
+    await galleryRepo.insert({ category: r.category, imageKey: "", caption: r.caption, altText: r.altText, sortOrder: sortOrder++ });
+  }
   console.log(`• seeded ${rows.length} gallery items`);
 }
 
-function seedBlog(): void {
-  if (blogRepo.count() > 0) {
+async function seedBlog(): Promise<void> {
+  if ((await blogRepo.count()) > 0) {
     console.log("• blog posts already seeded, skipping");
     return;
   }
@@ -575,47 +585,46 @@ function seedBlog(): void {
       author: "Yogi Tours & Travels", sortOrder: 5
     }
   ];
-  rows.forEach((r) => {
-    blogRepo.insert({
+  for (const r of rows) {
+    await blogRepo.insert({
       title: r.title, slug: r.slug, excerpt: r.excerpt, content: r.content,
       coverImageKey: r.coverImageKey, author: r.author, published: 1,
       publishedAt: new Date().toISOString().replace("T", " ").slice(0, 19), sortOrder: r.sortOrder
     });
-  });
+  }
   console.log(`• seeded ${rows.length} blog posts`);
 }
 
-function seedAdmin(): void {
-  if (adminUserCount() > 0) {
+async function seedAdmin(): Promise<void> {
+  if ((await adminUserCount()) > 0) {
     console.log("• admin user already exists, skipping (use the admin panel to change password)");
     return;
   }
   const username = process.env.ADMIN_USERNAME || "admin";
   const password = process.env.ADMIN_PASSWORD || "change-this-password";
   const hash = bcrypt.hashSync(password, 10);
-  createAdminUser(username, hash);
+  await createAdminUser(username, hash);
   console.log(`• created admin user "${username}" from .env (change ADMIN_PASSWORD before going live)`);
 }
 
-function run(): void {
+async function run(): Promise<void> {
   console.log("Seeding database...");
-  db.exec("BEGIN");
+  await initSchema();
   try {
-    seedVehicles();
-    seedServices();
-    seedPackages();
-    seedFaqs();
-    seedTestimonials();
-    seedGallery();
-    seedBlog();
-    seedAdmin();
-    db.exec("COMMIT");
+    await seedVehicles();
+    await seedServices();
+    await seedPackages();
+    await seedFaqs();
+    await seedTestimonials();
+    await seedGallery();
+    await seedBlog();
+    await seedAdmin();
     console.log("Seed complete.");
   } catch (err) {
-    db.exec("ROLLBACK");
-    console.error("Seed failed, rolled back:", err);
+    console.error("Seed failed (tables already inserted before the error are NOT rolled back — rerunning is safe, each seed function skips tables that already have rows):", err);
     process.exitCode = 1;
   }
+  process.exit(process.exitCode ?? 0);
 }
 
 run();

@@ -1,45 +1,56 @@
-import { DatabaseSync } from "node:sqlite";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-import fs from "node:fs";
+import { Pool, type QueryResultRow } from "pg";
+import { env } from "../config/env.js";
 import { SCHEMA_SQL } from "./schema.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(__dirname, "../../../data");
-const dbPath = path.join(dataDir, "app.db");
-
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+if (!env.databaseUrl) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    "[db] DATABASE_URL is not set — the app will fail on the first query. Set it to a Postgres connection string."
+  );
 }
 
-export const db = new DatabaseSync(dbPath);
+export const pool = new Pool({
+  connectionString: env.databaseUrl,
+  // Hosted Postgres (Vercel Postgres/Neon/Supabase) requires TLS; their
+  // certs aren't in Node's default trust store, so this is the standard
+  // "connect, don't verify the chain" setting recommended by all three.
+  ssl: env.databaseUrl.includes("localhost") ? false : { rejectUnauthorized: false }
+});
 
-// Reasonable defaults for a small server-rendered site.
-db.exec("PRAGMA journal_mode = WAL;");
-db.exec("PRAGMA foreign_keys = ON;");
-
-export function initSchema(): void {
-  db.exec(SCHEMA_SQL);
-  migrate();
+/** Rewrites node:sqlite-style "?" positional placeholders into Postgres's "$1, $2, ...". */
+function toPgSql(sql: string): string {
+  let i = 0;
+  return sql.replace(/\?/g, () => `$${++i}`);
 }
 
-/**
- * CREATE TABLE IF NOT EXISTS only applies to brand-new databases — a column
- * added to schema.ts after the table already exists (like this one) needs an
- * explicit ALTER TABLE to reach existing installs. Guarded via
- * PRAGMA table_info so it's safe to run on every startup.
- */
-function migrate(): void {
-  const vehicleCols = db.prepare("PRAGMA table_info(vehicles)").all() as Array<{ name: string }>;
-  if (!vehicleCols.some((c) => c.name === "gallery")) {
-    db.exec("ALTER TABLE vehicles ADD COLUMN gallery TEXT NOT NULL DEFAULT '[]';");
-  }
-  if (!vehicleCols.some((c) => c.name === "vehicleClass")) {
-    db.exec("ALTER TABLE vehicles ADD COLUMN vehicleClass TEXT NOT NULL DEFAULT '';");
-  }
-  if (!vehicleCols.some((c) => c.name === "rating")) {
-    db.exec("ALTER TABLE vehicles ADD COLUMN rating REAL;");
-  }
+export async function query<T extends QueryResultRow = QueryResultRow>(
+  sql: string,
+  params: unknown[] = []
+): Promise<T[]> {
+  const result = await pool.query<T>(toPgSql(sql), params);
+  return result.rows;
 }
 
-initSchema();
+export async function queryOne<T extends QueryResultRow = QueryResultRow>(
+  sql: string,
+  params: unknown[] = []
+): Promise<T | undefined> {
+  const rows = await query<T>(sql, params);
+  return rows[0];
+}
+
+/** Runs a write query and returns the affected row count. */
+export async function run(sql: string, params: unknown[] = []): Promise<{ rowCount: number }> {
+  const result = await pool.query(toPgSql(sql), params);
+  return { rowCount: result.rowCount ?? 0 };
+}
+
+let schemaReady: Promise<void> | null = null;
+
+/** Idempotent — safe to call on every cold start of a serverless function. */
+export function initSchema(): Promise<void> {
+  if (!schemaReady) {
+    schemaReady = pool.query(SCHEMA_SQL).then(() => undefined);
+  }
+  return schemaReady;
+}

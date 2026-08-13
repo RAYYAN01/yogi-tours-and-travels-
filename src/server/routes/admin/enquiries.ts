@@ -10,34 +10,47 @@ router.use(requireAdmin);
 
 const VALID_STATUSES: EnquiryStatus[] = ["new", "contacted", "closed"];
 
-router.get("/", (req, res) => {
-  const status = typeof req.query.status === "string" && VALID_STATUSES.includes(req.query.status as EnquiryStatus)
-    ? (req.query.status as EnquiryStatus)
-    : undefined;
-  res.render("admin/enquiries-list", {
-    enquiries: allEnquiries(status),
-    statusFilter: status || "all",
-    layoutSection: "admin"
-  });
+router.get("/", async (req, res, next) => {
+  try {
+    const status =
+      typeof req.query.status === "string" && VALID_STATUSES.includes(req.query.status as EnquiryStatus)
+        ? (req.query.status as EnquiryStatus)
+        : undefined;
+    res.render("admin/enquiries-list", {
+      enquiries: await allEnquiries(status),
+      statusFilter: status || "all",
+      layoutSection: "admin"
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.get("/:id", (req, res, next) => {
-  const enquiry = findEnquiry(Number(req.params.id));
-  if (!enquiry) {
-    next();
-    return;
+router.get("/:id", async (req, res, next) => {
+  try {
+    const enquiry = await findEnquiry(Number(req.params.id));
+    if (!enquiry) {
+      next();
+      return;
+    }
+    res.render("admin/enquiry-detail", { enquiry, layoutSection: "admin" });
+  } catch (err) {
+    next(err);
   }
-  res.render("admin/enquiry-detail", { enquiry, layoutSection: "admin" });
 });
 
-router.post("/:id/status", verifyCsrfToken, (req, res) => {
-  const id = Number(req.params.id);
-  const status = req.body?.status;
-  if (VALID_STATUSES.includes(status)) {
-    updateEnquiryStatus(id, status);
-    setFlash(req, "success", "Enquiry status updated.");
+router.post("/:id/status", verifyCsrfToken, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const status = req.body?.status;
+    if (VALID_STATUSES.includes(status)) {
+      await updateEnquiryStatus(id, status);
+      setFlash(req, "success", "Enquiry status updated.");
+    }
+    res.redirect(`/admin/enquiries/${id}`);
+  } catch (err) {
+    next(err);
   }
-  res.redirect(`/admin/enquiries/${id}`);
 });
 
 export default router;

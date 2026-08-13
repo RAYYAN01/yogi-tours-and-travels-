@@ -1,12 +1,12 @@
-import { db } from "./connection.js";
+import { query, queryOne, run } from "./connection.js";
 
-/** node:sqlite returns null-prototype row objects; normalize to plain objects. */
+/** Legacy shape carried over from the node:sqlite version — rows are already plain objects with pg, so these are now no-ops kept for call-site compatibility. */
 export function toPlain<T>(row: unknown): T {
-  return row ? ({ ...(row as Record<string, unknown>) } as T) : (row as T);
+  return row as T;
 }
 
 export function toPlainList<T>(rows: unknown[]): T[] {
-  return rows.map((r) => toPlain<T>(r));
+  return rows as T[];
 }
 
 /** Parse a JSON-encoded string[] column, tolerating malformed/empty data. */
@@ -32,8 +32,12 @@ export function linesToJsonArray(text: string | undefined | null): string {
 
 const now = (): string => new Date().toISOString().replace("T", " ").slice(0, 19);
 
+/** Postgres folds unquoted identifiers to lowercase — every camelCase column needs double-quoting. */
+const q = (col: string): string => `"${col}"`;
+
 interface RepoOptions {
   table: string;
+  /** Pre-quoted ORDER BY clause, e.g. '"sortOrder" ASC, id ASC'. Column names with a capital letter must be double-quoted. */
   orderBy?: string;
 }
 
@@ -45,43 +49,47 @@ interface RepoOptions {
  */
 export function createRepo<T extends { id: number }>(opts: RepoOptions) {
   const { table } = opts;
-  const orderBy = opts.orderBy ?? "sortOrder ASC, id ASC";
+  const orderBy = opts.orderBy ?? '"sortOrder" ASC, id ASC';
 
   return {
-    all(): T[] {
-      return toPlainList<T>(db.prepare(`SELECT * FROM ${table} ORDER BY ${orderBy}`).all());
+    async all(): Promise<T[]> {
+      return query<T>(`SELECT * FROM ${table} ORDER BY ${orderBy}`);
     },
-    allWhere(whereSql: string, ...params: unknown[]): T[] {
-      return toPlainList<T>(
-        db.prepare(`SELECT * FROM ${table} WHERE ${whereSql} ORDER BY ${orderBy}`).all(...(params as never[]))
-      );
+    /** whereSql must already double-quote any camelCase column, e.g. '"travelCategory" = ?'. */
+    async allWhere(whereSql: string, ...params: unknown[]): Promise<T[]> {
+      return query<T>(`SELECT * FROM ${table} WHERE ${whereSql} ORDER BY ${orderBy}`, params);
     },
-    findById(id: number): T | undefined {
-      return toPlain<T>(db.prepare(`SELECT * FROM ${table} WHERE id = ?`).get(id));
+    async findById(id: number): Promise<T | undefined> {
+      return queryOne<T>(`SELECT * FROM ${table} WHERE id = ?`, [id]);
     },
-    findBySlug(slug: string): T | undefined {
-      return toPlain<T>(db.prepare(`SELECT * FROM ${table} WHERE slug = ?`).get(slug));
+    async findBySlug(slug: string): Promise<T | undefined> {
+      return queryOne<T>(`SELECT * FROM ${table} WHERE slug = ?`, [slug]);
     },
-    count(): number {
-      const row = toPlain<{ c: number }>(db.prepare(`SELECT COUNT(*) as c FROM ${table}`).get());
-      return row?.c ?? 0;
+    async count(): Promise<number> {
+      const row = await queryOne<{ c: string }>(`SELECT COUNT(*) as c FROM ${table}`);
+      return row ? Number(row.c) : 0;
     },
-    insert(data: Record<string, unknown>): number {
+    async insert(data: Record<string, unknown>): Promise<number> {
       const cols = Object.keys(data);
       const placeholders = cols.map(() => "?").join(", ");
-      const stmt = db.prepare(`INSERT INTO ${table} (${cols.join(", ")}) VALUES (${placeholders})`);
-      const info = stmt.run(...(cols.map((c) => data[c]) as never[]));
-      return Number(info.lastInsertRowid);
+      const row = await queryOne<{ id: number }>(
+        `INSERT INTO ${table} (${cols.map(q).join(", ")}) VALUES (${placeholders}) RETURNING id`,
+        cols.map((c) => data[c])
+      );
+      return row?.id ?? 0;
     },
-    update(id: number, data: Record<string, unknown>): void {
+    async update(id: number, data: Record<string, unknown>): Promise<void> {
       const cols = Object.keys(data);
       if (cols.length === 0) return;
-      const setSql = cols.map((c) => `${c} = ?`).join(", ");
-      const stmt = db.prepare(`UPDATE ${table} SET ${setSql}, updatedAt = ? WHERE id = ?`);
-      stmt.run(...(cols.map((c) => data[c]) as never[]), now(), id);
+      const setSql = cols.map((c) => `${q(c)} = ?`).join(", ");
+      await run(`UPDATE ${table} SET ${setSql}, "updatedAt" = ? WHERE id = ?`, [
+        ...cols.map((c) => data[c]),
+        now(),
+        id
+      ]);
     },
-    remove(id: number): void {
-      db.prepare(`DELETE FROM ${table} WHERE id = ?`).run(id);
+    async remove(id: number): Promise<void> {
+      await run(`DELETE FROM ${table} WHERE id = ?`, [id]);
     }
   };
 }

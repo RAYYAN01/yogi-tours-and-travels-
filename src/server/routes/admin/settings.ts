@@ -12,10 +12,10 @@ router.get("/", (req, res) => {
   res.render("admin/settings", { error: null, layoutSection: "admin" });
 });
 
-router.post("/password", verifyCsrfToken, (req, res) => {
+router.post("/password", verifyCsrfToken, async (req, res) => {
   const username = req.session.adminUsername as string;
   const { currentPassword, newPassword, confirmPassword } = req.body || {};
-  const user = findAdminByUsername(username);
+  const user = await findAdminByUsername(username);
 
   if (!user || !bcrypt.compareSync(currentPassword || "", user.passwordHash)) {
     res.status(400).render("admin/settings", { error: "Current password is incorrect.", layoutSection: "admin" });
@@ -30,7 +30,7 @@ router.post("/password", verifyCsrfToken, (req, res) => {
     return;
   }
 
-  updateAdminPassword(username, bcrypt.hashSync(newPassword, 10));
+  await updateAdminPassword(username, bcrypt.hashSync(newPassword, 10));
   setFlash(req, "success", "Password updated successfully.");
   res.redirect("/admin/settings");
 });

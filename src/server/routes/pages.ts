@@ -19,37 +19,54 @@ const creditsPath = path.resolve(__dirname, "../../../IMAGE_CREDITS.json");
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  const faqs = faqsRepo.all().slice(0, 8);
-  res.render("pages/home", {
-    title: "Yogi Tours & Travels | Tours & Travels in Bangalore — Cabs, Tempo Traveller & Bus Rental",
-    metaDescription:
-      "Car, Tempo Traveller & bus rental, airport transfers and custom tour packages in Bangalore. Get a free quote from Yogi Tours & Travels today.",
-    canonicalPath: "/",
-    // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
-    transparentHeader: true,
-    vehicles: vehiclesRepo.all(),
-    services: featuredServices(6),
-    packages: featuredPackages(9),
-    pricing: startingPriceByCategory(),
-    faqs,
-    testimonials: testimonialsRepo.all(),
-    schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
-  });
+router.get("/", async (req, res, next) => {
+  try {
+    const [allFaqs, vehicles, services, packages, pricing, testimonials] = await Promise.all([
+      faqsRepo.all(),
+      vehiclesRepo.all(),
+      featuredServices(6),
+      featuredPackages(9),
+      startingPriceByCategory(),
+      testimonialsRepo.all()
+    ]);
+    const faqs = allFaqs.slice(0, 8);
+    res.render("pages/home", {
+      title: "Yogi Tours & Travels | Tours & Travels in Bangalore — Cabs, Tempo Traveller & Bus Rental",
+      metaDescription:
+        "Car, Tempo Traveller & bus rental, airport transfers and custom tour packages in Bangalore. Get a free quote from Yogi Tours & Travels today.",
+      canonicalPath: "/",
+      // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
+      transparentHeader: true,
+      vehicles,
+      services,
+      packages,
+      pricing,
+      faqs,
+      testimonials,
+      schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.get("/about", (req, res) => {
-  res.render("pages/about", {
-    title: "About Us | Yogi Tours & Travels — Bangalore Tours & Travels Agency",
-    metaDescription:
-      "Learn about Yogi Tours & Travels, a Bangalore-based tours and travels agency serving families, corporates and groups with cars, Tempo Travellers, mini buses and tourist buses.",
-    canonicalPath: "/about",
-    crumbs: [
-      { name: "Home", url: "/" },
-      { name: "About", url: "/about" }
-    ],
-    testimonials: testimonialsRepo.all()
-  });
+router.get("/about", async (req, res, next) => {
+  try {
+    const testimonials = await testimonialsRepo.all();
+    res.render("pages/about", {
+      title: "About Us | Yogi Tours & Travels — Bangalore Tours & Travels Agency",
+      metaDescription:
+        "Learn about Yogi Tours & Travels, a Bangalore-based tours and travels agency serving families, corporates and groups with cars, Tempo Travellers, mini buses and tourist buses.",
+      canonicalPath: "/about",
+      crumbs: [
+        { name: "Home", url: "/" },
+        { name: "About", url: "/about" }
+      ],
+      testimonials
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get("/contact", (req, res) => {

@@ -13,9 +13,9 @@ router.get("/login", (req, res) => {
   res.render("admin/login", { error: null, layoutSection: "admin-auth" });
 });
 
-router.post("/login", verifyCsrfToken, (req, res) => {
+router.post("/login", verifyCsrfToken, async (req, res) => {
   const { username, password } = req.body || {};
-  const user = typeof username === "string" ? findAdminByUsername(username.trim()) : undefined;
+  const user = typeof username === "string" ? await findAdminByUsername(username.trim()) : undefined;
   const valid = user && typeof password === "string" && bcrypt.compareSync(password, user.passwordHash);
 
   if (!valid) {

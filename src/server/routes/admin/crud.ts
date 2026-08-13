@@ -10,13 +10,13 @@ import { resources, type ResourceConfig, type FieldConfig } from "./resourceConf
 const router = Router();
 router.use(requireAdmin);
 
-function uniqueSlug(resource: ResourceConfig, base: string, ignoreId?: number): string {
+async function uniqueSlug(resource: ResourceConfig, base: string, ignoreId?: number): Promise<string> {
   let slug = slugify(base) || "item";
   let n = 2;
   // repo.findBySlug throws if the table has no slug column, but slugSource is only set for
   // resources that do have one, so this is safe for the resources that call uniqueSlug().
   while (true) {
-    const existing = resource.repo.findBySlug(slug);
+    const existing = await resource.repo.findBySlug(slug);
     if (!existing || existing.id === ignoreId) return slug;
     slug = `${slugify(base)}-${n++}`;
   }
@@ -86,9 +86,13 @@ resources.forEach((resource) => {
   const maybeUpload: RequestHandler = upload.single("imageFile");
 
   // LIST
-  router.get(`/${resource.key}`, (req, res) => {
-    const items = resource.repo.all();
-    res.render("admin/generic-list", { resource, items, layoutSection: "admin" });
+  router.get(`/${resource.key}`, async (req, res, next) => {
+    try {
+      const items = await resource.repo.all();
+      res.render("admin/generic-list", { resource, items, layoutSection: "admin" });
+    } catch (err) {
+      next(err);
+    }
   });
 
   // NEW FORM
@@ -97,13 +101,13 @@ resources.forEach((resource) => {
   });
 
   // CREATE
-  router.post(`/${resource.key}`, maybeUpload, verifyCsrfToken, (req, res) => {
+  router.post(`/${resource.key}`, maybeUpload, verifyCsrfToken, async (req, res) => {
     try {
       const record = buildRecordFromBody(resource, req.body, req.file, undefined, true);
       if (resource.slugSource) {
-        record.slug = uniqueSlug(resource, String(record.slug || ""));
+        record.slug = await uniqueSlug(resource, String(record.slug || ""));
       }
-      const id = resource.repo.insert(record);
+      const id = await resource.repo.insert(record);
       setFlash(req, "success", `${resource.singular} created successfully.`);
       res.redirect(`/admin/${resource.key}/${id}/edit`);
     } catch (err) {
@@ -119,57 +123,69 @@ resources.forEach((resource) => {
   });
 
   // EDIT FORM
-  router.get(`/${resource.key}/:id/edit`, (req, res, next) => {
-    const item = resource.repo.findById(Number(req.params.id));
-    if (!item) {
-      next();
-      return;
-    }
-    // Expand JSON "lines" fields back into newline-separated text for the textarea.
-    const viewItem: Record<string, unknown> = { ...item };
-    for (const f of resource.fields) {
-      if (f.type === "lines") {
-        viewItem[f.name] = parseJsonArray(viewItem[f.name] as string).join("\n");
+  router.get(`/${resource.key}/:id/edit`, async (req, res, next) => {
+    try {
+      const item = await resource.repo.findById(Number(req.params.id));
+      if (!item) {
+        next();
+        return;
       }
+      // Expand JSON "lines" fields back into newline-separated text for the textarea.
+      const viewItem: Record<string, unknown> = { ...item };
+      for (const f of resource.fields) {
+        if (f.type === "lines") {
+          viewItem[f.name] = parseJsonArray(viewItem[f.name] as string).join("\n");
+        }
+      }
+      res.render("admin/generic-form", { resource, item: viewItem, mode: "edit", errors: null, layoutSection: "admin" });
+    } catch (err) {
+      next(err);
     }
-    res.render("admin/generic-form", { resource, item: viewItem, mode: "edit", errors: null, layoutSection: "admin" });
   });
 
   // UPDATE
-  router.post(`/${resource.key}/:id`, maybeUpload, verifyCsrfToken, (req, res) => {
-    const id = Number(req.params.id);
-    const existing = resource.repo.findById(id);
-    if (!existing) {
-      res.status(404).render("admin/error", { title: "Not found", message: "That item no longer exists.", layoutSection: "admin" });
-      return;
-    }
+  router.post(`/${resource.key}/:id`, maybeUpload, verifyCsrfToken, async (req, res, next) => {
     try {
-      const existingImageValue = imageField ? String((existing as Record<string, unknown>)[imageField.name] ?? "") : undefined;
-      const record = buildRecordFromBody(resource, req.body, req.file, existingImageValue, false);
-      delete record.publishedAt; // never overwrite original publish date from the edit form
-      if (resource.slugSource) {
-        record.slug = uniqueSlug(resource, String(record.slug || ""), id);
+      const id = Number(req.params.id);
+      const existing = await resource.repo.findById(id);
+      if (!existing) {
+        res.status(404).render("admin/error", { title: "Not found", message: "That item no longer exists.", layoutSection: "admin" });
+        return;
       }
-      resource.repo.update(id, record);
-      setFlash(req, "success", `${resource.singular} updated successfully.`);
-      res.redirect(`/admin/${resource.key}/${id}/edit`);
+      try {
+        const existingImageValue = imageField ? String((existing as Record<string, unknown>)[imageField.name] ?? "") : undefined;
+        const record = buildRecordFromBody(resource, req.body, req.file, existingImageValue, false);
+        delete record.publishedAt; // never overwrite original publish date from the edit form
+        if (resource.slugSource) {
+          record.slug = await uniqueSlug(resource, String(record.slug || ""), id);
+        }
+        await resource.repo.update(id, record);
+        setFlash(req, "success", `${resource.singular} updated successfully.`);
+        res.redirect(`/admin/${resource.key}/${id}/edit`);
+      } catch (err) {
+        console.error(`Failed to update ${resource.key} #${id}:`, err);
+        res.status(400).render("admin/generic-form", {
+          resource,
+          item: { ...req.body, id },
+          mode: "edit",
+          errors: "Something went wrong saving this item. Please check the fields and try again.",
+          layoutSection: "admin"
+        });
+      }
     } catch (err) {
-      console.error(`Failed to update ${resource.key} #${id}:`, err);
-      res.status(400).render("admin/generic-form", {
-        resource,
-        item: { ...req.body, id },
-        mode: "edit",
-        errors: "Something went wrong saving this item. Please check the fields and try again.",
-        layoutSection: "admin"
-      });
+      next(err);
     }
   });
 
   // DELETE
-  router.post(`/${resource.key}/:id/delete`, verifyCsrfToken, (req, res) => {
-    resource.repo.remove(Number(req.params.id));
-    setFlash(req, "success", `${resource.singular} deleted.`);
-    res.redirect(`/admin/${resource.key}`);
+  router.post(`/${resource.key}/:id/delete`, verifyCsrfToken, async (req, res, next) => {
+    try {
+      await resource.repo.remove(Number(req.params.id));
+      setFlash(req, "success", `${resource.singular} deleted.`);
+      res.redirect(`/admin/${resource.key}`);
+    } catch (err) {
+      next(err);
+    }
   });
 });
 

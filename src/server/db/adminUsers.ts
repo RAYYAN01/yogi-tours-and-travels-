@@ -1,23 +1,23 @@
-import { db } from "./connection.js";
-import { toPlain } from "./repo.js";
+import { queryOne, run } from "./connection.js";
 import type { AdminUser } from "../types/models.js";
 
-export function findAdminByUsername(username: string): AdminUser | undefined {
-  return toPlain<AdminUser>(db.prepare("SELECT * FROM admin_users WHERE username = ?").get(username));
+export async function findAdminByUsername(username: string): Promise<AdminUser | undefined> {
+  return queryOne<AdminUser>("SELECT * FROM admin_users WHERE username = ?", [username]);
 }
 
-export function createAdminUser(username: string, passwordHash: string): number {
-  const info = db
-    .prepare("INSERT INTO admin_users (username, passwordHash) VALUES (?, ?)")
-    .run(username, passwordHash);
-  return Number(info.lastInsertRowid);
+export async function createAdminUser(username: string, passwordHash: string): Promise<number> {
+  const row = await queryOne<{ id: number }>(
+    'INSERT INTO admin_users (username, "passwordHash") VALUES (?, ?) RETURNING id',
+    [username, passwordHash]
+  );
+  return row?.id ?? 0;
 }
 
-export function adminUserCount(): number {
-  const row = toPlain<{ c: number }>(db.prepare("SELECT COUNT(*) as c FROM admin_users").get());
-  return row?.c ?? 0;
+export async function adminUserCount(): Promise<number> {
+  const row = await queryOne<{ c: string }>("SELECT COUNT(*) as c FROM admin_users");
+  return row ? Number(row.c) : 0;
 }
 
-export function updateAdminPassword(username: string, passwordHash: string): void {
-  db.prepare("UPDATE admin_users SET passwordHash = ? WHERE username = ?").run(passwordHash, username);
+export async function updateAdminPassword(username: string, passwordHash: string): Promise<void> {
+  await run('UPDATE admin_users SET "passwordHash" = ? WHERE username = ?', [passwordHash, username]);
 }
