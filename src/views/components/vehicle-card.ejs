@@ -6,6 +6,7 @@ const __features = parseJsonArray(__v.features);
 const __detailUrl = `/fleet/${__v.category}/${__v.slug}`;
 const __fullStars = __v.rating ? Math.floor(__v.rating) : 0;
 const __halfStar = __v.rating ? __v.rating - __fullStars >= 0.5 : false;
+const __tariff = dutyTariff(__v.slug);
 %>
 <article class="card-vehicle group flex flex-col h-full bg-white rounded-2xl border border-ink-100 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300">
   <a href="<%= __detailUrl %>" class="relative block aspect-[4/3] overflow-hidden rounded-t-2xl">
@@ -22,6 +23,8 @@ const __halfStar = __v.rating ? __v.rating - __fullStars >= 0.5 : false;
     <% } %>
     <% if (__v.ratePerKm) { %>
     <span class="absolute bottom-3 left-3 badge bg-sun-600 text-ink-900 shadow-sm">₹<%= __v.ratePerKm %>/km onwards</span>
+    <% } else { %>
+    <span class="absolute bottom-3 left-3 badge bg-ink-900/85 text-white shadow-sm">Price on Request</span>
     <% } %>
   </a>
 
@@ -56,6 +59,13 @@ const __halfStar = __v.rating ? __v.rating - __fullStars >= 0.5 : false;
       <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'users', cls: 'w-3.5 h-3.5 text-brand-500' }) %><%= seatLabel(__v) %></span>
       <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'luggage', cls: 'w-3.5 h-3.5 text-brand-500' }) %><%= __v.luggage %></span>
     </div>
+
+    <% if (__tariff) { %>
+    <p class="flex items-center gap-1.5 text-[12px] text-ink-500 mt-2">
+      <%- include('../partials/icon', { name: 'info', cls: 'w-3.5 h-3.5 text-brand-500 shrink-0' }) %>
+      Min <%= __tariff.minKmPerDay %> km/day · Bata ₹<%= __tariff.driverBata %>/day
+    </p>
+    <% } %>
 
     <% if (__features.length) { %>
     <div class="flex flex-wrap gap-1.5 mt-3.5">

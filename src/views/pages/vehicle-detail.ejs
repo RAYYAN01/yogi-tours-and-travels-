@@ -78,10 +78,43 @@
         <% } %>
         <p class="text-ink-500 text-sm mt-2 leading-relaxed"><%= vehicle.tagline %></p>
 
-        <% if (vehicle.ratePerKm) { %>
+        <%
+          const __tariff = dutyTariff(vehicle.slug);
+        %>
+        <% if (vehicle.ratePerKm && __tariff) { %>
+        <div class="mt-4 rounded-xl bg-sun-50 ring-1 ring-inset ring-sun-200 px-4 py-4">
+          <p class="font-display font-bold text-2xl text-sun-700">₹<%= vehicle.ratePerKm %><span class="text-sm font-medium text-sun-600">/km</span></p>
+          <dl class="mt-3 space-y-1.5 text-[13px]">
+            <div class="flex items-center justify-between">
+              <dt class="text-ink-500">Minimum running</dt>
+              <dd class="font-semibold text-ink-900"><%= __tariff.minKmPerDay %> km/day</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-ink-500">Driver Bata</dt>
+              <dd class="font-semibold text-ink-900">₹<%= __tariff.driverBata %>/day</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-ink-500">Duty time</dt>
+              <dd class="font-semibold text-ink-900"><%= DUTY_POLICY.dutyStart %> – <%= DUTY_POLICY.dutyEnd %></dd>
+            </div>
+          </dl>
+          <div class="mt-3 pt-3 border-t border-sun-200/70">
+            <p class="text-[13px] text-ink-700">
+              Estimated minimum daily charge:
+              <span class="font-semibold text-ink-900">₹<%= estimatedMinimumDailyTotal(vehicle.ratePerKm, __tariff).toLocaleString('en-IN') %></span>
+            </p>
+            <p class="text-[11px] text-ink-500 mt-1"><%= DUTY_POLICY.extraBataNote %>. <%= DUTY_POLICY.additionalChargesNote %>.</p>
+          </div>
+        </div>
+        <% } else if (vehicle.ratePerKm) { %>
         <div class="mt-4 rounded-xl bg-sun-50 ring-1 ring-inset ring-sun-200 px-4 py-3">
           <p class="font-display font-bold text-2xl text-sun-700">₹<%= vehicle.ratePerKm %><span class="text-sm font-medium text-sun-600">/km onwards</span></p>
           <p class="text-[12px] text-ink-500 mt-0.5">Tolls, parking, driver allowance &amp; GST as applicable — confirmed in your quotation.</p>
+        </div>
+        <% } else { %>
+        <div class="mt-4 rounded-xl bg-ink-50 ring-1 ring-inset ring-ink-200 px-4 py-3">
+          <p class="font-display font-bold text-lg text-ink-900">Price on Request</p>
+          <p class="text-[12px] text-ink-500 mt-0.5">Pricing depends on route, duration and group size — get an exact quote for this vehicle.</p>
         </div>
         <% } %>
 

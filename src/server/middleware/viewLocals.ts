@@ -4,6 +4,7 @@ import { mainNav, footerServiceLinks, footerToursLinks, footerCompanyLinks, lega
 import { organizationSchema } from "../utils/schema.js";
 import { parseJsonArray } from "../db/repo.js";
 import { VEHICLE_CATEGORY_LABELS } from "../db/content.js";
+import { dutyTariff, estimatedMinimumDailyTotal, DUTY_POLICY } from "../db/pricing.js";
 import type { Vehicle, VehicleCategory } from "../types/models.js";
 
 const orgSchema = organizationSchema();
@@ -44,6 +45,9 @@ export function injectViewLocals(req: Request, res: Response, next: NextFunction
   // Cars don't use this convention, so they keep a plain seat count.
   res.locals.seatLabel = (v: Pick<Vehicle, "seats" | "category">): string =>
     v.category === "car" ? `${v.seats} Seats` : `${v.seats}+1 Seats`;
+  res.locals.dutyTariff = dutyTariff;
+  res.locals.estimatedMinimumDailyTotal = estimatedMinimumDailyTotal;
+  res.locals.DUTY_POLICY = DUTY_POLICY;
   res.locals.canonicalUrl = `${env.siteUrl}${req.path}`;
   res.locals.isAdmin = Boolean(req.session?.adminUsername);
   res.locals.adminUsername = req.session?.adminUsername || "";
