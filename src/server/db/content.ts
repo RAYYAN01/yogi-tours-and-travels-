@@ -37,13 +37,23 @@ function vehicleSortBaseName(name: string): string {
 }
 
 /**
- * Reusable sort: alphabetical (case-insensitive, numeric-aware) by the
- * vehicle's base name, with same-base-name variants ordered by seat count
- * ascending. Apply this to any vehicle list right before rendering cards —
- * never rely on sortOrder/id/insertion order for customer-facing display.
+ * Reusable sort: vehicle TYPE first (Cars, then Tempo Travellers, then Mini
+ * Buses, then Tourist Buses — VEHICLE_CATEGORY_SLUGS order, smallest
+ * passenger class to largest), then alphabetical (case-insensitive,
+ * numeric-aware) by base name within that category, with same-base-name
+ * seating variants ordered by seat count ascending. Apply this to any
+ * vehicle list right before rendering cards — never rely on
+ * sortOrder/id/insertion order for customer-facing display. Calling it on
+ * an already-single-category list (vehiclesByCategory) is a no-op for the
+ * category comparison, so the same function is safe to use everywhere.
  */
-export function sortVehiclesAlphabetically<T extends { name: string; seats: number }>(vehicles: T[]): T[] {
+export function sortVehiclesAlphabetically<T extends { name: string; seats: number; category: VehicleCategory }>(
+  vehicles: T[]
+): T[] {
   return [...vehicles].sort((a, b) => {
+    const categoryComparison = VEHICLE_CATEGORY_SLUGS.indexOf(a.category) - VEHICLE_CATEGORY_SLUGS.indexOf(b.category);
+    if (categoryComparison !== 0) return categoryComparison;
+
     const baseA = vehicleSortBaseName(a.name);
     const baseB = vehicleSortBaseName(b.name);
     const baseComparison = baseA.localeCompare(baseB, undefined, { sensitivity: "base", numeric: true });
