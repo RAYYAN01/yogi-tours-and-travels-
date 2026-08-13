@@ -65,7 +65,15 @@
      whole site's CTAs read as active/attention-grabbing rather than static.
      --btn-shine-color defaults to a white streak for solid/dark buttons;
      light-background variants (outline, white) override it to a dark tint
-     below since a white sweep is invisible on a white background. */
+     below since a white sweep is invisible on a white background.
+
+     Performance note: with dozens of these on one page (every vehicle/
+     package/service card has 2-3), animating layout-triggering properties
+     like `left` or repainted ones like `box-shadow` directly caused real
+     scroll jank/freezing — the browser was recomputing layout and/or
+     repainting every animated element on every frame. Both the sweep and
+     the glow now animate only `transform`/`opacity`, which the browser can
+     run on the compositor thread without layout or paint. */
   .btn,
   .shine {
     @apply relative overflow-hidden;
@@ -79,23 +87,43 @@
     content: "";
     position: absolute;
     inset: 0;
-    left: -75%;
     width: 50%;
     background: linear-gradient(115deg, transparent, var(--btn-shine-color), transparent);
-    transform: skewX(-20deg);
+    transform: translateX(-250%) skewX(-20deg);
     animation: btn-shine-sweep 3.2s ease-in-out infinite;
     pointer-events: none;
+    will-change: transform;
   }
   .btn-sm {
     @apply px-3.5 py-2.5 min-h-[40px] text-[13px];
   }
   .btn-primary {
     @apply bg-brand-700 text-white shadow-sm hover:bg-brand-800;
-    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
   }
-  .btn-accent {
+  .btn-primary::before {
+    --btn-glow-color: rgba(118, 28, 6, 0.6);
+  }
+  .btn-accent,
+  .btn-quote {
     @apply bg-brand-500 text-white hover:bg-brand-600;
-    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
+  }
+  .btn-primary,
+  .btn-accent,
+  .btn-quote {
+    @apply relative;
+  }
+  .btn-primary::before,
+  .btn-accent::before,
+  .btn-quote::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    z-index: -1;
+    border-radius: inherit;
+    box-shadow: 0 4px 22px 2px var(--btn-glow-color, rgba(194, 44, 9, 0.75));
+    opacity: 0;
+    animation: btn-glow-pulse 2.6s ease-in-out infinite;
+    pointer-events: none;
   }
   .btn-outline {
     @apply bg-white text-ink-700 ring-1 ring-inset ring-ink-200 hover:bg-ink-50 hover:ring-ink-300;
@@ -121,25 +149,24 @@
      (vehicle cards, service cards, mobile action bar), so it's a bright red,
      pill-shaped and uppercase to match the header's "Enquire Now" button. */
   .btn-quote {
-    @apply bg-brand-500 text-white hover:bg-brand-600 !rounded-full font-bold uppercase tracking-[0.06em];
-    animation: btn-glow-pulse-strong 2.6s ease-in-out infinite;
+    @apply !rounded-full font-bold uppercase tracking-[0.06em];
   }
   @keyframes btn-shine-sweep {
     0%, 15% {
-      left: -75%;
+      transform: translateX(-250%) skewX(-20deg);
     }
     40%,
     100% {
-      left: 125%;
+      transform: translateX(250%) skewX(-20deg);
     }
   }
-  @keyframes btn-glow-pulse-strong {
+  @keyframes btn-glow-pulse {
     0%,
     100% {
-      box-shadow: 0 4px 14px -2px rgba(194, 44, 9, 0.5);
+      opacity: 0;
     }
     50% {
-      box-shadow: 0 4px 22px 2px rgba(194, 44, 9, 0.75);
+      opacity: 1;
     }
   }
 
