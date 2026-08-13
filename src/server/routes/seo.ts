@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { env } from "../config/env.js";
+import { env, business } from "../config/env.js";
 import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS } from "../db/content.js";
 
 const router = Router();
@@ -69,9 +69,119 @@ Allow: /
 Disallow: /admin
 Disallow: /api
 
+# Generative/answer-engine crawlers — explicitly welcomed so this site can be
+# cited by AI search & chat assistants (ChatGPT, Perplexity, Claude, Google
+# AI Overviews), not just indexed by traditional search.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: ${env.siteUrl}/sitemap.xml
 `;
   res.type("text/plain").send(body);
+});
+
+/**
+ * llms.txt (llmstxt.org) — a plain-language summary of the site for LLMs
+ * and AI search agents to consume directly, since they don't render pages
+ * or follow internal links the way a browser does. Built from the same
+ * real, non-fabricated content already backing the rest of the site.
+ */
+router.get("/llms.txt", async (req, res, next) => {
+  try {
+    const [vehicles, services, packages] = await Promise.all([vehiclesRepo.all(), servicesRepo.all(), packagesRepo.all()]);
+
+    const vehiclesByCategory = new Map<string, typeof vehicles>();
+    for (const v of vehicles) {
+      const list = vehiclesByCategory.get(v.category) ?? [];
+      list.push(v);
+      vehiclesByCategory.set(v.category, list);
+    }
+
+    const categoryOrder: Array<{ slug: string; label: string }> = [
+      { slug: "car", label: "Cars" },
+      { slug: "tempo-traveller", label: "Tempo Travellers" },
+      { slug: "mini-bus", label: "Mini Buses" },
+      { slug: "tourist-bus", label: "Tourist Buses" }
+    ];
+
+    const fleetSection = categoryOrder
+      .map(({ slug, label }) => {
+        const list = vehiclesByCategory.get(slug) ?? [];
+        if (!list.length) return "";
+        const lines = list
+          .map((v) => `- ${v.name} (${v.seats} seats)${v.ratePerKm ? ` — ₹${v.ratePerKm}/km` : " — price on request"}: ${env.siteUrl}/fleet/${v.category}/${v.slug}`)
+          .join("\n");
+        return `### ${label}\n${lines}`;
+      })
+      .filter(Boolean)
+      .join("\n\n");
+
+    const servicesSection = services
+      .map((s) => `- ${s.name}: ${s.shortDescription} ${env.siteUrl}/services/${s.slug}`)
+      .join("\n");
+
+    const packagesSection = packages
+      .slice(0, 20)
+      .map((p) => `- ${p.title} (${p.duration}, ${p.destination}): ${env.siteUrl}/tour-packages/${p.slug}`)
+      .join("\n");
+
+    const body = `# ${business.name}
+
+> ${business.description}
+
+Bangalore-based tours and travels agency. Phone/WhatsApp: ${business.phone}. Email: ${business.email}. Serves ${business.areaServed.join(", ")} and surrounding areas.
+
+## Fleet
+
+${fleetSection}
+
+Full fleet: ${env.siteUrl}/fleet
+
+## Services
+
+${servicesSection}
+
+Full services list: ${env.siteUrl}/services
+
+## Tour Packages
+
+${packagesSection}
+
+Full tour packages list: ${env.siteUrl}/tour-packages
+
+## Other pages
+
+- About: ${env.siteUrl}/about
+- Contact: ${env.siteUrl}/contact
+- Blog: ${env.siteUrl}/blog
+- Gallery: ${env.siteUrl}/gallery
+`;
+
+    res.type("text/plain").send(body);
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;
