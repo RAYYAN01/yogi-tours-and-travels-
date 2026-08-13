@@ -78,8 +78,12 @@ app.use(
 
 // Legacy URLs from the previous website — 301 to the closest current page
 // so any residual Google ranking/backlinks transfer instead of hitting a 404.
+// LEGACY_REDIRECTS keys never have a trailing slash, so normalize the
+// incoming path first — this makes one entry cover both "/path" and
+// "/path/" instead of needing two keys per legacy URL.
 app.use((req, res, next) => {
-  const target = LEGACY_REDIRECTS[req.path];
+  const normalizedPath = req.path.length > 1 && req.path.endsWith("/") ? req.path.slice(0, -1) : req.path;
+  const target = LEGACY_REDIRECTS[normalizedPath];
   if (target) {
     res.redirect(301, target);
     return;
