@@ -184,7 +184,7 @@ async function seedServices(): Promise<void> {
   }
   const rows = [
     { name: "Outstation Travel", slug: "outstation-travel", icon: "route", featured: 1,
-      shortDescription: "One-way and round-trip cabs for journeys beyond Bangalore, with an upfront quotation before you travel.",
+      shortDescription: "The best outstation cab service in Bangalore — one-way and round-trip cabs for journeys beyond the city, with an upfront quotation before you travel.",
       description: "Whether you're heading to Coorg for the weekend or driving down to Goa for a longer break, our outstation service covers one-way drops and full round trips across Karnataka and neighbouring states. You choose the vehicle — sedan, SUV, Tempo Traveller or bus — and we take care of the driver, fuel and route planning.",
       highlights: ["One-way and round-trip options", "Experienced outstation drivers", "Karnataka & neighbouring states", "Upfront, itemised quotation"] },
     { name: "Airport Transfer", slug: "airport-transfer", icon: "plane", featured: 1,

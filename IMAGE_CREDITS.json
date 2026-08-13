@@ -1,7 +1,7 @@
 [
   {
     "slug": "vidhana_soudha",
-    "file": "vidhana_soudha.jpg",
+    "file": "vidhana_soudha.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Vidhana_Soudha_Bangalore.jpg",
     "license": "CC BY-SA 4.0",
     "artist": "Wise Droid",
@@ -9,7 +9,7 @@
   },
   {
     "slug": "coorg-getaway",
-    "file": "coorg-getaway.jpg",
+    "file": "coorg-getaway.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Madikeri",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Raja's_Seat_View_Point.jpg",
     "license": "CC BY-SA 4.0",
@@ -18,7 +18,7 @@
   },
   {
     "slug": "ooty-coonoor-hill-tour",
-    "file": "ooty-coonoor-hill-tour.jpg",
+    "file": "ooty-coonoor-hill-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Ooty",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Ooty_lake.jpg",
     "license": "CC BY-SA 3.0",
@@ -27,7 +27,7 @@
   },
   {
     "slug": "mysore-heritage-day-tour",
-    "file": "mysore-heritage-day-tour.jpg",
+    "file": "mysore-heritage-day-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Mysore_Palace",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Mysore_Palace_Morning.jpg",
     "license": "GFDL 1.2",
@@ -36,7 +36,7 @@
   },
   {
     "slug": "chikmagalur-coffee-trails",
-    "file": "chikmagalur-coffee-trails.jpg",
+    "file": "chikmagalur-coffee-trails.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Chikmagalur",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Chikmagalur,_India._(7793316622).jpg",
     "license": "CC BY-SA 2.0",
@@ -54,7 +54,7 @@
   },
   {
     "slug": "hampi-heritage-trail",
-    "file": "hampi-heritage-trail.jpg",
+    "file": "hampi-heritage-trail.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Hampi",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Wide_angle_of_Galigopuram_of_Virupaksha_Temple,_Hampi_(04)_(cropped).jpg",
     "license": "CC BY-SA 4.0",
@@ -63,7 +63,7 @@
   },
   {
     "slug": "goa-beach-holiday",
-    "file": "goa-beach-holiday.jpg",
+    "file": "goa-beach-holiday.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Palolem_Beach",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Palolem_Beach,_South_Goa.jpg",
     "license": "CC BY-SA 4.0",
@@ -72,7 +72,7 @@
   },
   {
     "slug": "kerala-backwaters-tour",
-    "file": "kerala-backwaters-tour.jpg",
+    "file": "kerala-backwaters-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Alappuzha",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Alappuzha_Boat_Beauty_W.jpg",
     "license": "CC BY-SA 3.0",
@@ -81,7 +81,7 @@
   },
   {
     "slug": "tirupati-pilgrimage-tour",
-    "file": "tirupati-pilgrimage-tour.jpg",
+    "file": "tirupati-pilgrimage-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Tirumala_Venkateswara_Temple",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Tirumala_090615.jpg",
     "license": "CC BY-SA 4.0",
@@ -90,7 +90,7 @@
   },
   {
     "slug": "dharmasthala-kukke-pilgrimage",
-    "file": "dharmasthala-kukke-pilgrimage.jpg",
+    "file": "dharmasthala-kukke-pilgrimage.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Dharmasthala",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Dharmasthala_Temple.jpg",
     "license": "CC BY-SA 3.0",
@@ -117,7 +117,7 @@
   },
   {
     "slug": "trivandrum-kovalam-beach-tour",
-    "file": "trivandrum-kovalam-beach-tour.jpg",
+    "file": "trivandrum-kovalam-beach-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Kovalam",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Kovalam_beach_trivandrum_kerala.jpg",
     "license": "CC BY-SA 4.0",
@@ -126,7 +126,7 @@
   },
   {
     "slug": "mantralaya-pilgrimage-tour",
-    "file": "mantralaya-pilgrimage-tour.jpg",
+    "file": "mantralaya-pilgrimage-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Mantralayam",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Ragavendratemple.jpg",
     "license": "CC BY-SA 3.0",
@@ -135,7 +135,7 @@
   },
   {
     "slug": "pondicherry-heritage-beach-tour",
-    "file": "pondicherry-heritage-beach-tour.jpg",
+    "file": "pondicherry-heritage-beach-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Puducherry_(city)",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Pondicherry-Rock_beach_aerial_view.jpg",
     "license": "CC BY-SA 3.0",
@@ -144,7 +144,7 @@
   },
   {
     "slug": "rameshwaram-pilgrimage-tour",
-    "file": "rameshwaram-pilgrimage-tour.jpg",
+    "file": "rameshwaram-pilgrimage-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Ramanathaswamy_Temple",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Ramanathaswamy_temple7.JPG",
     "license": "CC BY-SA 4.0",
@@ -153,7 +153,7 @@
   },
   {
     "slug": "kanyakumari-tour",
-    "file": "kanyakumari-tour.jpg",
+    "file": "kanyakumari-tour.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Kanyakumari",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Vivekananda_Rock_Memorial,_Kanyakumari.jpg",
     "license": "CC BY-SA 3.0",
@@ -162,7 +162,7 @@
   },
   {
     "slug": "gokarna-beach-getaway",
-    "file": "gokarna-beach-getaway.jpg",
+    "file": "gokarna-beach-getaway.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Gokarna,_Karnataka",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Delight_india.jpg",
     "license": "CC BY-SA 4.0",
@@ -171,7 +171,7 @@
   },
   {
     "slug": "sakleshpur-western-ghats-trail",
-    "file": "sakleshpur-western-ghats-trail.jpg",
+    "file": "sakleshpur-western-ghats-trail.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Sakleshpur",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Places_in_western_ghat_karntataka_between_subramanya_and_sakleshpur_14.jpg",
     "license": "CC BY-SA 3.0",
@@ -180,7 +180,7 @@
   },
   {
     "slug": "nandi-hills-sunrise-trip",
-    "file": "nandi-hills-sunrise-trip.jpg",
+    "file": "nandi-hills-sunrise-trip.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Nandi_Hills,_India",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Sunrise_at_Nandi_Hills.jpg",
     "license": "CC BY-SA 4.0",
@@ -189,7 +189,7 @@
   },
   {
     "slug": "hero-bangalore",
-    "file": "hero-bangalore.jpg",
+    "file": "hero-bangalore.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Bangalore",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:View_from_Visvesvaraya_Industrial_and_Technological_Museum_(2025)_02.jpg",
     "license": "CC BY-SA 4.0",
@@ -252,7 +252,7 @@
   },
   {
     "slug": "outstation-travel",
-    "file": "outstation-travel.jpg",
+    "file": "outstation-travel.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Bangalore-Mysore_road,_July_2014.JPG",
     "license": "CC BY-SA 4.0",
     "artist": "Sunnya343",
@@ -260,7 +260,7 @@
   },
   {
     "slug": "airport-transfer",
-    "file": "airport-transfer.jpg",
+    "file": "airport-transfer.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Terminal_1_of_Kempegowda_International_Airport.jpg",
     "license": "CC BY-SA 4.0",
     "artist": "Sameer2905",
@@ -268,7 +268,7 @@
   },
   {
     "slug": "local-intercity-travel",
-    "file": "local-intercity-travel.jpg",
+    "file": "local-intercity-travel.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:An_urban_road_and_traffic_in_Bangalore_Karnataka_India_April_2014.jpg",
     "license": "CC BY-SA 2.0",
     "artist": "Harsha K R from Bangalore, India",
@@ -276,7 +276,7 @@
   },
   {
     "slug": "corporate-travel",
-    "file": "corporate-travel.jpg",
+    "file": "corporate-travel.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:ITPL-Whitefield-Bangalore1.jpg",
     "license": "CC BY-SA 4.0",
     "artist": "PageImp",
@@ -284,7 +284,7 @@
   },
   {
     "slug": "wedding-transportation",
-    "file": "wedding-transportation.jpg",
+    "file": "wedding-transportation.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Wedding_with_red_car_(Unsplash).jpg",
     "license": "CC0 1.0",
     "artist": "Scott Webb",
@@ -292,7 +292,7 @@
   },
   {
     "slug": "educational-tours",
-    "file": "educational-tours.jpg",
+    "file": "educational-tours.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:School_bus,_Indore.jpg",
     "license": "CC BY-SA 3.0",
     "artist": "Bernard Gagnon",
@@ -300,7 +300,7 @@
   },
   {
     "slug": "pilgrimage-tours",
-    "file": "pilgrimage-tours.jpg",
+    "file": "pilgrimage-tours.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:A_900_year_old_Temple_in_South_India_(37892625552).jpg",
     "license": "CC BY 2.0",
     "artist": "Hari K  Patibanda",
@@ -308,7 +308,7 @@
   },
   {
     "slug": "resort-trips",
-    "file": "resort-trips.jpg",
+    "file": "resort-trips.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Resort_calicut_kerala.jpg",
     "license": "CC BY 2.0",
     "artist": "John Johnston",
@@ -316,7 +316,7 @@
   },
   {
     "slug": "event-transportation",
-    "file": "event-transportation.jpg",
+    "file": "event-transportation.webp",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Sarji_Convention_hall,_Shivamogga,_Karnataka_(2026)_01.jpg",
     "license": "CC BY-SA 4.0",
     "artist": "Gpkp",
@@ -324,7 +324,7 @@
   },
   {
     "slug": "group-transportation",
-    "file": "group-transportation.jpg",
+    "file": "group-transportation.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Coach_(bus)",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Ausden_Clark_Executive_Coach_in_Black_and_Pink_Livery.jpg",
     "license": "Public domain",
@@ -333,7 +333,7 @@
   },
   {
     "slug": "family-tours",
-    "file": "family-tours.jpg",
+    "file": "family-tours.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Suzuki_Ertiga",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Suzuki_Ertiga_NC_FL_1.5_GLX_Hybrid_Snow_White_Pearl.jpg",
     "license": "CC BY-SA 4.0",
@@ -342,7 +342,7 @@
   },
   {
     "slug": "vidhana-soudha",
-    "file": "vidhana-soudha.jpg",
+    "file": "vidhana-soudha.webp",
     "sourcePage": "https://en.wikipedia.org/wiki/Vidhana_Soudha",
     "commonsFile": "https://commons.wikimedia.org/wiki/File:Vidhana_Soudha_2012.jpg",
     "license": "GFDL 1.2",

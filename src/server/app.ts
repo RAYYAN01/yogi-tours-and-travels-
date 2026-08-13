@@ -12,6 +12,7 @@ import { initSchema, pool } from "./db/connection.js";
 import { injectViewLocals } from "./middleware/viewLocals.js";
 import { ensureCsrfToken } from "./middleware/csrf.js";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
+import { LEGACY_REDIRECTS } from "./config/redirects.js";
 
 import pagesRouter from "./routes/pages.js";
 import vehiclesRouter from "./routes/vehicles.js";
@@ -74,6 +75,17 @@ app.use(
     }
   })
 );
+
+// Legacy URLs from the previous website — 301 to the closest current page
+// so any residual Google ranking/backlinks transfer instead of hitting a 404.
+app.use((req, res, next) => {
+  const target = LEGACY_REDIRECTS[req.path];
+  if (target) {
+    res.redirect(301, target);
+    return;
+  }
+  next();
+});
 
 app.use(ensureCsrfToken);
 app.use(injectViewLocals);
