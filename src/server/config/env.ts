@@ -10,6 +10,10 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   isProd: process.env.NODE_ENV === "production",
   siteUrl: required("SITE_URL", "http://localhost:3000"),
+  /** GA4 Measurement ID (e.g. "G-XXXXXXX") — leave unset to skip loading Google Analytics entirely. */
+  gaMeasurementId: process.env.GA_MEASUREMENT_ID || "",
+  /** Google Search Console HTML-tag verification token (the content= value only, not the whole meta tag) — leave unset to skip the tag. */
+  googleSiteVerification: process.env.GOOGLE_SITE_VERIFICATION || "",
   sessionSecret: required("SESSION_SECRET", "dev-secret-change-me"),
   /** Postgres connection string (e.g. from Vercel Postgres/Neon/Supabase). Required in production. */
   databaseUrl: process.env.DATABASE_URL || "",

@@ -9,6 +9,7 @@ import {
   packagesForVehicle
 } from "../db/content.js";
 import { productVehicleSchema, breadcrumbSchema } from "../utils/schema.js";
+import { env } from "../config/env.js";
 import type { VehicleCategory } from "../types/models.js";
 
 const router = Router();
@@ -123,7 +124,9 @@ router.get("/:category/:slug", async (req, res, next) => {
         productVehicleSchema({
           name: vehicle.name,
           description: vehicle.description,
-          url: `/fleet/${category}/${vehicle.slug}`
+          url: `/fleet/${category}/${vehicle.slug}`,
+          imageUrl: vehicle.imageKey ? `${env.siteUrl}${vehicle.imageKey}` : undefined,
+          ratePerKm: vehicle.ratePerKm
         }),
         breadcrumbSchema([
           { name: "Home", url: "/" },

@@ -2,7 +2,7 @@
 const __title = typeof title !== "undefined" ? title : `${business.name} | Tours & Travels in Bangalore`;
 const __desc = typeof metaDescription !== "undefined" ? metaDescription : business.description;
 const __canonical = typeof canonicalPath !== "undefined" ? `${env.siteUrl}${canonicalPath}` : canonicalUrl;
-const __ogImage = typeof ogImage !== "undefined" ? ogImage : `${env.siteUrl}/assets/images/og-default.svg`;
+const __ogImage = typeof ogImage !== "undefined" ? ogImage : `${env.siteUrl}/assets/images/og-default.png`;
 const __noindex = typeof noindex !== "undefined" ? noindex : false;
 const __schemas = typeof schemas !== "undefined" ? schemas : [];
 %><!doctype html>
@@ -14,6 +14,9 @@ const __schemas = typeof schemas !== "undefined" ? schemas : [];
   <title><%= __title %></title>
   <meta name="description" content="<%= __desc %>" />
   <link rel="canonical" href="<%= __canonical %>" />
+  <% if (env.googleSiteVerification) { %>
+  <meta name="google-site-verification" content="<%= env.googleSiteVerification %>" />
+  <% } %>
   <% if (__noindex) { %>
   <meta name="robots" content="noindex, nofollow" />
   <% } else { %>
@@ -27,6 +30,8 @@ const __schemas = typeof schemas !== "undefined" ? schemas : [];
   <meta property="og:description" content="<%= __desc %>" />
   <meta property="og:url" content="<%= __canonical %>" />
   <meta property="og:image" content="<%= __ogImage %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="en_IN" />
 
   <!-- Twitter -->
@@ -49,4 +54,14 @@ const __schemas = typeof schemas !== "undefined" ? schemas : [];
   <% __schemas.forEach(function (s) { %>
   <script type="application/ld+json"><%- JSON.stringify(s) %></script>
   <% }); %>
+
+  <% if (env.gaMeasurementId) { %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= env.gaMeasurementId %>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '<%= env.gaMeasurementId %>');
+  </script>
+  <% } %>
 </head>

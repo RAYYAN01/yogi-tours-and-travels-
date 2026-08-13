@@ -64,6 +64,8 @@ export function productVehicleSchema(input: {
   description: string;
   url: string;
   imageUrl?: string;
+  /** Real confirmed per-km rate in INR — omitted (no `offers` block) rather than faked when not yet confirmed. */
+  ratePerKm?: number | null;
 }): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
@@ -73,14 +75,24 @@ export function productVehicleSchema(input: {
     url: `${env.siteUrl}${input.url}`,
     ...(input.imageUrl ? { image: input.imageUrl } : {}),
     brand: { "@type": "Organization", name: business.name },
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "INR",
-      price: "0",
-      availability: "https://schema.org/InStock",
-      url: `${env.siteUrl}${input.url}`,
-      description: "Contact us for a customised quotation."
-    }
+    ...(input.ratePerKm
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "INR",
+            price: String(input.ratePerKm),
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: String(input.ratePerKm),
+              priceCurrency: "INR",
+              unitText: "per kilometre"
+            },
+            availability: "https://schema.org/InStock",
+            url: `${env.siteUrl}${input.url}`,
+            description: "Per-kilometre rate — final quotation confirmed on enquiry."
+          }
+        }
+      : {})
   };
 }
 
