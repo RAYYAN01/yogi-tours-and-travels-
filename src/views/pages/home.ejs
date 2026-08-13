@@ -43,6 +43,9 @@
           </a>
         </div>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-8 text-white/70 text-[13px]">
+          <span class="flex items-center gap-1.5 text-white font-semibold">
+            <%- include('../partials/icon', { name: 'star', cls: 'w-4 h-4 text-sun-400' }) %><%= business.googleRating.value %> &middot; <%= business.googleRating.count %>+ Google Reviews
+          </span>
           <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'shield-check', cls: 'w-4 h-4' }) %>Verified Drivers</span>
           <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'wallet', cls: 'w-4 h-4' }) %>Transparent Pricing</span>
           <span class="flex items-center gap-1.5"><%- include('../partials/icon', { name: 'headset', cls: 'w-4 h-4' }) %>24/7 Support</span>

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { env, business } from "../config/env.js";
-import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS } from "../db/content.js";
+import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS, faqsRepo } from "../db/content.js";
 
 const router = Router();
 
@@ -109,7 +109,12 @@ Sitemap: ${env.siteUrl}/sitemap.xml
  */
 router.get("/llms.txt", async (req, res, next) => {
   try {
-    const [vehicles, services, packages] = await Promise.all([vehiclesRepo.all(), servicesRepo.all(), packagesRepo.all()]);
+    const [vehicles, services, packages, faqs] = await Promise.all([
+      vehiclesRepo.all(),
+      servicesRepo.all(),
+      packagesRepo.all(),
+      faqsRepo.all()
+    ]);
 
     const vehiclesByCategory = new Map<string, typeof vehicles>();
     for (const v of vehicles) {
@@ -146,6 +151,8 @@ router.get("/llms.txt", async (req, res, next) => {
       .map((p) => `- ${p.title} (${p.duration}, ${p.destination}): ${env.siteUrl}/tour-packages/${p.slug}`)
       .join("\n");
 
+    const faqSection = faqs.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n");
+
     const body = `# ${business.name}
 
 > ${business.description}
@@ -169,6 +176,10 @@ Full services list: ${env.siteUrl}/services
 ${packagesSection}
 
 Full tour packages list: ${env.siteUrl}/tour-packages
+
+## Frequently Asked Questions
+
+${faqSection}
 
 ## Other pages
 

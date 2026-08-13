@@ -32,7 +32,7 @@ router.get("/", async (req, res, next) => {
       testimonialsRepo.all(),
       galleryPreview()
     ]);
-    const faqs = allFaqs.slice(0, 8);
+    const faqs = allFaqs.slice(0, 12);
     res.render("pages/home", {
       vehicles: sortVehiclesAlphabetically(vehicles),
       title: "Yogi Tours & Travels | Tours & Travels in Bangalore — Cabs, Tempo Traveller & Bus Rental",
