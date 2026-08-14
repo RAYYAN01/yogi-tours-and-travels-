@@ -123,8 +123,30 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(ensureCsrfToken);
+// Scoped to /admin only: CSRF tokens are only ever checked on admin forms
+// (verifyCsrfToken is never used outside src/server/routes/admin/*). Running
+// this globally was touching req.session on every public page view — which,
+// combined with saveUninitialized:false, still forces a session save (and a
+// Set-Cookie + a write to the Postgres session store) the instant a value is
+// assigned to it — so every anonymous visitor to the homepage, fleet pages,
+// etc. was creating and persisting a session for no reason. That both adds
+// an extra DB round-trip to every public request and makes every response
+// contain a unique Set-Cookie header, which rules out HTTP caching entirely
+// (a cached response would replay one visitor's session cookie to another).
+app.use("/admin", ensureCsrfToken);
 app.use(injectViewLocals);
+
+// Public, non-personalized pages are safe to cache now that they no longer
+// carry a per-visitor Set-Cookie. A short edge cache means most visitors —
+// including from India, where Vercel's edge is close but the function/DB
+// round-trip is not — get an instant cached response instead of re-running
+// the full render + database query path on every request.
+app.use((req, res, next) => {
+  if (req.method === "GET" && !req.path.startsWith("/admin") && !req.path.startsWith("/api")) {
+    res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
+  }
+  next();
+});
 
 app.use(
   "/assets/uploads",
