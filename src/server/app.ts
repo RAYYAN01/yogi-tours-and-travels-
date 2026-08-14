@@ -143,7 +143,13 @@ app.use(injectViewLocals);
 // the full render + database query path on every request.
 app.use((req, res, next) => {
   if (req.method === "GET" && !req.path.startsWith("/admin") && !req.path.startsWith("/api")) {
-    res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
+    res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=600");
+    // Vercel's edge strips s-maxage from the client-facing Cache-Control on
+    // Serverless Function responses, so it doesn't drive Vercel's own CDN
+    // cache the way it would on a plain static/CDN origin — this header is
+    // Vercel's documented mechanism for controlling that edge cache
+    // specifically, independent of what's sent to the browser.
+    res.setHeader("Vercel-CDN-Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
   }
   next();
 });
