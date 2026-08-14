@@ -25,6 +25,18 @@ export interface EnquiryInput {
 
 const VALID_TYPES = new Set(["outstation", "local", "airport", "quote", "contact", "package", "vehicle"]);
 
+// Applied to every short free-text field below — generous enough for any
+// real input, tight enough to stop a single field from carrying an
+// oversized payload (the global 100kb body-size limit in app.ts already
+// bounds the request as a whole; this bounds each field individually).
+const SHORT_FIELD_MAX = 200;
+
+function checkMaxLength(errors: Record<string, string>, key: string, value: string | undefined, label: string): void {
+  if (value && value.length > SHORT_FIELD_MAX) {
+    errors[key] = `${label} is too long.`;
+  }
+}
+
 export function validateEnquiry(body: EnquiryInput): ValidationResult {
   const errors: Record<string, string> = {};
 
@@ -54,6 +66,13 @@ export function validateEnquiry(body: EnquiryInput): ValidationResult {
   if (body.type === "outstation" && (!body.destination || body.destination.trim().length < 2)) {
     errors.destination = "Please enter a destination.";
   }
+
+  checkMaxLength(errors, "pickupLocation", body.pickupLocation, "Pickup location");
+  checkMaxLength(errors, "destination", body.destination, "Destination");
+  checkMaxLength(errors, "tripType", body.tripType, "Trip type");
+  checkMaxLength(errors, "vehicleType", body.vehicleType, "Vehicle type");
+  checkMaxLength(errors, "passengers", body.passengers, "Passengers");
+  checkMaxLength(errors, "sourcePage", body.sourcePage, "Source page");
 
   if (body.message && body.message.length > 2000) {
     errors.message = "Message is too long.";

@@ -13,7 +13,11 @@ import multer from "multer";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadDir = path.resolve(__dirname, "../../../public/assets/uploads");
 
-const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif", "image/svg+xml"]);
+// SVG deliberately excluded: it can embed <script>, making it a stored-XSS
+// vector if the file is ever opened directly rather than embedded as an
+// <img> (which strips scripting). Raster formats cover every real use case
+// here (vehicle/service/gallery photos).
+const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"]);
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),

@@ -5,6 +5,12 @@ import { verifyCsrfToken } from "../../middleware/csrf.js";
 
 const router = Router();
 
+// Constant-effort fallback hash: compared against when the username doesn't
+// exist, so login response time doesn't reveal whether an account exists
+// (bcrypt.compareSync would otherwise be skipped entirely for unknown
+// usernames, making that path measurably faster).
+const DUMMY_HASH = bcrypt.hashSync("not-a-real-password", 10);
+
 router.get("/login", (req, res) => {
   if (req.session.adminUsername) {
     res.redirect("/admin");
@@ -16,7 +22,8 @@ router.get("/login", (req, res) => {
 router.post("/login", verifyCsrfToken, async (req, res) => {
   const { username, password } = req.body || {};
   const user = typeof username === "string" ? await findAdminByUsername(username.trim()) : undefined;
-  const valid = user && typeof password === "string" && bcrypt.compareSync(password, user.passwordHash);
+  const passwordOk = bcrypt.compareSync(typeof password === "string" ? password : "", user?.passwordHash ?? DUMMY_HASH);
+  const valid = Boolean(user) && passwordOk;
 
   if (!valid) {
     res.status(401).render("admin/login", { error: "Incorrect username or password.", layoutSection: "admin-auth" });
@@ -32,7 +39,8 @@ router.post("/login", verifyCsrfToken, async (req, res) => {
       res.status(500).render("admin/login", { error: "Could not start a session. Please try again.", layoutSection: "admin-auth" });
       return;
     }
-    req.session.adminUsername = user.username;
+    // Safe: `valid` (checked above) is only true when `user` is defined.
+    req.session.adminUsername = user!.username;
     res.redirect(returnTo);
   });
 });

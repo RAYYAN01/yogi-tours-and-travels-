@@ -37,9 +37,36 @@ app.set("views", path.join(projectRoot, "src/views"));
 
 app.use(
   helmet({
-    contentSecurityPolicy: false // relaxed for a small server-rendered site; revisit with a strict CSP before production launch
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        // 'unsafe-inline' is required for the small inline bootstrap script in
+        // head.ejs, the JSON-LD schema blocks, and the optional GA4 snippet —
+        // none of the templates take unescaped user input into a <script>
+        // tag (verified: every dynamic value in views renders via EJS's
+        // auto-escaping <%= %>), so this doesn't reopen an existing hole.
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'self'"]
+      }
+    }
   })
 );
+// This site never uses the camera, microphone, geolocation, etc. — deny them
+// all outright rather than leaving the default (permissive) policy in place.
+app.use((req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  );
+  next();
+});
 app.use(compression());
 if (!env.isProd) {
   app.use(morgan("dev"));

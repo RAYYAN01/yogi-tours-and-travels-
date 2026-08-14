@@ -32,8 +32,22 @@ export function linesToJsonArray(text: string | undefined | null): string {
 
 const now = (): string => new Date().toISOString().replace("T", " ").slice(0, 19);
 
-/** Postgres folds unquoted identifiers to lowercase — every camelCase column needs double-quoting. */
-const q = (col: string): string => `"${col}"`;
+const SAFE_IDENTIFIER = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+
+/**
+ * Postgres folds unquoted identifiers to lowercase — every camelCase column
+ * needs double-quoting. Every column name insert()/update() see today comes
+ * from a fixed, developer-defined field list (never raw req.body keys), so
+ * this check is a no-op in current usage — it's here so a column name can
+ * never carry a stray `"` and break out of the quoted identifier if a future
+ * call site is less careful about what it passes in.
+ */
+const q = (col: string): string => {
+  if (!SAFE_IDENTIFIER.test(col)) {
+    throw new Error(`Unsafe column identifier: ${col}`);
+  }
+  return `"${col}"`;
+};
 
 interface RepoOptions {
   table: string;
