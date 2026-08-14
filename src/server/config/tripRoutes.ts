@@ -159,6 +159,76 @@ export const TRIP_ROUTES: TripRoute[] = [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
       { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
     ]
+  },
+  {
+    slug: "bangalore-to-goa-cab",
+    destination: "Goa",
+    state: "Goa",
+    distanceKm: 560,
+    travelTimeHours: "10–10.5 hours",
+    highlights: ["Calangute Beach", "Baga Beach", "Old Goa Churches"],
+    intro:
+      "Goa is typically reached via Hubli and Belgaum on NH48, one of the longer regularly booked outstation drives from Bangalore. Given the distance, this is almost always a multi-day round trip or a one-way drop rather than a same-day return.",
+    vehicleSlugs: [
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
+      { category: "tempo-traveller", slug: "force-urbania", label: "Force Urbania" }
+    ]
+  },
+  {
+    slug: "bangalore-to-kerala-backwaters-cab",
+    destination: "Kerala Backwaters (Alleppey & Kumarakom)",
+    state: "Kerala",
+    distanceKm: 590,
+    travelTimeHours: "11–12 hours",
+    highlights: ["Alleppey Houseboats", "Kumarakom Backwaters", "Vembanad Lake"],
+    intro:
+      "The Kerala backwaters route to Alleppey and Kumarakom is usually driven via Salem and Kochi. Given the distance, this is typically planned as a multi-day trip with an overnight halt rather than a single-day drive.",
+    vehicleSlugs: [
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
+      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+    ]
+  },
+  {
+    slug: "bangalore-to-munnar-cab",
+    destination: "Munnar",
+    state: "Kerala",
+    distanceKm: 475,
+    travelTimeHours: "9.5–10 hours",
+    highlights: ["Tea Gardens", "Eravikulam National Park", "Top Station"],
+    intro:
+      "Munnar's tea-garden hills are reached via Coimbatore and Udumalpet, with a ghat climb in the final stretch. Most travellers plan this as a multi-day trip given the drive length and the hill roads near the destination.",
+    vehicleSlugs: [
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
+      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+    ]
+  },
+  {
+    slug: "bangalore-to-gokarna-cab",
+    destination: "Gokarna",
+    state: "Karnataka",
+    distanceKm: 485,
+    travelTimeHours: "9–9.5 hours",
+    highlights: ["Om Beach", "Kudle Beach", "Mahabaleshwar Temple"],
+    intro:
+      "Gokarna is reached via Hubli and Shimoga on state highways, a popular beach-and-temple weekend route for travellers looking for a quieter alternative to Goa. Most book this as a 2-day round trip.",
+    vehicleSlugs: [
+      { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" }
+    ]
+  },
+  {
+    slug: "bangalore-to-kanyakumari-cab",
+    destination: "Kanyakumari",
+    state: "Tamil Nadu",
+    distanceKm: 610,
+    travelTimeHours: "11–12 hours",
+    highlights: ["Vivekananda Rock Memorial", "Thiruvalluvar Statue", "Sunset Point"],
+    intro:
+      "Kanyakumari, at the southern tip of the country, is reached via Salem and Madurai on NH44. This is one of the longer routes we handle, almost always booked as a multi-day round trip or a one-way drop.",
+    vehicleSlugs: [
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
+      { category: "tempo-traveller", slug: "force-urbania", label: "Force Urbania" }
+    ]
   }
 ];
 
