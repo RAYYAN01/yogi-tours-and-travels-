@@ -50,7 +50,13 @@
           <li><a href="<%= telHref %>" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'phone', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span><%= business.phone %></span></a></li>
           <li><a href="https://wa.me/<%= whatsappDigits %>" target="_blank" rel="noopener" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'whatsapp', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span><%= business.whatsapp %></span></a></li>
           <li><a href="<%= mailtoHref %>" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'mail', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span class="break-all"><%= business.email %></span></a></li>
-          <li class="flex items-start gap-2.5"><%- include('icon', { name: 'map-pin', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span><%= business.addressLine %></span></li>
+          <li class="flex items-start gap-2.5">
+            <%- include('icon', { name: 'map-pin', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %>
+            <span>
+              <%= business.addressLine %>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=<%= encodeURIComponent(business.addressLine) %>" target="_blank" rel="noopener" class="block text-brand-400 hover:text-brand-300 transition-colors mt-1">Get Directions</a>
+            </span>
+          </li>
         </ul>
       </div>
     </div>

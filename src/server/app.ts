@@ -53,7 +53,10 @@ app.use(
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         formAction: ["'self'"],
-        frameAncestors: ["'self'"]
+        frameAncestors: ["'self'"],
+        // The Contact page embeds a keyless Google Maps iframe (no API key
+        // needed for this basic embed) showing the business location.
+        frameSrc: ["https://www.google.com"]
       }
     }
   })
