@@ -1,6 +1,7 @@
 import { business, env } from "../config/env.js";
 
 export function organizationSchema(): Record<string, unknown> {
+  const sameAs: string[] = Object.values(business.social).filter((url) => url !== "");
   return {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
@@ -30,7 +31,8 @@ export function organizationSchema(): Record<string, unknown> {
       reviewCount: business.googleRating.count
     },
     areaServed: business.areaServed.map((a) => ({ "@type": "City", name: a })),
-    priceRange: "$$"
+    priceRange: "$$",
+    ...(sameAs.length ? { sameAs } : {})
   };
 }
 

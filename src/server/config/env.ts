@@ -66,7 +66,7 @@ export const business = {
   ],
   social: {
     facebook: "",
-    instagram: "",
+    instagram: "https://www.instagram.com/yogi_travels93/",
     youtube: "",
     twitter: ""
   },
