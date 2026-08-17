@@ -20,32 +20,22 @@ export const galleryRepo = createRepo<GalleryItem>({ table: "gallery" });
 export const blogRepo = createRepo<BlogPost>({ table: "blog_posts", orderBy: '"publishedAt" DESC' });
 
 /**
- * Vehicle names that carry their seat count as a leading number (our
- * category-listing convention, e.g. "12 Seater Tempo Traveller", "21 Seater
- * Mini Bus") would otherwise sort by that leading digit and scatter every
- * seating variant apart from its siblings and from vehicles of the same
- * type that don't happen to lead with a number (e.g. "Maharaja Tempo
- * Traveller", "Force Urbania"). Stripping a leading "<n> Seater " token
- * before comparing groups same-type variants together, exactly like
- * comparing "Toyota Innova Crysta" vs "Toyota Innova Hycross" already does
- * for name-first vehicles — the displayed name itself is never changed.
- */
-const LEADING_SEAT_COUNT_RE = /^\d+\s*seater\s+/i;
-
-function vehicleSortBaseName(name: string): string {
-  return name.trim().replace(LEADING_SEAT_COUNT_RE, "").trim();
-}
-
-/**
  * Reusable sort: vehicle TYPE first (Cars, then Tempo Travellers, then Mini
  * Buses, then Tourist Buses — VEHICLE_CATEGORY_SLUGS order, smallest
- * passenger class to largest), then alphabetical (case-insensitive,
- * numeric-aware) by base name within that category, with same-base-name
- * seating variants ordered by seat count ascending. Apply this to any
- * vehicle list right before rendering cards — never rely on
- * sortOrder/id/insertion order for customer-facing display. Calling it on
- * an already-single-category list (vehiclesByCategory) is a no-op for the
- * category comparison, so the same function is safe to use everywhere.
+ * passenger class to largest), then seat count ascending within that
+ * category, then alphabetical (case-insensitive, numeric-aware) by name as
+ * a tie-break for same-seat vehicles. Apply this to any vehicle list right
+ * before rendering cards — never rely on sortOrder/id/insertion order for
+ * customer-facing display. Calling it on an already-single-category list
+ * (vehiclesByCategory) is a no-op for the category comparison, so the same
+ * function is safe to use everywhere.
+ *
+ * Seats-first (not name-first) is deliberate: with real vehicle names like
+ * "Force Urbania" and "Maharaja Tempo Traveller" that don't lead with a
+ * seat count the way "9 Seater Tempo Traveller" does, alphabetical-by-name
+ * scattered them out of seat order entirely (Force Urbania's 17 seats
+ * sorted ahead of the 9- and 12-seaters). Seat-ascending is also just the
+ * more useful order for a customer comparing vehicles by group size.
  */
 export function sortVehiclesAlphabetically<T extends { name: string; seats: number; category: VehicleCategory }>(
   vehicles: T[]
@@ -54,15 +44,11 @@ export function sortVehiclesAlphabetically<T extends { name: string; seats: numb
     const categoryComparison = VEHICLE_CATEGORY_SLUGS.indexOf(a.category) - VEHICLE_CATEGORY_SLUGS.indexOf(b.category);
     if (categoryComparison !== 0) return categoryComparison;
 
-    const baseA = vehicleSortBaseName(a.name);
-    const baseB = vehicleSortBaseName(b.name);
-    const baseComparison = baseA.localeCompare(baseB, undefined, { sensitivity: "base", numeric: true });
-    if (baseComparison !== 0) return baseComparison;
-
     const seatComparison = a.seats - b.seats;
     if (seatComparison !== 0) return seatComparison;
 
-    // Final deterministic tie-break for two vehicles with an identical base name and seat count.
+    // Tie-break for two vehicles with the same seat count (e.g. Toyota
+    // Innova Crysta vs Hycross, both 7 seats): alphabetical, numeric-aware.
     return a.name.trim().localeCompare(b.name.trim(), undefined, { sensitivity: "base", numeric: true });
   });
 }
