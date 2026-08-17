@@ -16,10 +16,10 @@ import type { VehicleCategory } from "../types/models.js";
 const router = Router();
 
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
-  car: "From compact sedans to the Innova Crysta and Hycross — comfortable cars for airport transfers, city travel and outstation trips.",
-  "tempo-traveller": "9 to 17 seater Tempo Travellers, including Luxury and Maharaja configurations, for family and group travel.",
-  "mini-bus": "20 to 29 seater mini buses for corporate offsites, wedding groups and mid-sized school or community trips.",
-  "tourist-bus": "33 to 50 seater tourist buses for large group tours, institutional travel and big event logistics."
+  car: "From compact sedans and the Maruti Dzire to the Innova Crysta and Hycross — cars for hire with driver for airport transfers, city travel and outstation trips.",
+  "tempo-traveller": "9, 12 and 17 seater Tempo Travellers, including the Force Urbania, for hire with driver for family and group travel, outstation trips and airport transfers.",
+  "mini-bus": "21 and 25 seater mini buses for corporate offsites, wedding groups and mid-sized school or community trips, available for local and outstation hire.",
+  "tourist-bus": "40 and 55 seater tourist buses for large group tours, institutional travel and big event logistics, available for outstation and local hire."
 };
 
 router.get("/", async (req, res, next) => {
@@ -108,7 +108,7 @@ router.get("/:category/:slug", async (req, res, next) => {
 
     res.render("pages/vehicle-detail", {
       title: `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
-      metaDescription: `Book the ${vehicle.name} (${vehicle.seats} seater) in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
+      metaDescription: `Book the ${vehicle.name} (${vehicle.seats} seater) with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [
         { name: "Home", url: "/" },

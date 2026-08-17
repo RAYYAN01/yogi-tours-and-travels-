@@ -229,6 +229,20 @@ export const TRIP_ROUTES: TripRoute[] = [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
       { category: "tempo-traveller", slug: "force-urbania", label: "Force Urbania" }
     ]
+  },
+  {
+    slug: "bangalore-to-wayanad-cab",
+    destination: "Wayanad",
+    state: "Kerala",
+    distanceKm: 290,
+    travelTimeHours: "6–6.5 hours",
+    highlights: ["Edakkal Caves", "Chembra Peak", "Banasura Sagar Dam"],
+    intro:
+      "Wayanad is reached via Mysore, Gundlupet and Bandipur/Muthanga forest range, with a wildlife-corridor stretch that has timing restrictions after dark. Most travellers plan an early start and a multi-day stay given the drive length.",
+    vehicleSlugs: [
+      { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
+      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+    ]
   }
 ];
 
