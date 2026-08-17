@@ -100,7 +100,7 @@ export const TRIP_ROUTES: TripRoute[] = [
     vehicleSlugs: [
       { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
       { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
-      { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "Maharaja Tempo Traveller" }
+      { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" }
     ]
   },
   {

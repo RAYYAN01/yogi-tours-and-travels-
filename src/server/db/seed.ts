@@ -99,7 +99,7 @@ async function seedVehicles(): Promise<void> {
       description: "Built for multi-day outstation tours where comfort matters as much as capacity. The Luxury Tempo Traveller upgrades to plusher recliner seating, improved cabin insulation and a more refined finish — a popular choice for corporate offsites and premium family tours.",
       ratePerKm: 35,
       features: [...commonTTFeatures, "Premium Recliner Seats", "Curtains"], featured: 1, sortOrder: 4 },
-    { category: "tempo-traveller", name: "Maharaja Tempo Traveller", slug: "maharaja-tempo-traveller", seats: 12, luggage: "12 bags + roof carrier",
+    { category: "tempo-traveller", name: "12 Seater Tempo Traveller", slug: "maharaja-tempo-traveller", seats: 12, luggage: "12 bags + roof carrier",
       tagline: "Wide, sofa-style 'Maharaja' seating for a relaxed, lounge-like group travel experience.",
       description: "The Maharaja configuration trades a few seats for significantly more width and legroom per passenger, arranged in a lounge-style layout. A favourite for family celebrations, milestone trips and groups who prioritise comfort over headcount.",
       features: [...commonTTFeatures, "Wide Sofa-style Seating", "Curtains"], featured: 0, sortOrder: 5, ratePerKm: 45 },
