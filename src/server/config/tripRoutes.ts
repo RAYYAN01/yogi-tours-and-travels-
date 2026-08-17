@@ -28,7 +28,8 @@ export const TRIP_ROUTES: TripRoute[] = [
     vehicleSlugs: [
       { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
+      { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" }
     ]
   },
   {
@@ -43,6 +44,7 @@ export const TRIP_ROUTES: TripRoute[] = [
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
       { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
+      { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "force-urbania", label: "Force Urbania" }
     ]
   },

@@ -105,10 +105,15 @@ router.get("/:category/:slug", async (req, res, next) => {
     const related = (await vehiclesByCategory(category)).filter((v) => v.id !== vehicle.id).slice(0, 3);
     const featuredInPackages = (await packagesForVehicle(vehicle)).slice(0, 3);
     const relevantRoutes = TRIP_ROUTES.filter((r) => r.vehicleSlugs.some((v) => v.slug === vehicle.slug)).slice(0, 4);
+    // Vehicles like "9 Seater Tempo Traveller" already state their capacity in
+    // the name — appending "(9 seater)" again reads as a redundant stutter.
+    // Only vehicles named without a seat count (Force Urbania, Toyota Innova
+    // Crysta, etc.) get it appended.
+    const seatSuffix = vehicle.name.toLowerCase().includes(`${vehicle.seats} seat`) ? "" : ` (${vehicle.seats} seater)`;
 
     res.render("pages/vehicle-detail", {
       title: `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
-      metaDescription: `Book the ${vehicle.name} (${vehicle.seats} seater) with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
+      metaDescription: `Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [
         { name: "Home", url: "/" },
