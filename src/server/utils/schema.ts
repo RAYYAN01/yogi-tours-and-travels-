@@ -19,6 +19,12 @@ export function organizationSchema(): Record<string, unknown> {
       postalCode: business.address.postalCode,
       addressCountry: business.address.addressCountry
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: business.geo.latitude,
+      longitude: business.geo.longitude
+    },
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.addressLine)}`,
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -30,7 +36,21 @@ export function organizationSchema(): Record<string, unknown> {
       ratingValue: business.googleRating.value,
       reviewCount: business.googleRating.count
     },
-    areaServed: business.areaServed.map((a) => ({ "@type": "City", name: a })),
+    // First entry carries the "Bengaluru"/"Bangalore" dual-name explicitly so
+    // search & AI engines resolve both spellings to the same served city;
+    // the rest are the specific localities we operate in day-to-day.
+    areaServed: [
+      { "@type": "City", name: "Bangalore", alternateName: "Bengaluru" },
+      ...business.areaServed.filter((a) => a !== "Bangalore").map((a) => ({ "@type": "City", name: a }))
+    ],
+    // Local/day-trip operating radius around Bengaluru — longer named
+    // outstation routes (Goa, Chennai, Hyderabad etc.) are declared
+    // separately as TouristTrip/Service schema on their own route pages.
+    serviceArea: {
+      "@type": "GeoCircle",
+      geoMidpoint: { "@type": "GeoCoordinates", latitude: business.geo.latitude, longitude: business.geo.longitude },
+      geoRadius: String(business.serviceRadiusKm * 1000)
+    },
     priceRange: "$$",
     ...(sameAs.length ? { sameAs } : {})
   };

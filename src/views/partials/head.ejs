@@ -23,6 +23,12 @@ const __schemas = typeof schemas !== "undefined" ? schemas : [];
   <meta name="robots" content="index, follow" />
   <% } %>
 
+  <!-- Geo tags — legacy but still read by some local directories/crawlers -->
+  <meta name="geo.region" content="IN-KA" />
+  <meta name="geo.placename" content="Bengaluru" />
+  <meta name="ICBM" content="<%= business.geo.latitude %>, <%= business.geo.longitude %>" />
+  <meta name="geo.position" content="<%= business.geo.latitude %>;<%= business.geo.longitude %>" />
+
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="<%= business.name %>" />

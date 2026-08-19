@@ -31,7 +31,7 @@ export const business = {
   shortName: "Yogi Tours & Travels",
   tagline: "Travel Comfortably. Explore Freely.",
   description:
-    "Yogi Tours & Travels is a Bangalore-based tours and travels agency offering car rentals, Tempo Traveller and mini bus hire, tourist bus rental, airport transfers, outstation cabs and customised tour packages across Karnataka and South India.",
+    "Yogi Tours & Travels is a Bengaluru (Bangalore)-based tours and travels agency — serving India's Silicon City and areas up to 150 km around it — offering car rentals, Tempo Traveller and mini bus hire, tourist bus rental, airport transfers, outstation cabs and customised tour packages across Karnataka and South India.",
   phone: process.env.BUSINESS_PHONE || "+91 90000 00000",
   whatsapp: process.env.BUSINESS_WHATSAPP || "+91 90000 00000",
   email: process.env.BUSINESS_EMAIL || "info@yogitourstravels.com",
@@ -46,6 +46,13 @@ export const business = {
     postalCode: "560056",
     addressCountry: "IN"
   },
+  // Neighbourhood-level coordinates for Nagadevanahalli, Bengaluru 560056 —
+  // geocoded from the real address above via OpenStreetMap Nominatim (not
+  // fabricated). Precise enough for schema.org GeoCoordinates/GeoCircle;
+  // not claimed as a rooftop-exact pin.
+  geo: { latitude: 12.9361617, longitude: 77.4940345 },
+  /** Real-world outstation service radius we consistently quote for — matches the routes actually listed on the site (Mysore, Coorg, Chikmagalur etc. sit within it; longer ones like Goa/Chennai/Hyderabad are quoted individually). */
+  serviceRadiusKm: 150,
   /** Google Business Profile shows "Open 24 hours". */
   openingHours: "24/7",
   /** Real rating from the verified Google Business Profile as of 2026-08-14 — update if it changes. */
