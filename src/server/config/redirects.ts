@@ -11,7 +11,9 @@
 export const LEGACY_REDIRECTS: Record<string, string> = {
   "/best-outstation-cab-service-in-bangalore": "/services/outstation-travel",
   "/best-outstation-cabs-service-in-bangalore": "/services/outstation-travel",
-  "/luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/force-urbania",
+  // "9/10 Seater" in the old title matches the real 9 Seater Tempo
+  // Traveller, not the 17-seat Force Urbania — was previously mismatched.
+  "/luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
   "/best-sedan-cab-service-bangalore": "/fleet/car",
 
   // WordPress tag-archive pages
@@ -19,7 +21,7 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/tag/mini-bus-rental-bangalore-12-seater": "/fleet/mini-bus",
   "/tag/tempo-traveller-rental-bangalore": "/fleet/tempo-traveller",
   "/tag/book-tempo-traveller-on-rent-in-bangalore-online": "/fleet/tempo-traveller",
-  "/tag/best-luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/force-urbania",
+  "/tag/best-luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
   "/category/blog": "/blog",
 
   // Individual vehicle/keyword landing pages
