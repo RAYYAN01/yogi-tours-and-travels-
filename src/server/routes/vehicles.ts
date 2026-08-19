@@ -25,6 +25,14 @@ const CATEGORY_RENTAL_LABEL: Record<VehicleCategory, string> = {
   "tourist-bus": "Tourist Bus"
 };
 
+// Per-vehicle title override for a handful of high-intent "best X in
+// Bangalore" queries — kept as an explicit, honest exception (not a blanket
+// claim on every vehicle) since it's backed by the business's real 4.9★/210
+// Google rating stated in the meta description below, not an empty boast.
+const VEHICLE_TITLE_OVERRIDE: Record<string, string> = {
+  "maharaja-tempo-traveller": "Best 12 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels"
+};
+
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
   car: "From compact sedans and the Maruti Dzire to the Innova Crysta and Hycross — cars for hire with driver for airport transfers, city travel and outstation trips.",
   "tempo-traveller": "Tempo Traveller rental in Bangalore across 9, 12 and 17 seater options, including the Force Urbania, with driver for family and group travel, outstation trips across Karnataka and airport transfers.",
@@ -130,7 +138,7 @@ router.get("/:category/:slug", async (req, res, next) => {
     const seatSuffix = vehicle.name.toLowerCase().includes(`${vehicle.seats} seat`) ? "" : ` (${vehicle.seats} seater)`;
 
     res.render("pages/vehicle-detail", {
-      title: `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
+      title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
       metaDescription: `Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [

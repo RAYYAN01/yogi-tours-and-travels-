@@ -100,7 +100,7 @@ async function seedVehicles(): Promise<void> {
       ratePerKm: 35,
       features: [...commonTTFeatures, "Premium Recliner Seats", "Curtains"], featured: 1, sortOrder: 4 },
     { category: "tempo-traveller", name: "12 Seater Tempo Traveller", slug: "maharaja-tempo-traveller", seats: 12, luggage: "12 bags + roof carrier",
-      tagline: "Bangalore 12 seater Tempo Traveller rental — wide, sofa-style 'Maharaja' seating for a relaxed, lounge-like group travel experience across Karnataka.",
+      tagline: "Looking for the best 12 seater Tempo Traveller in Bangalore? Yogi Tours & Travels is rated 4.9★ from 210+ Google reviews — this 'Maharaja' configuration offers wide, sofa-style seating for a relaxed, lounge-like group travel experience across Karnataka.",
       description: "The 12 Seater Tempo Traveller (Maharaja configuration) trades a few seats for significantly more width and legroom per passenger, arranged in a lounge-style layout. Available for 12 seater Tempo Traveller rental in Bangalore (Bengaluru) and outstation trips across Karnataka and South India — a favourite for family celebrations, milestone trips and groups who prioritise comfort over headcount.",
       features: [...commonTTFeatures, "Wide Sofa-style Seating", "Curtains"], featured: 0, sortOrder: 5, ratePerKm: 45 },
     { category: "tempo-traveller", name: "17 Seater Tempo Traveller", slug: "tempo-traveller-17-seater", seats: 17, luggage: "17 bags + roof carrier",
