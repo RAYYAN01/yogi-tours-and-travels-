@@ -7,6 +7,13 @@
   "engines": {
     "node": ">=22.5.0"
   },
+  "browserslist": [
+    "defaults",
+    "not dead",
+    "iOS >= 13",
+    "Safari >= 13",
+    "Android >= 8"
+  ],
   "scripts": {
     "seed": "tsx src/server/db/seed.ts",
     "migrate:postgres": "node scripts/migrate-to-postgres.mjs",

@@ -11,6 +11,10 @@ export function organizationSchema(): Record<string, unknown> {
     url: env.siteUrl,
     telephone: business.whatsapp,
     email: business.email,
+    // Real, existing site assets — Google's LocalBusiness rich-result
+    // eligibility looks for both an "image" and a "logo".
+    image: [`${env.siteUrl}/assets/images/og-default.png`],
+    logo: `${env.siteUrl}/assets/images/logo.png`,
     address: {
       "@type": "PostalAddress",
       streetAddress: business.address.streetAddress,

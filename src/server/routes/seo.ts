@@ -22,9 +22,16 @@ const STATIC_PATHS = [
   { path: "/cancellation-policy", priority: "0.2", changefreq: "yearly" }
 ];
 
+/** Formats a DB timestamp as a sitemap-safe YYYY-MM-DD lastmod, or omits it if the value isn't a real parseable date rather than guessing one. */
+function toLastmod(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString().slice(0, 10);
+}
+
 router.get("/sitemap.xml", async (req, res, next) => {
  try {
-  const urls: Array<{ path: string; priority: string; changefreq: string }> = [...STATIC_PATHS];
+  const urls: Array<{ path: string; priority: string; changefreq: string; lastmod?: string }> = [...STATIC_PATHS];
 
   for (const cat of VEHICLE_CATEGORY_SLUGS) {
     urls.push({ path: `/fleet/${cat}`, priority: "0.8", changefreq: "weekly" });
@@ -36,16 +43,16 @@ router.get("/sitemap.xml", async (req, res, next) => {
     publishedBlogPosts()
   ]);
   for (const v of vehicles) {
-    urls.push({ path: `/fleet/${v.category}/${v.slug}`, priority: "0.7", changefreq: "monthly" });
+    urls.push({ path: `/fleet/${v.category}/${v.slug}`, priority: "0.7", changefreq: "monthly", lastmod: toLastmod(v.updatedAt) });
   }
   for (const s of services) {
-    urls.push({ path: `/services/${s.slug}`, priority: "0.8", changefreq: "monthly" });
+    urls.push({ path: `/services/${s.slug}`, priority: "0.8", changefreq: "monthly", lastmod: toLastmod(s.updatedAt) });
   }
   for (const p of packages) {
     urls.push({ path: `/tour-packages/${p.slug}`, priority: "0.7", changefreq: "monthly" });
   }
   for (const post of blogPosts) {
-    urls.push({ path: `/blog/${post.slug}`, priority: "0.5", changefreq: "monthly" });
+    urls.push({ path: `/blog/${post.slug}`, priority: "0.5", changefreq: "monthly", lastmod: toLastmod(post.updatedAt) });
   }
   for (const l of LOCATIONS) {
     urls.push({ path: `/locations/car-rental-${l.slug}`, priority: "0.6", changefreq: "monthly" });
@@ -61,7 +68,7 @@ ${urls
     (u) => `  <url>
     <loc>${env.siteUrl}${u.path}</loc>
     <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+    <priority>${u.priority}</priority>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ""}
   </url>`
   )
   .join("\n")}
