@@ -8,9 +8,9 @@ const router = Router();
 
 router.get("/", (req, res) => {
   res.render("pages/locations-list", {
-    title: "Areas We Serve in Bangalore | Yogi Tours & Travels",
+    title: "Tours and Travels Near Me — Areas We Serve in Bangalore | Yogi Tours & Travels",
     metaDescription:
-      "Car, cab, Tempo Traveller and bus rental across Bangalore — Whitefield, Electronic City, Koramangala, Indiranagar, Jayanagar and more.",
+      "Searching for tours and travels near me? Find your locality — car, cab, Tempo Traveller and bus rental across Bangalore, covering Whitefield, Electronic City, Koramangala, Indiranagar, Jayanagar and more.",
     canonicalPath: "/locations",
     crumbs: [
       { name: "Home", url: "/" },
@@ -47,8 +47,8 @@ router.get("/car-rental-:slug", async (req, res, next) => {
 
     const canonicalPath = `/locations/car-rental-${location.slug}`;
     res.render("pages/location-detail", {
-      title: `Car Rental in ${location.name}, Bangalore | Yogi Tours & Travels`,
-      metaDescription: `Book car, cab, Tempo Traveller and bus rental in ${location.name}, Bangalore. Local, airport and outstation pickups with transparent per-km pricing.`,
+      title: `Tours and Travels Near ${location.name}, Bangalore | Yogi Tours & Travels`,
+      metaDescription: `Tours and travels near ${location.name}, Bangalore — book car, cab, Tempo Traveller and bus rental with local pickup. Local, airport and outstation trips with transparent per-km pricing.`,
       canonicalPath,
       crumbs: [
         { name: "Home", url: "/" },

@@ -36,9 +36,9 @@ router.get("/", async (req, res, next) => {
     const faqs = allFaqs.slice(0, 12);
     res.render("pages/home", {
       vehicles: sortVehiclesAlphabetically(vehicles),
-      title: "Tours and Travels in Bangalore | Yogi Tours & Travels",
+      title: "Tours and Travels Near Me in Bangalore | Yogi Tours & Travels",
       metaDescription:
-        "Car rental, cab and taxi service in Bangalore for local, airport and outstation travel — Tempo Traveller, Innova, Urbania and bus rental with transparent per-km pricing. Yogi Tours & Travels, available 24/7.",
+        "Looking for tours and travels near me in Bangalore? Yogi Tours & Travels covers every locality with car, cab, Tempo Traveller, Urbania and bus rental for local, airport and outstation trips — transparent per-km pricing, available 24/7.",
       canonicalPath: "/",
       // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
       transparentHeader: true,
