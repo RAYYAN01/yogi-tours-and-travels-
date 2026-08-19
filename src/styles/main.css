@@ -221,7 +221,12 @@
   }
 
   .trip-type-option {
-    @apply flex-1 flex items-center justify-center gap-1.5 text-[13px] font-medium rounded-lg ring-1 ring-inset ring-ink-200 text-ink-500 py-2.5 cursor-pointer transition-colors hover:bg-ink-50;
+    /* flex-1 alone doesn't stop a flex item from refusing to shrink below its
+       unwrapped content width (min-width:auto is the flex default) — same
+       class of bug as the booking tabs above. min-w-0 lets it actually
+       shrink to its allotted share on narrow phones instead of overflowing
+       the row (the "Pickup from Airport" label is the widest offender). */
+    @apply flex-1 min-w-0 flex items-center justify-center gap-1.5 text-[13px] font-medium rounded-lg ring-1 ring-inset ring-ink-200 text-ink-500 py-2.5 cursor-pointer transition-colors hover:bg-ink-50;
   }
   .trip-type-option:has(input:checked) {
     @apply bg-brand-50 ring-brand-400 text-brand-700;

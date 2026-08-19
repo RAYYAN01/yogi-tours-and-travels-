@@ -136,11 +136,11 @@
           <div class="flex gap-2" role="radiogroup" aria-label="Pickup or drop">
             <label class="trip-type-option">
               <input type="radio" name="tripType" value="Airport Drop" class="sr-only" data-default-trip-type />
-              <span><%- include('icon', { name: 'arrow-right', cls: 'w-3.5 h-3.5' }) %>Drop to Airport</span>
+              <span class="truncate"><%- include('icon', { name: 'arrow-right', cls: 'w-3.5 h-3.5' }) %>Drop to Airport</span>
             </label>
             <label class="trip-type-option">
               <input type="radio" name="tripType" value="Airport Pickup" class="sr-only" />
-              <span><%- include('icon', { name: 'arrow-left', cls: 'w-3.5 h-3.5' }) %>Pickup from Airport</span>
+              <span class="truncate"><%- include('icon', { name: 'arrow-left', cls: 'w-3.5 h-3.5' }) %>Pickup from Airport</span>
             </label>
           </div>
         </div>
