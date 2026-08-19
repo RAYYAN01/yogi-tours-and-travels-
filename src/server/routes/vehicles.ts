@@ -8,16 +8,26 @@ import {
   vehicleGallery,
   packagesForVehicle
 } from "../db/content.js";
-import { productVehicleSchema, breadcrumbSchema } from "../utils/schema.js";
+import { productVehicleSchema, breadcrumbSchema, serviceSchema } from "../utils/schema.js";
 import { env } from "../config/env.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 import type { VehicleCategory } from "../types/models.js";
 
 const router = Router();
 
+// Singular form for "X Rental in Bangalore" phrasing — VEHICLE_CATEGORY_LABELS
+// is plural ("Tempo Travellers"), which reads wrong directly in front of
+// "Rental" ("Tempo Travellers Rental").
+const CATEGORY_RENTAL_LABEL: Record<VehicleCategory, string> = {
+  car: "Car",
+  "tempo-traveller": "Tempo Traveller",
+  "mini-bus": "Mini Bus",
+  "tourist-bus": "Tourist Bus"
+};
+
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
   car: "From compact sedans and the Maruti Dzire to the Innova Crysta and Hycross — cars for hire with driver for airport transfers, city travel and outstation trips.",
-  "tempo-traveller": "9, 12 and 17 seater Tempo Travellers, including the Force Urbania, for hire with driver for family and group travel, outstation trips and airport transfers.",
+  "tempo-traveller": "Tempo Traveller rental in Bangalore across 9, 12 and 17 seater options, including the Force Urbania, with driver for family and group travel, outstation trips across Karnataka and airport transfers.",
   "mini-bus": "21 and 25 seater mini buses for corporate offsites, wedding groups and mid-sized school or community trips, available for local and outstation hire.",
   "tourist-bus": "40 and 55 seater tourist buses for large group tours, institutional travel and big event logistics, available for outstation and local hire."
 };
@@ -62,25 +72,33 @@ router.get("/:category", async (req, res, next) => {
       return;
     }
     const label = VEHICLE_CATEGORY_LABELS[category];
+    const rentalLabel = CATEGORY_RENTAL_LABEL[category];
     const vehicles = await vehiclesByCategory(category);
+    const categoryPath = `/fleet/${category}`;
     res.render("pages/vehicles-category", {
-      title: `${label} on Rent in Bangalore | Yogi Tours & Travels`,
+      title: `${rentalLabel} Rental in Bangalore | Yogi Tours & Travels`,
       metaDescription: `${CATEGORY_INTRO[category]} Transparent quotations, experienced drivers and well-maintained vehicles.`,
-      canonicalPath: `/fleet/${category}`,
+      canonicalPath: categoryPath,
       crumbs: [
         { name: "Home", url: "/" },
         { name: "Fleet", url: "/fleet" },
-        { name: label, url: `/fleet/${category}` }
+        { name: label, url: categoryPath }
       ],
       category,
       label,
+      rentalLabel,
       intro: CATEGORY_INTRO[category],
       vehicles,
       schemas: [
+        serviceSchema({
+          name: `${rentalLabel} Rental in Bangalore`,
+          description: CATEGORY_INTRO[category],
+          url: categoryPath
+        }),
         breadcrumbSchema([
           { name: "Home", url: "/" },
           { name: "Fleet", url: "/fleet" },
-          { name: label, url: `/fleet/${category}` }
+          { name: label, url: categoryPath }
         ])
       ]
     });
