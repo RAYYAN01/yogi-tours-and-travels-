@@ -87,7 +87,7 @@ async function seedVehicles(): Promise<void> {
 
     // TEMPO TRAVELLERS
     { category: "tempo-traveller", name: "9 Seater Tempo Traveller", slug: "tempo-traveller-12-seater", seats: 9, luggage: "9 bags + roof carrier",
-      tagline: "Bangalore 9 seater Tempo Traveller rental — our most-booked choice for group outstation trips across Karnataka and pilgrimage tours.",
+      tagline: "One of Bangalore's most-booked 9 seater Tempo Travellers — well suited to group outstation trips across Karnataka and pilgrimage tours.",
       description: "The 9 Seater Tempo Traveller is a dependable middle-ground choice for office outings, pilgrimage groups, and multi-family trips. Available for 9 seater Tempo Traveller rental in Bangalore (Bengaluru) and outstation trips across Karnataka and South India. Forward-facing push-back seats, individual windows and a dedicated luggage boot make it well suited to multi-day itineraries.",
       features: commonTTFeatures, featured: 1, sortOrder: 2, ratePerKm: 22 },
     { category: "tempo-traveller", name: "14 Seater Tempo Traveller", slug: "tempo-traveller-14-seater", seats: 14, luggage: "14 bags + roof carrier",
@@ -100,11 +100,11 @@ async function seedVehicles(): Promise<void> {
       ratePerKm: 35,
       features: [...commonTTFeatures, "Premium Recliner Seats", "Curtains"], featured: 1, sortOrder: 4 },
     { category: "tempo-traveller", name: "12 Seater Tempo Traveller", slug: "maharaja-tempo-traveller", seats: 12, luggage: "12 bags + roof carrier",
-      tagline: "Looking for the best 12 seater Tempo Traveller in Bangalore? Yogi Tours & Travels is rated 4.9★ from 210+ Google reviews — this 'Maharaja' configuration offers wide, sofa-style seating for a relaxed, lounge-like group travel experience across Karnataka.",
+      tagline: "Rated 4.9★ from 210+ Google reviews — one of Bangalore's best 12 seater Tempo Travellers, with wide, sofa-style 'Maharaja' seating for a relaxed, lounge-like group travel experience across Karnataka.",
       description: "The 12 Seater Tempo Traveller (Maharaja configuration) trades a few seats for significantly more width and legroom per passenger, arranged in a lounge-style layout. Available for 12 seater Tempo Traveller rental in Bangalore (Bengaluru) and outstation trips across Karnataka and South India — a favourite for family celebrations, milestone trips and groups who prioritise comfort over headcount.",
       features: [...commonTTFeatures, "Wide Sofa-style Seating", "Curtains"], featured: 0, sortOrder: 5, ratePerKm: 45 },
     { category: "tempo-traveller", name: "17 Seater Tempo Traveller", slug: "tempo-traveller-17-seater", seats: 17, luggage: "17 bags + roof carrier",
-      tagline: "Bangalore 17 seater Tempo Traveller rental for outstation trips across Karnataka, pilgrimage routes to Tirupati, and long-distance group tours to destinations across India.",
+      tagline: "One of Bangalore's 17 seater Tempo Traveller options for large groups — pilgrimage routes to Tirupati and long-distance tours across India.",
       description: "The 17 Seater Tempo Traveller is a Force-built vehicle offering full-size group capacity with push-back seats, individual windows and a dedicated luggage boot. Available for 17 seater Tempo Traveller rental in Bangalore (Bengaluru) and Karnataka-wide outstation trips, plus long-distance group tours to destinations across India — a dependable choice for large family groups, pilgrimage tours and multi-day outstation trips.",
       features: commonTTFeatures, featured: 0, sortOrder: 6 },
     { category: "tempo-traveller", name: "Force Urbania", slug: "force-urbania", seats: 17, luggage: "17 bags + rear storage",
