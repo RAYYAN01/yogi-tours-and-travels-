@@ -5,7 +5,7 @@
       <%- include('icon', { name: 'route', cls: 'w-4 h-4' }) %><span>Outstation</span>
     </button>
     <button type="button" role="tab" id="booking-tab-local" aria-controls="booking-panel-local" aria-selected="false" class="booking-tab" data-booking-tab="local">
-      <%- include('icon', { name: 'map-pin', cls: 'w-4 h-4' }) %><span>Local / Intercity</span>
+      <%- include('icon', { name: 'map-pin', cls: 'w-4 h-4' }) %><span class="truncate"><span class="sm:hidden">Local</span><span class="hidden sm:inline">Local / Intercity</span></span>
     </button>
     <button type="button" role="tab" id="booking-tab-airport" aria-controls="booking-panel-airport" aria-selected="false" class="booking-tab" data-booking-tab="airport">
       <%- include('icon', { name: 'plane', cls: 'w-4 h-4' }) %><span>Airport</span>

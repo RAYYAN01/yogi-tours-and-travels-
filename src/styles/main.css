@@ -249,7 +249,16 @@
 
   /* Booking widget tabs */
   .booking-tab {
-    @apply flex items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-[13px] sm:text-sm font-semibold text-ink-500 transition-colors hover:text-brand-700;
+    /* min-w-0 overrides the grid item's default min-width:auto, which
+       otherwise sizes each grid-cols-3 track to its unwrapped content width
+       (the "Local / Intercity" label is the widest). Without it, the track
+       can't shrink below that content on narrow phones, so the whole grid —
+       and the page along with it — gets forced wider than the viewport and
+       mobile browsers render the entire page zoomed out to fit. */
+    @apply flex items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-[13px] sm:text-sm font-semibold text-ink-500 transition-colors hover:text-brand-700 min-w-0;
+  }
+  .booking-tab span {
+    @apply truncate;
   }
   .booking-tab[aria-selected="true"] {
     @apply bg-white text-brand-700 shadow-sm;
