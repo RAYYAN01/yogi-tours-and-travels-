@@ -15,9 +15,9 @@
     overflow-x: hidden;
   }
   body {
-    /* Light green page background — cards/sections that layer on top keep
+    /* "Pearl white" page background — cards/sections that layer on top keep
        true bg-white so they still read as a distinct surface. */
-    background-color: #e9f3e2;
+    background-color: #f6f8f0;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: theme("fontFamily.display");
