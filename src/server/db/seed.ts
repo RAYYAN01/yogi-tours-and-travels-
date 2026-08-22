@@ -520,79 +520,38 @@ async function seedBlog(): Promise<void> {
   }
   const rows = [
     {
-      title: "How to Choose the Right Vehicle for Your Bangalore Group Trip",
-      slug: "how-to-choose-the-right-vehicle-for-group-trip",
-      excerpt: "Sedan, Innova, Tempo Traveller or bus? A quick guide to matching vehicle type to group size, luggage and route.",
-      coverImageKey: "",
-      content: `<p>The most common question we get before a trip isn't about pricing — it's "which vehicle should we book?" The right answer depends on three things: how many people are travelling, how much luggage you're carrying, and how far you're going.</p>
-<h2>Groups of 1–4</h2>
-<p>A sedan is usually enough for airport runs, city travel and short outstation trips with light luggage. If you're carrying more than two medium bags, consider a Maruti Ertiga for the extra boot space.</p>
-<h2>Groups of 5–7</h2>
-<p>This is Innova and Innova Crysta territory. For longer drives — Coorg, Chikmagalur, Ooty — the Crysta's better cabin insulation and captain seats make a real difference over four or more hours on the road.</p>
-<h2>Groups of 9–17</h2>
-<p>Once you're past what a single MUV can comfortably seat, a Tempo Traveller is the natural next step. The 12 seater is our most-booked size for family and pilgrimage groups, while the Luxury and Maharaja variants trade a few seats for noticeably more comfort on multi-day trips.</p>
-<h2>Groups of 20+</h2>
-<p>Mini buses (20–29 seater) and tourist buses (33–50 seater) are built for office teams, wedding parties, school groups and large pilgrimage tours where moving everyone together on one vehicle is more practical than splitting across cars.</p>
-<p>If you're unsure, tell us your group size and route when you enquire — we'll suggest a vehicle rather than leave you to guess.</p>`,
+      title: "A Karnataka to Gujarat Road Trip: Driving to the Statue of Unity",
+      slug: "karnataka-to-gujarat-road-trip-statue-of-unity",
+      excerpt: "What a genuine 1,500 km outstation drive from Bangalore to the Statue of Unity in Gujarat looks like — the route through Maharashtra, the arrival at Kevadia, and which vehicle actually suits a trip this long.",
+      coverImageKey: "/assets/images/blog/gujarat-blog-4.webp",
+      content: `<p>Most of the routes we write about start and end within a day's drive of Bangalore — Coorg, Mysore, Chikmagalur. This one didn't. A recent outstation booking took a Yogi Tours &amp; Travels vehicle over 1,500 km north from Karnataka to Kevadia in Gujarat, home to the Statue of Unity — the 182-metre statue of Sardar Vallabhbhai Patel overlooking the Narmada river and the Sardar Sarovar Dam. It's one of the longer drives we plan for, and a good example of what a genuine multi-day outstation trip from Bangalore actually involves.</p>
+
+<h2>The route: Karnataka to Gujarat</h2>
+<p>The drive north runs through Karnataka into Maharashtra — past Pune and Nashik — before crossing into Gujarat via Surat and Vadodara, then on to Kevadia in Narmada district. At around 1,500 km one-way, it's not a route we'd ever suggest doing in one push. Groups typically split it into two driving days with an overnight halt in Maharashtra, arriving in Kevadia fresh enough to actually enjoy the site rather than just collapse at the hotel.</p>
+
+<img src="/assets/images/blog/gujarat-blog-2.webp" alt="Hillside 'Statue of Unity' signage overlooking the Narmada river valley, Gujarat" loading="lazy" />
+<figcaption>The valley approach to the Statue of Unity, with the Narmada river below.</figcaption>
+
+<h2>Arriving at the Statue of Unity</h2>
+<p>Nothing about the drive quite prepares you for the scale of it up close — at 182 metres, it's the tallest statue in the world, and it's visible from well before you reach the viewing gallery. The site sits right on the Narmada, with the Sardar Sarovar Dam nearby, so the statue, the river and the surrounding hills of the Satpura and Vindhya ranges all frame each other rather than competing.</p>
+
+<img src="/assets/images/blog/gujarat-blog-1.webp" alt="The Statue of Unity viewed from the visitor viewing gallery, Kevadia, Gujarat" loading="lazy" />
+<figcaption>The viewing gallery deck, with the statue rising directly above.</figcaption>
+
+<img src="/assets/images/blog/gujarat-blog-5.webp" alt="Full view of the Statue of Unity against a cloudy sky, Gujarat" loading="lazy" />
+
+<h2>What kind of trip is this?</h2>
+<p>A drive this long isn't an airport-transfer booking — it's closer to how we plan a <a href="/services/outstation-travel">multi-day outstation trip</a>, with route planning, overnight stops and a vehicle built for long hours on the highway rather than short city hops. For a trip like this, we'd typically suggest an <a href="/fleet/car/innova-crysta">Innova Crysta</a> for a small family or friend group, or a <a href="/fleet/tempo-traveller">Tempo Traveller</a> if you're travelling as a larger group and want everyone on one vehicle for the full two-day drive each way.</p>
+
+<img src="/assets/images/blog/gujarat-blog-3.webp" alt="Narmada river valley near the Statue of Unity, Gujarat" loading="lazy" />
+
+<h2>Is it worth the drive from Bangalore?</h2>
+<p>If Gujarat is one stop on a longer North India itinerary, flying makes more sense. But for a dedicated trip built specifically around the Statue of Unity — with the freedom to stop, detour and set your own pace across two full days of highway — a booked outstation vehicle from Bangalore is a genuinely practical way to do it, not just a scenic alternative to flying.</p>
+
+<img src="/assets/images/blog/gujarat-blog-6.webp" alt="Statue of Unity and the surrounding viewing plaza at Kevadia, Gujarat" loading="lazy" />
+
+<p>Planning a long-distance outstation trip from Bangalore — whether it's Gujarat or somewhere closer? <a href="/contact">Get in touch</a> and we'll help you plan the route and pick the right vehicle for it.</p>`,
       author: "Yogi Tours & Travels", sortOrder: 1
-    },
-    {
-      title: "Bangalore Airport Transfer: What to Expect When Booking a Cab to Kempegowda International Airport",
-      slug: "bangalore-airport-transfer-what-to-expect",
-      excerpt: "A practical look at booking an airport cab in Bangalore — timing, pickup points and what a good transfer service should offer.",
-      coverImageKey: "",
-      content: `<p>Kempegowda International Airport sits well outside central Bangalore, which means traffic timing matters more than distance when planning an airport transfer.</p>
-<h2>How early should you book?</h2>
-<p>For a scheduled departure, we recommend booking your cab at least the evening before, and confirming pickup time based on your flight's departure and typical traffic on your route — earlier during peak morning and evening hours.</p>
-<h2>What should a good airport transfer include?</h2>
-<p>At minimum: a driver briefed on your flight number and timing, a vehicle that matches your group size and luggage, and a pickup location that's easy to find. For arrivals, we track your flight status so the driver adjusts for early or delayed landings.</p>
-<h2>Which vehicle should you pick?</h2>
-<p>A sedan comfortably handles one to two travellers with cabin baggage and a check-in bag each. For families or groups with more luggage, an Innova or Innova Crysta gives you both the seating and boot space to avoid a tight fit.</p>`,
-      author: "Yogi Tours & Travels", sortOrder: 2
-    },
-    {
-      title: "Tempo Traveller vs Mini Bus: Which One Should You Book for Your Next Outing?",
-      slug: "tempo-traveller-vs-mini-bus-which-to-book",
-      excerpt: "Both fit groups, but they're built for different trip sizes. Here's how to decide between a Tempo Traveller and a mini bus.",
-      coverImageKey: "",
-      content: `<p>Tempo Travellers and mini buses both serve group travel, but they're not interchangeable — the right choice depends mostly on group size and how much you value manoeuvrability versus raw capacity.</p>
-<h2>Tempo Traveller: 9–17 seats</h2>
-<p>Tempo Travellers are easier to manoeuvre on narrower hill roads and through city traffic, which makes them a strong choice for family trips, pilgrimage tours and friend-group getaways to destinations like Coorg or Chikmagalur.</p>
-<h2>Mini Bus: 20–29 seats</h2>
-<p>Once your group crosses about 18–20 people, a mini bus becomes the more practical option — it's purpose-built for larger headcounts and is commonly booked for corporate offsites, wedding guest groups and larger school outings.</p>
-<h2>Quick way to decide</h2>
-<p>If your group is under 17 and you're heading to a hill destination with winding roads, lean Tempo Traveller. If you're over 20 people or moving between city venues for an event, a mini bus will usually serve you better.</p>`,
-      author: "Yogi Tours & Travels", sortOrder: 3
-    },
-    {
-      title: "A Simple Guide to Planning a Weekend Trip to Coorg from Bangalore",
-      slug: "weekend-trip-to-coorg-from-bangalore-guide",
-      excerpt: "Distance, drive time and a simple two-day plan for a Coorg weekend getaway from Bangalore.",
-      coverImageKey: "",
-      content: `<p>Coorg is one of the most popular weekend escapes from Bangalore, and for good reason — coffee estates, waterfalls and hill views within a manageable drive.</p>
-<h2>How far is Coorg from Bangalore?</h2>
-<p>Coorg (Madikeri) is roughly 250–260 km from Bangalore, which typically works out to a 5–6 hour drive depending on your route and stops.</p>
-<h2>A simple two-day plan</h2>
-<p>Day one: leave early, arrive by early afternoon, check in, and use the remaining daylight for a coffee estate visit or a nearby waterfall. Day two: cover Raja's Seat and Abbey Falls or Iruppu Falls in the morning before starting the drive back, so you're not rushing the return leg after dark.</p>
-<h2>What vehicle works best?</h2>
-<p>For couples or small families, a sedan or Innova Crysta is comfortable for the drive. For larger friend groups, a 9 or 9 seater Tempo Traveller keeps everyone together and gives you space for luggage and coffee shopping on the way back.</p>`,
-      author: "Yogi Tours & Travels", sortOrder: 4
-    },
-    {
-      title: "Corporate Travel Checklist: Booking Reliable Transportation for Business Events",
-      slug: "corporate-travel-checklist-business-events",
-      excerpt: "A short checklist for booking dependable transportation for offsites, client visits and corporate events.",
-      coverImageKey: "",
-      content: `<p>Corporate travel has less room for error than a leisure trip — a late pickup can mean a missed flight connection or a delayed event start. Here's what we recommend confirming before you book.</p>
-<h2>Confirm headcount early</h2>
-<p>Vehicle sizing should be based on confirmed attendee numbers, not estimates. It's easier to size a mini bus correctly upfront than to arrange a second vehicle at the last minute.</p>
-<h2>Share the full day's schedule</h2>
-<p>For offsites and multi-stop event days, share your agenda — pickup points, timing between venues, and the return schedule — so vehicles and drivers can be planned around it rather than booked as a single point-to-point trip.</p>
-<h2>Ask about backup planning</h2>
-<p>For high-stakes events, ask whether a backup vehicle or driver is available. It's a reasonable question, and a transportation partner who takes corporate travel seriously should have an answer.</p>
-<h2>Get an itemised quotation</h2>
-<p>A clear quotation — vehicle category, estimated distance/duration charges, driver allowance and applicable taxes — makes it easier to get internal approval and avoids surprises on invoicing.</p>`,
-      author: "Yogi Tours & Travels", sortOrder: 5
     }
   ];
   for (const r of rows) {

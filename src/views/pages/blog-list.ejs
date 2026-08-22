@@ -1,21 +1,7 @@
 <%- include('../partials/page-start') %>
 <%- include('../partials/breadcrumbs') %>
 
-<section class="py-14 lg:py-20">
-  <div class="container">
-    <div class="max-w-2xl">
-      <span class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] uppercase text-brand-600 mb-3">
-        <span class="w-6 h-px bg-brand-500"></span>Blog
-      </span>
-      <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Travel Tips &amp; Guides</h1>
-      <p class="text-ink-500 text-[15px] sm:text-base leading-relaxed mt-4">
-        Practical guides on choosing vehicles, planning trips from Bangalore, and getting travel logistics right.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="pb-16 lg:pb-24">
+<section class="pb-16 lg:pb-24 pt-10 lg:pt-14">
   <div class="container">
     <% if (posts.length === 0) { %>
       <p class="text-ink-500">No articles published yet — check back soon.</p>

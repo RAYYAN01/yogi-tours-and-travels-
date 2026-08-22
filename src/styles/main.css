@@ -369,6 +369,12 @@
   .prose-content h2 {
     @apply mt-8 mb-3;
   }
+  .prose-content img {
+    @apply w-full rounded-2xl shadow-card my-6;
+  }
+  .prose-content figcaption {
+    @apply text-xs text-ink-400 text-center -mt-4 mb-6;
+  }
 
   .scrollbar-hide {
     scrollbar-width: none;
