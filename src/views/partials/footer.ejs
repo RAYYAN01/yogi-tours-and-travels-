@@ -46,13 +46,13 @@
 
       <div class="lg:col-span-2" aria-label="Contact">
         <h3 class="font-display font-semibold text-white text-sm tracking-wide uppercase mb-4">Contact</h3>
-        <ul class="space-y-3 text-sm">
-          <li><a href="<%= telHref %>" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'phone', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span><%= business.phone %></span></a></li>
-          <li><a href="https://wa.me/<%= whatsappDigits %>" target="_blank" rel="noopener" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'whatsapp', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span><%= business.whatsapp %></span></a></li>
-          <li><a href="<%= mailtoHref %>" class="flex items-start gap-2.5 hover:text-white transition-colors"><%- include('icon', { name: 'mail', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span class="break-all"><%= business.email %></span></a></li>
-          <li class="flex items-start gap-2.5">
+        <ul class="space-y-3 text-sm min-w-0">
+          <li class="min-w-0"><a href="<%= telHref %>" class="flex items-start gap-2.5 min-w-0 hover:text-white transition-colors"><%- include('icon', { name: 'phone', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span class="min-w-0 break-words"><%= business.phone %></span></a></li>
+          <li class="min-w-0"><a href="https://wa.me/<%= whatsappDigits %>" target="_blank" rel="noopener" class="flex items-start gap-2.5 min-w-0 hover:text-white transition-colors"><%- include('icon', { name: 'whatsapp', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span class="min-w-0 break-words"><%= business.whatsapp %></span></a></li>
+          <li class="min-w-0"><a href="<%= mailtoHref %>" class="flex items-start gap-2.5 min-w-0 hover:text-white transition-colors"><%- include('icon', { name: 'mail', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %><span class="min-w-0 break-all"><%= business.email %></span></a></li>
+          <li class="flex items-start gap-2.5 min-w-0">
             <%- include('icon', { name: 'map-pin', cls: 'w-4 h-4 mt-0.5 shrink-0 text-brand-400' }) %>
-            <span>
+            <span class="min-w-0 break-words">
               <%= business.addressLine %>
               <a href="https://www.google.com/maps/dir/?api=1&destination=<%= encodeURIComponent(business.addressLine) %>" target="_blank" rel="noopener" class="block text-brand-400 hover:text-brand-300 transition-colors mt-1">Get Directions</a>
             </span>
