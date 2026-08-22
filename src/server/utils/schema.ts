@@ -151,12 +151,23 @@ export function touristTripSchema(input: {
   };
 }
 
+/** DB timestamps are stored as "YYYY-MM-DD HH:MM:SS" — schema.org/Google want real ISO 8601 ("...T...Z"). */
+function toIso(dbTimestamp: string): string {
+  const d = new Date(dbTimestamp.includes("T") ? dbTimestamp : `${dbTimestamp.replace(" ", "T")}Z`);
+  return Number.isNaN(d.getTime()) ? dbTimestamp : d.toISOString();
+}
+
 export function blogPostingSchema(input: {
   title: string;
   description: string;
   url: string;
   datePublished: string;
+  dateModified?: string;
   author: string;
+  /** Absolute image URL — real cover photo, not the generic site default. */
+  image?: string;
+  /** Real places/topics the post is substantively about, for entity grounding (GEO/AEO). */
+  mentions?: Array<{ name: string; type?: string }>;
 }): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
@@ -164,7 +175,13 @@ export function blogPostingSchema(input: {
     headline: input.title,
     description: input.description,
     url: `${env.siteUrl}${input.url}`,
-    datePublished: input.datePublished,
+    datePublished: toIso(input.datePublished),
+    dateModified: toIso(input.dateModified ?? input.datePublished),
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${env.siteUrl}${input.url}` },
+    ...(input.image ? { image: [input.image] } : {}),
+    ...(input.mentions?.length
+      ? { mentions: input.mentions.map((m) => ({ "@type": m.type ?? "Place", name: m.name })) }
+      : {}),
     author: { "@type": "Organization", name: input.author },
     publisher: { "@id": `${env.siteUrl}/#organization` }
   };

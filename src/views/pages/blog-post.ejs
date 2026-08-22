@@ -15,6 +15,20 @@
 
     <div class="prose-content text-[15.5px] text-ink-700"><%- post.content %></div>
 
+    <% if (typeof faqs !== "undefined" && faqs.length) { %>
+    <div class="mt-10 pt-8 border-t border-ink-100">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        <% faqs.forEach(function(f) { %>
+        <div>
+          <p class="font-medium text-ink-900 text-[15px]"><%= f.question %></p>
+          <p class="mt-1 text-sm text-ink-600 leading-relaxed"><%= f.answer %></p>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
     <div class="mt-10 pt-8 border-t border-ink-100 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="text-sm text-ink-500">Planning a trip? We can help you pick the right vehicle.</p>
       <button type="button" class="btn btn-primary shrink-0" data-enquiry-trigger data-enquiry-type="quote" data-enquiry-context="Blog: <%= post.title %>">
