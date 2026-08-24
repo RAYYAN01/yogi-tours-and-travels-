@@ -111,6 +111,11 @@ async function seedVehicles(): Promise<void> {
       tagline: "A modern, van-style group vehicle with a smoother ride and contemporary cabin design.",
       description: "The Force Urbania is a newer-generation alternative to the traditional Tempo Traveller body, offering a more car-like ride, a modern interior and strong performance on both city roads and highway stretches — well suited to corporate group travel and premium tours.",
       features: [...commonTTFeatures, "Modern Cabin Design"], featured: 1, sortOrder: 6, ratePerKm: 38 },
+    { category: "tempo-traveller", name: "Urbania 12 Seater Maharaja", slug: "urbania-12-seater-maharaja", seats: 12, luggage: "12 bags + rear storage",
+      tagline: "A premium 12 seater Force Urbania with Maharaja-style captain seating for groups who want extra comfort on longer routes.",
+      description: "The Urbania 12 Seater Maharaja pairs the Force Urbania's modern van body with individual captain-style seats in tan leather, ambient cabin lighting and curtained windows. A step up in comfort from standard bench seating, well suited to premium family trips, corporate group travel and multi-day outstation tours where legroom and finish matter as much as capacity.",
+      features: ["Air Conditioning", "Captain Seats", "Ambient Cabin Lighting", "Push-back Seats", "Reading Lights", "Charging Points", "Curtains", "Experienced Driver"],
+      featured: 0, sortOrder: 8 },
 
     // MINI BUSES
     { category: "mini-bus", name: "20 Seater Mini Bus", slug: "mini-bus-20-seater", seats: 20, luggage: "Overhead racks + rear boot",
