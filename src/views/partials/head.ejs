@@ -5,6 +5,12 @@ const __canonical = typeof canonicalPath !== "undefined" ? `${env.siteUrl}${cano
 const __ogImage = typeof ogImage !== "undefined" ? ogImage : `${env.siteUrl}/assets/images/og-default.png`;
 const __noindex = typeof noindex !== "undefined" ? noindex : false;
 const __schemas = typeof schemas !== "undefined" ? schemas : [];
+// Google itself has ignored the keywords meta tag since ~2009, but it's a
+// harmless, real reflection of the page's actual topic and some SEO audit
+// tools/other search engines still check for it. Page routes can pass a
+// more specific metaKeywords string; this is the sitewide fallback.
+const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
+  "tours and travels bangalore, car rental bangalore, tempo traveller rental bangalore, cab service bangalore, outstation cabs bangalore, airport taxi bangalore, mini bus rental bangalore, tourist bus rental bangalore, innova crysta rental bangalore";
 %><!doctype html>
 <html lang="en-IN">
 <head>
@@ -13,6 +19,9 @@ const __schemas = typeof schemas !== "undefined" ? schemas : [];
   <script>document.documentElement.classList.add('js');</script>
   <title><%= __title %></title>
   <meta name="description" content="<%= __desc %>" />
+  <meta name="keywords" content="<%= __keywords %>" />
+  <meta name="publisher" content="<%= business.name %>" />
+  <meta name="author" content="<%= business.name %>" />
   <link rel="canonical" href="<%= __canonical %>" />
   <% if (env.googleSiteVerification) { %>
   <meta name="google-site-verification" content="<%= env.googleSiteVerification %>" />

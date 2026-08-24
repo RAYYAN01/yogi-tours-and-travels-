@@ -173,6 +173,7 @@ router.get("/:category/:slug", async (req, res, next) => {
     res.render("pages/vehicle-detail", {
       title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
       metaDescription: `Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
+      metaKeywords: `${vehicle.name.toLowerCase()} bangalore, ${vehicle.name.toLowerCase()} bengaluru, ${vehicle.name.toLowerCase()} rental, ${vehicle.name.toLowerCase()} near me, ${label.toLowerCase()} bangalore, ${vehicle.seats} seater rental bangalore`,
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [
         { name: "Home", url: "/" },
