@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   res.render("pages/routes-list", {
     title: "Bangalore Outstation Cab Routes | Tempo Traveller Rental | Yogi Tours & Travels",
     metaDescription:
-      "Distance, travel time and vehicle options for popular outstation routes from Bangalore — Mysore, Coorg, Ooty, Hampi, Tirupati and more. Tempo Traveller rental available on every route for group travel.",
+      "Distance, travel time and vehicle options for popular outstation routes from Bangalore — Mysore, Coorg, Ooty, Hampi, Tirupati and more.",
     canonicalPath: "/routes",
     crumbs: [
       { name: "Home", url: "/" },

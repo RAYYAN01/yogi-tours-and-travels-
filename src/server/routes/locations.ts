@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
   res.render("pages/locations-list", {
     title: "Tours and Travels Near Me — Areas We Serve in Bangalore | Yogi Tours & Travels",
     metaDescription:
-      "Searching for tours and travels near me? Find your locality — car, cab, Tempo Traveller and bus rental across Bangalore, covering Whitefield, Electronic City, Koramangala, Indiranagar, Jayanagar and more.",
+      "Tours and travels near me — find your locality. Car, cab, Tempo Traveller and bus rental across Bangalore, covering Whitefield, Koramangala and more.",
     canonicalPath: "/locations",
     crumbs: [
       { name: "Home", url: "/" },

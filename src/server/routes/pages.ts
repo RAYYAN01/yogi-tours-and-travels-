@@ -38,7 +38,7 @@ router.get("/", async (req, res, next) => {
       vehicles: sortVehiclesAlphabetically(vehicles),
       title: "Tours and Travels Near Me in Bangalore | Yogi Tours & Travels",
       metaDescription:
-        "Looking for tours and travels near me in Bangalore? Yogi Tours & Travels covers every locality with car, cab, Tempo Traveller, Urbania and bus rental for local, airport and outstation trips — transparent per-km pricing, available 24/7.",
+        "Tours and travels near me in Bangalore — car, cab, Tempo Traveller, Urbania & bus rental for local, airport and outstation trips. Transparent pricing, 24/7.",
       canonicalPath: "/",
       // Only the home page opens on a full-bleed dark hero, so only it gets the transparent-over-hero header.
       transparentHeader: true,
@@ -62,7 +62,7 @@ router.get("/about", async (req, res, next) => {
     res.render("pages/about", {
       title: "About Us | Yogi Tours & Travels — Bangalore Tours & Travels Agency",
       metaDescription:
-        "Learn about Yogi Tours & Travels, a Bangalore-based tours and travels agency serving families, corporates and groups with cars, Tempo Travellers, mini buses and tourist buses.",
+        "Yogi Tours & Travels is a Bangalore tours and travels agency serving families, corporates and groups with cars, Tempo Travellers, mini buses and tourist buses.",
       canonicalPath: "/about",
       crumbs: [
         { name: "Home", url: "/" },
@@ -79,7 +79,7 @@ router.get("/contact", (req, res) => {
   res.render("pages/contact", {
     title: "Contact Us | Yogi Tours & Travels — Bangalore",
     metaDescription:
-      "Get in touch with Yogi Tours & Travels for cab bookings, Tempo Traveller rentals, bus hire and tour package enquiries in Bangalore. Call, WhatsApp or send an enquiry.",
+      "Contact Yogi Tours & Travels for cab bookings, Tempo Traveller rentals, bus hire and tour packages in Bangalore. Call, WhatsApp or send an enquiry.",
     canonicalPath: "/contact",
     crumbs: [
       { name: "Home", url: "/" },

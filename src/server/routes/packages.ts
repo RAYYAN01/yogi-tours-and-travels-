@@ -23,7 +23,7 @@ router.get("/", async (req, res, next) => {
     res.render("pages/packages-list", {
       title: "Tour Packages from Bangalore | Coorg, Ooty, Mysore, Goa & More",
       metaDescription:
-        "Browse tour packages from Bangalore including Coorg, Ooty, Mysore, Chikmagalur, Hampi, Goa and Kerala backwaters. Customisable itineraries with your choice of vehicle.",
+        "Tour packages from Bangalore — Coorg, Ooty, Mysore, Chikmagalur, Hampi, Goa and Kerala backwaters. Customisable itineraries, your choice of vehicle.",
       canonicalPath: "/tour-packages",
       crumbs: [
         { name: "Home", url: "/" },

@@ -85,7 +85,7 @@ router.get("/", async (req, res, next) => {
     res.render("pages/vehicles-list", {
       title: "Vehicle Fleet | Car, Tempo Traveller, Mini Bus & Tourist Bus Rental in Bangalore",
       metaDescription:
-        "Browse the full Yogi Tours & Travels fleet in Bangalore — sedans, Innova Crysta, Tempo Travellers, mini buses and tourist buses. Get a quote for your group size.",
+        "Browse the full Yogi Tours & Travels fleet in Bangalore — sedans, Innova Crysta, Tempo Travellers, mini buses and tourist buses.",
       canonicalPath: "/fleet",
       crumbs: [
         { name: "Home", url: "/" },
