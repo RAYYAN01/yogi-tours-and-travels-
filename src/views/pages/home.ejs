@@ -3,11 +3,22 @@
 <!-- HERO -->
 <section class="relative isolate overflow-hidden bg-ink-950 min-h-screen min-h-[100svh] -mt-14 lg:-mt-16 flex items-center">
   <div class="absolute inset-0 z-0 bg-ink-950" aria-hidden="true">
-    <img
-      src="/assets/images/destinations/hero-bangalore.webp"
-      alt=""
-      class="w-full h-full object-cover lg:hidden"
-    />
+    <video
+      class="lg:hidden w-full h-full object-cover"
+      style="background-color: #2f0e04;"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/assets/images/destinations/hero-bangalore.webp"
+      data-hero-video
+    >
+      <!-- Smaller (640x360, ~1.9MB) encode for phones/tablets — the full
+           1280x720 desktop file (~9.3MB) would be a real data/load-time
+           cost on cellular connections for a purely decorative background. -->
+      <source src="/assets/video/hero-background-mobile.mp4" type="video/mp4" />
+    </video>
     <video
       class="hidden lg:block w-full h-full object-cover"
       style="background-color: #2f0e04;"
