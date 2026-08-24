@@ -1,7 +1,14 @@
 import { business, env } from "../config/env.js";
 
 export function organizationSchema(): Record<string, unknown> {
-  const sameAs: string[] = Object.values(business.social).filter((url) => url !== "");
+  // The verified Google Business Profile belongs in sameAs alongside social
+  // profiles — it's the strongest signal tying this website to the real,
+  // Google-verified business entity (helps local pack / Knowledge Panel / AI
+  // answers resolve them as the same organization rather than two entities).
+  const sameAs: string[] = [
+    ...Object.values(business.social).filter((url) => url !== ""),
+    ...(business.googleBusinessProfile ? [business.googleBusinessProfile] : [])
+  ];
   return {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
@@ -11,6 +18,17 @@ export function organizationSchema(): Record<string, unknown> {
     url: env.siteUrl,
     telephone: business.whatsapp,
     email: business.email,
+    // Google's own Knowledge Graph ID for this business — an explicit,
+    // unambiguous entity identifier rather than relying on name/address matching.
+    ...(business.googleKnowledgeGraphId
+      ? {
+          identifier: {
+            "@type": "PropertyValue",
+            propertyID: "Google Knowledge Graph ID",
+            value: business.googleKnowledgeGraphId
+          }
+        }
+      : {}),
     // Real, existing site assets — Google's LocalBusiness rich-result
     // eligibility looks for both an "image" and a "logo".
     image: [`${env.siteUrl}/assets/images/og-default.png`],

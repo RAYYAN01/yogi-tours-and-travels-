@@ -77,7 +77,14 @@ export const business = {
     youtube: "",
     twitter: ""
   },
-  googleBusinessProfile: "",
+  // Verified Google Business Profile, supplied by the owner via their own
+  // "Share" link (https://share.google/aoUumyZBQXRl3AGOK), which resolves to
+  // Google Knowledge Graph entity /g/11ld89nkjl "YOGI TOURS AND TRAVELS".
+  // Stored as the clean kgmid URL rather than the share short-link so it has
+  // no tracking parameters and points at a stable entity identifier.
+  googleBusinessProfile: "https://www.google.com/search?kgmid=/g/11ld89nkjl",
+  /** Google Knowledge Graph machine ID for this business — used as a schema.org identifier so search/AI engines tie this site to the verified listing. */
+  googleKnowledgeGraphId: "/g/11ld89nkjl",
   mapsEmbed: ""
 } as const;
 

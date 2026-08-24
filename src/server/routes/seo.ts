@@ -174,7 +174,7 @@ router.get("/llms.txt", async (req, res, next) => {
 
 > ${business.description}
 
-Bengaluru (Bangalore)-based tours and travels agency, India's Silicon City. Address: ${business.addressLine}. Coordinates: ${business.geo.latitude}, ${business.geo.longitude}. Phone/WhatsApp: ${business.whatsapp}. Email: ${business.email}. Open 24 hours. Rated ${business.googleRating.value}/5 from ${business.googleRating.count} Google reviews. Serves ${business.areaServed.join(", ")} directly, with outstation coverage across Karnataka and South India within roughly ${business.serviceRadiusKm} km and beyond on named routes.
+Bengaluru (Bangalore)-based tours and travels agency, India's Silicon City. Address: ${business.addressLine}. Coordinates: ${business.geo.latitude}, ${business.geo.longitude}. Phone/WhatsApp: ${business.whatsapp}. Email: ${business.email}. Open 24 hours. Rated ${business.googleRating.value}/5 from ${business.googleRating.count} Google reviews. Verified Google Business Profile: ${business.googleBusinessProfile} (Google Knowledge Graph ID ${business.googleKnowledgeGraphId}). Serves ${business.areaServed.join(", ")} directly, with outstation coverage across Karnataka and South India within roughly ${business.serviceRadiusKm} km and beyond on named routes.
 
 ## Fleet
 

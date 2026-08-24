@@ -82,10 +82,12 @@
         <%- include('../components/testimonial-card', { testimonial: t }) %>
       <% }); %>
     </div>
+    <% if (business.googleBusinessProfile) { %>
     <p class="text-center text-sm text-ink-500 mt-6">
       Have you travelled with us? We'd love to hear about it —
-      <a href="<%= business.googleBusinessProfile || '#' %>" class="text-brand-700 font-semibold hover:text-brand-800">leave us a review on Google</a>.
+      <a href="<%= business.googleBusinessProfile %>" target="_blank" rel="noopener" class="text-brand-700 font-semibold hover:text-brand-800">leave us a review on Google</a>.
     </p>
+    <% } %>
   </div>
 </section>
 
