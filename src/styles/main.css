@@ -11,13 +11,26 @@
        document's scrollable area and lets the page scroll sideways into
        blank space (dragging fixed elements like the WhatsApp button along
        with the viewport edge, away from the visible content). Clipping
-       horizontal overflow at the root is the standard fix. */
+       horizontal overflow at the root is the standard fix.
+
+       This has to be set on BOTH html and body, not just one — iOS Safari
+       treats <body> as the actual scrolling element in many cases, while
+       Android Chrome scrolls <html>; a rule on only one of them silently
+       fails to clip on the other platform, which is exactly the "both
+       Android and iOS" bug this was reported as. width:100% + overflow
+       clipping on both is the standard cross-browser-safe pairing. */
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
   body {
     /* "Pearl white" page background — cards/sections that layer on top keep
        true bg-white so they still read as a distinct surface. */
     background-color: #f6f8f0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: theme("fontFamily.display");
