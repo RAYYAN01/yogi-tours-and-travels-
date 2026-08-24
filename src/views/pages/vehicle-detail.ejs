@@ -173,6 +173,22 @@
 </section>
 
 
+<% if (typeof vehicleFaqs !== "undefined" && vehicleFaqs && vehicleFaqs.length) { %>
+<section class="py-16 lg:py-20 bg-ink-50/60">
+  <div class="container max-w-3xl">
+    <%- include('../components/section-heading', { eyebrow: 'FAQs', heading: `Frequently Asked Questions — ${vehicle.name}` }) %>
+    <div class="space-y-5 mt-8">
+      <% vehicleFaqs.forEach(function(f) { %>
+      <div class="rounded-xl bg-white border border-ink-100 p-5">
+        <p class="font-semibold text-ink-900 text-[15px]"><%= f.question %></p>
+        <p class="mt-1.5 text-sm text-ink-600 leading-relaxed"><%= f.answer %></p>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <% if (featuredInPackages.length) { %>
 <section class="py-16 lg:py-20">
   <div class="container">

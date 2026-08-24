@@ -8,7 +8,7 @@ import {
   vehicleGallery,
   packagesForVehicle
 } from "../db/content.js";
-import { productVehicleSchema, breadcrumbSchema, serviceSchema } from "../utils/schema.js";
+import { productVehicleSchema, breadcrumbSchema, serviceSchema, faqSchema } from "../utils/schema.js";
 import { env } from "../config/env.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 import type { VehicleCategory } from "../types/models.js";
@@ -32,6 +32,37 @@ const CATEGORY_RENTAL_LABEL: Record<VehicleCategory, string> = {
 const VEHICLE_TITLE_OVERRIDE: Record<string, string> = {
   "maharaja-tempo-traveller": "Best 12 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels",
   "tempo-traveller-17-seater": "Best 17 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels"
+};
+
+// Real, honest Q&A phrased close to how people actually search/ask AI
+// assistants — surfaced as both an FAQPage schema and a matching visible
+// section on the page (Google requires FAQ schema content to be visible,
+// not just present in JSON-LD). Opt-in per vehicle slug, not a blanket
+// addition, so nothing here overstates what's true for a vehicle without
+// a written answer.
+const VEHICLE_FAQS: Record<string, Array<{ question: string; answer: string }>> = {
+  "tempo-traveller-17-seater": [
+    {
+      question: "Where can I find the best 17 seater Tempo Traveller in Bangalore?",
+      answer:
+        "Yogi Tours & Travels is rated 4.9★ from 210+ Google reviews and operates 17 seater Tempo Travellers across Bangalore (Bengaluru), with transparent per-km pricing and driver Bata confirmed upfront before booking."
+    },
+    {
+      question: "Is there a 17 seater Tempo Traveller near me in Bangalore?",
+      answer:
+        "Yes — pickups are available across Bangalore, including Whitefield, Electronic City, Koramangala, HSR Layout, Jayanagar, JP Nagar, Indiranagar, Yelahanka, Hebbal, Marathahalli and Rajajinagar."
+    },
+    {
+      question: "Is the 17 seater Tempo Traveller comfortable for long trips?",
+      answer:
+        "Yes. It has push-back seats, individual windows, reading lights and a dedicated luggage boot, making it a dependable option for multi-day outstation trips and pilgrimage tours, not just short city rides."
+    },
+    {
+      question: "What is the rate for a 17 seater Tempo Traveller in Bangalore?",
+      answer:
+        "₹30/km AC and ₹28/km Non-AC, with a ₹700/day driver Bata — confirmed rates, not an estimate. Tolls, parking, permit and state taxes are additional and shown in your quotation."
+    }
+  ]
 };
 
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
@@ -137,6 +168,7 @@ router.get("/:category/:slug", async (req, res, next) => {
     // Only vehicles named without a seat count (Force Urbania, Toyota Innova
     // Crysta, etc.) get it appended.
     const seatSuffix = vehicle.name.toLowerCase().includes(`${vehicle.seats} seat`) ? "" : ` (${vehicle.seats} seater)`;
+    const vehicleFaqs = VEHICLE_FAQS[vehicle.slug];
 
     res.render("pages/vehicle-detail", {
       title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
@@ -155,6 +187,7 @@ router.get("/:category/:slug", async (req, res, next) => {
       related,
       featuredInPackages,
       relevantRoutes,
+      vehicleFaqs,
       schemas: [
         productVehicleSchema({
           name: vehicle.name,
@@ -168,7 +201,8 @@ router.get("/:category/:slug", async (req, res, next) => {
           { name: "Fleet", url: "/fleet" },
           { name: label, url: `/fleet/${category}` },
           { name: vehicle.name, url: `/fleet/${category}/${vehicle.slug}` }
-        ])
+        ]),
+        ...(vehicleFaqs ? [faqSchema(vehicleFaqs)] : [])
       ]
     });
   } catch (err) {

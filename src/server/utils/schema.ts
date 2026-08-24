@@ -128,7 +128,8 @@ export function productVehicleSchema(input: {
             },
             availability: "https://schema.org/InStock",
             url: `${env.siteUrl}${input.url}`,
-            description: "Per-kilometre rate — final quotation confirmed on enquiry."
+            description: "Per-kilometre rate — final quotation confirmed on enquiry.",
+            areaServed: { "@type": "City", name: "Bangalore", alternateName: "Bengaluru" }
           }
         }
       : {})
