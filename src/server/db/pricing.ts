@@ -8,6 +8,8 @@
 export interface DutyTariff {
   minKmPerDay: number;
   driverBata: number;
+  /** Only set for vehicles with a confirmed separate non-AC rate — vehicles.ratePerKm is the AC rate. */
+  nonAcRatePerKm?: number;
 }
 
 export const DUTY_POLICY = {
@@ -24,7 +26,8 @@ const TARIFFS: Record<string, DutyTariff> = {
   "toyota-innova": { minKmPerDay: 300, driverBata: 400 },
   "innova-crysta": { minKmPerDay: 300, driverBata: 400 },
   "tempo-traveller-12-seater": { minKmPerDay: 300, driverBata: 500 },
-  "maharaja-tempo-traveller": { minKmPerDay: 300, driverBata: 700 },
+  "maharaja-tempo-traveller": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 20 },
+  "tempo-traveller-17-seater": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 28 },
   "force-urbania": { minKmPerDay: 300, driverBata: 700 }
 };
 

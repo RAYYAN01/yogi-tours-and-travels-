@@ -83,7 +83,14 @@
         %>
         <% if (vehicle.ratePerKm && __tariff) { %>
         <div class="mt-4 rounded-xl bg-sun-50 ring-1 ring-inset ring-sun-200 px-4 py-4">
+          <% if (__tariff.nonAcRatePerKm) { %>
+          <div class="flex items-baseline gap-4">
+            <p><span class="font-display font-bold text-2xl text-sun-700">₹<%= vehicle.ratePerKm %></span><span class="text-sm font-medium text-sun-600">/km AC</span></p>
+            <p><span class="font-display font-bold text-lg text-ink-700">₹<%= __tariff.nonAcRatePerKm %></span><span class="text-xs font-medium text-ink-500">/km Non-AC</span></p>
+          </div>
+          <% } else { %>
           <p class="font-display font-bold text-2xl text-sun-700">₹<%= vehicle.ratePerKm %><span class="text-sm font-medium text-sun-600">/km</span></p>
+          <% } %>
           <dl class="mt-3 space-y-1.5 text-[13px]">
             <div class="flex items-center justify-between">
               <dt class="text-ink-500">Minimum running</dt>
