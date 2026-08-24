@@ -31,7 +31,7 @@ const CATEGORY_RENTAL_LABEL: Record<VehicleCategory, string> = {
 // Google rating stated in the meta description below, not an empty boast.
 const VEHICLE_TITLE_OVERRIDE: Record<string, string> = {
   "maharaja-tempo-traveller": "Best 12 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels",
-  "tempo-traveller-17-seater": "Best 17 Seater Tours and Travels in Bangalore | Yogi Tours & Travels"
+  "tempo-traveller-17-seater": "Best 17 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels"
 };
 
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
