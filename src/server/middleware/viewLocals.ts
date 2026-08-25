@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { business, env, telHref, mailtoHref, whatsappDigits } from "../config/env.js";
+import { business, env, telHref, mailtoHref, whatsappDigits, mapsEmbedUrl } from "../config/env.js";
 import { mainNav, footerServiceLinks, footerToursLinks, footerCompanyLinks, legalLinks } from "../config/nav.js";
 import { organizationSchema } from "../utils/schema.js";
 import { parseJsonArray } from "../db/repo.js";
@@ -8,6 +8,7 @@ import { dutyTariff, estimatedMinimumDailyTotal, DUTY_POLICY } from "../db/prici
 import type { Vehicle, VehicleCategory } from "../types/models.js";
 
 const orgSchema = organizationSchema();
+export const orgSchemaWithRating = organizationSchema(true);
 
 const CATEGORY_ICON: Record<VehicleCategory, string> = {
   car: "car",
@@ -24,6 +25,7 @@ const CATEGORY_ICON: Record<VehicleCategory, string> = {
 export function injectViewLocals(req: Request, res: Response, next: NextFunction): void {
   res.locals.business = business;
   res.locals.env = env;
+  res.locals.mapsEmbedUrl = mapsEmbedUrl;
   res.locals.telHref = telHref();
   res.locals.mailtoHref = mailtoHref();
   res.locals.whatsappDigits = whatsappDigits();

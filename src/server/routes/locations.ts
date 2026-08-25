@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { LOCATIONS, findLocation } from "../config/locations.js";
 import { vehiclesRepo, VEHICLE_CATEGORY_SLUGS, VEHICLE_CATEGORY_LABELS } from "../db/content.js";
-import { breadcrumbSchema } from "../utils/schema.js";
+import { breadcrumbSchema, faqSchema } from "../utils/schema.js";
 import type { VehicleCategory } from "../types/models.js";
 
 const router = Router();
 
 router.get("/", (req, res) => {
   res.render("pages/locations-list", {
-    title: "Tours and Travels Near Me — Areas We Serve in Bangalore | Yogi Tours & Travels",
+    title: "Areas We Serve in Bangalore | Yogi Tours & Travels",
     metaDescription:
-      "Tours and travels near me — find your locality. Car, cab, Tempo Traveller and bus rental across Bangalore, covering Whitefield, Koramangala and more.",
+      "Car, cab, Tempo Traveller and bus rental across Bangalore localities — find your area, covering Whitefield, Koramangala and more.",
     canonicalPath: "/locations",
     crumbs: [
       { name: "Home", url: "/" },
@@ -64,6 +64,23 @@ router.get("/car-rental-:slug", async (req, res, next) => {
           { name: "Home", url: "/" },
           { name: "Locations", url: "/locations" },
           { name: location.name, url: canonicalPath }
+        ]),
+        // Kept word-for-word in sync with the visible "Common Questions" block
+        // in location-detail.ejs, so the schema never claims content the page
+        // doesn't actually show.
+        faqSchema([
+          {
+            question: `Do you offer airport pickup from ${location.name}?`,
+            answer: `Yes — we cover pickup and drop to Kempegowda International Airport from ${location.name} and every other area we serve.`
+          },
+          {
+            question: `Can I book an outstation trip from ${location.name}?`,
+            answer: `Yes. Pickup is arranged directly from ${location.name} for outstation trips.`
+          },
+          {
+            question: `Which vehicles are available in ${location.name}?`,
+            answer: `The full fleet — sedans, Toyota Innova & Innova Crysta, Tempo Travellers, Force Urbania and buses — can be arranged for pickup in ${location.name}.`
+          }
         ])
       ]
     });

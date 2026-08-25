@@ -8,10 +8,10 @@ import {
   vehicleGallery,
   packagesForVehicle
 } from "../db/content.js";
-import { productVehicleSchema, breadcrumbSchema, serviceSchema, faqSchema } from "../utils/schema.js";
-import { env } from "../config/env.js";
+import { vehicleServiceSchema, breadcrumbSchema, serviceSchema, faqSchema } from "../utils/schema.js";
+import { env, business } from "../config/env.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
-import type { VehicleCategory } from "../types/models.js";
+import type { Vehicle, VehicleCategory } from "../types/models.js";
 
 const router = Router();
 
@@ -63,6 +63,71 @@ const VEHICLE_FAQS: Record<string, Array<{ question: string; answer: string }>> 
         "₹30/km AC and ₹28/km Non-AC, with a ₹700/day driver Bata — confirmed rates, not an estimate. Tolls, parking, permit and state taxes are additional and shown in your quotation."
     }
   ]
+};
+
+/**
+ * Direct-answer Q&A for vehicles without a hand-curated VEHICLE_FAQS entry —
+ * generated only from real, already-confirmed data on the vehicle (seats,
+ * rate, service area), so it stays honest without needing per-vehicle
+ * copywriting. Answers the exact "how many seats / how much does it cost"
+ * phrasing people and AI assistants actually ask.
+ */
+function genericVehicleFaqs(vehicle: Vehicle, rentalLabel: string): Array<{ question: string; answer: string }> {
+  const seatsText = vehicle.category === "car" ? `${vehicle.seats} seats` : `${vehicle.seats} passenger seats plus the driver`;
+  const faqs: Array<{ question: string; answer: string }> = [
+    {
+      question: `How many seats does the ${vehicle.name} have?`,
+      answer: `The ${vehicle.name} has ${seatsText}.`
+    },
+    {
+      question: `What is the rental rate for the ${vehicle.name} in Bangalore?`,
+      answer: vehicle.ratePerKm
+        ? `₹${vehicle.ratePerKm}/km, with the final quotation confirmed on enquiry based on your route, trip duration and driver Bata.`
+        : `Rates depend on your route, trip duration and dates — share your requirement for a confirmed quotation.`
+    },
+    {
+      question: `Is the ${vehicle.name} available for outstation trips from Bangalore?`,
+      answer: `Yes — the ${rentalLabel.toLowerCase()} is available for both local Bangalore travel and outstation trips across Karnataka and South India, within our usual ${business.serviceRadiusKm} km service radius and beyond on named routes.`
+    },
+    {
+      question: `Is the ${vehicle.name} available near me in Bangalore?`,
+      answer: `Yes — pickup is arranged across Bangalore, including ${business.areaServed.slice(1, 5).join(", ")} and other areas we serve.`
+    }
+  ];
+  return faqs;
+}
+
+/** Per-vehicle <meta name="keywords"> phrases — the base set plus the exact "in bangalore" phrasing requested, and the Force Urbania name+seat combo where it actually applies. */
+function vehicleKeywords(vehicle: Vehicle, label: string): string {
+  const n = vehicle.name.toLowerCase();
+  const base = [
+    `${n} bangalore`,
+    `${n} bengaluru`,
+    `${n} rental`,
+    `${n} near me`,
+    `${label.toLowerCase()} bangalore`,
+    `${vehicle.seats} seater rental bangalore`,
+    `${vehicle.seats} seater ${label.toLowerCase()} in bangalore`
+  ];
+  if (n.includes("urbania")) {
+    base.push(`force urbania tempo traveller in bangalore`, `${vehicle.seats} seater force urbania tempo traveller in bangalore`);
+  }
+  return base.join(", ");
+}
+
+// Extra <meta name="keywords"> phrases per category — built only from real,
+// currently-live seat counts (checked directly against the database, not
+// seed.ts, which had drifted). No phrase here names a seat count that
+// doesn't correspond to an actual vehicle in that category.
+const CATEGORY_KEYWORDS: Record<VehicleCategory, string> = {
+  car: "car rental bangalore, innova crysta rental bangalore, cab service bangalore",
+  "tempo-traveller":
+    "tempo traveller rental bangalore, 9 seater tempo traveller in bangalore, 12 seater tempo traveller in bangalore, 17 seater tempo traveller in bangalore, force urbania tempo traveller in bangalore, 17 seater force urbania tempo traveller in bangalore",
+  "mini-bus": "mini bus in bangalore, mini bus rental bangalore, 21 seater mini bus in bangalore, 25 seater mini bus in bangalore",
+  // No 50-seater exists in Mini Bus or Tourist Bus — the closest real vehicle
+  // is the 55 Seater Tourist Bus, so that's what's targeted, alongside the
+  // literal "50 seater" phrase as a near-match for that search intent.
+  "tourist-bus": "tourist bus rental bangalore, 40 seater tourist bus bangalore, 55 seater tourist bus bangalore, 50 seater bus bangalore"
 };
 
 const CATEGORY_INTRO: Record<VehicleCategory, string> = {
@@ -118,6 +183,7 @@ router.get("/:category", async (req, res, next) => {
     res.render("pages/vehicles-category", {
       title: `${rentalLabel} Rental in Bangalore | Yogi Tours & Travels`,
       metaDescription: `${CATEGORY_INTRO[category]} Transparent quotations, experienced drivers and well-maintained vehicles.`,
+      metaKeywords: CATEGORY_KEYWORDS[category],
       canonicalPath: categoryPath,
       crumbs: [
         { name: "Home", url: "/" },
@@ -168,12 +234,12 @@ router.get("/:category/:slug", async (req, res, next) => {
     // Only vehicles named without a seat count (Force Urbania, Toyota Innova
     // Crysta, etc.) get it appended.
     const seatSuffix = vehicle.name.toLowerCase().includes(`${vehicle.seats} seat`) ? "" : ` (${vehicle.seats} seater)`;
-    const vehicleFaqs = VEHICLE_FAQS[vehicle.slug];
+    const vehicleFaqs = VEHICLE_FAQS[vehicle.slug] ?? genericVehicleFaqs(vehicle, CATEGORY_RENTAL_LABEL[category]);
 
     res.render("pages/vehicle-detail", {
       title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
       metaDescription: `Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
-      metaKeywords: `${vehicle.name.toLowerCase()} bangalore, ${vehicle.name.toLowerCase()} bengaluru, ${vehicle.name.toLowerCase()} rental, ${vehicle.name.toLowerCase()} near me, ${label.toLowerCase()} bangalore, ${vehicle.seats} seater rental bangalore`,
+      metaKeywords: vehicleKeywords(vehicle, label),
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [
         { name: "Home", url: "/" },
@@ -190,7 +256,7 @@ router.get("/:category/:slug", async (req, res, next) => {
       relevantRoutes,
       vehicleFaqs,
       schemas: [
-        productVehicleSchema({
+        vehicleServiceSchema({
           name: vehicle.name,
           description: vehicle.description,
           url: `/fleet/${category}/${vehicle.slug}`,

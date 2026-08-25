@@ -84,9 +84,11 @@ export const business = {
   // no tracking parameters and points at a stable entity identifier.
   googleBusinessProfile: "https://www.google.com/search?kgmid=/g/11ld89nkjl",
   /** Google Knowledge Graph machine ID for this business — used as a schema.org identifier so search/AI engines tie this site to the verified listing. */
-  googleKnowledgeGraphId: "/g/11ld89nkjl",
-  mapsEmbed: ""
+  googleKnowledgeGraphId: "/g/11ld89nkjl"
 } as const;
+
+/** No-API-key Google Maps embed URL, pinned to the real geocoded coordinates above. Used for the embedded map on /contact and location pages. */
+export const mapsEmbedUrl = `https://www.google.com/maps?q=${business.geo.latitude},${business.geo.longitude}&z=15&output=embed`;
 
 /** WhatsApp number stripped of everything except leading + and digits, for wa.me links. */
 export function whatsappDigits(): string {

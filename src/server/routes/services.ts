@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { servicesRepo, serviceHighlights, faqsRepo } from "../db/content.js";
-import { serviceSchema, breadcrumbSchema } from "../utils/schema.js";
+import { serviceSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
 
 const router = Router();
 
@@ -62,7 +62,8 @@ router.get("/:slug", async (req, res, next) => {
           { name: "Home", url: "/" },
           { name: "Services", url: "/services" },
           { name: service.name, url: `/services/${service.slug}` }
-        ])
+        ]),
+        ...(relatedFaqs.length ? [faqSchema(relatedFaqs.map((f) => ({ question: f.question, answer: f.answer })))] : [])
       ]
     });
   } catch (err) {

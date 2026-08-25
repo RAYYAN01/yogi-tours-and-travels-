@@ -35,7 +35,7 @@ const __tariff = dutyTariff(__v.slug);
     <% if (__v.rating || __v.vehicleClass) { %>
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
       <% if (__v.rating) { %>
-      <span class="inline-flex items-center gap-1 bg-ink-900 text-white rounded-md px-2 py-1 text-[12px] font-semibold">
+      <span class="inline-flex items-center gap-1 bg-ink-900 text-white rounded-md px-2 py-1 text-[12px] font-semibold" title="Our own vehicle condition rating, not a customer review score">
         <span class="flex items-center gap-0.5" aria-hidden="true">
           <% for (let i = 0; i < 5; i++) {
                const filled = i < __fullStars;

@@ -25,7 +25,7 @@ const TARIFFS: Record<string, DutyTariff> = {
   "toyota-etios": { minKmPerDay: 300, driverBata: 400 },
   "toyota-innova": { minKmPerDay: 300, driverBata: 400 },
   "innova-crysta": { minKmPerDay: 300, driverBata: 400 },
-  "tempo-traveller-12-seater": { minKmPerDay: 300, driverBata: 500 },
+  "9-seater-tempo-traveller": { minKmPerDay: 300, driverBata: 500 },
   "maharaja-tempo-traveller": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 20 },
   "tempo-traveller-17-seater": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 28 },
   "force-urbania": { minKmPerDay: 300, driverBata: 700 }

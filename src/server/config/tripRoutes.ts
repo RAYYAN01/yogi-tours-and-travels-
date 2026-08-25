@@ -28,7 +28,7 @@ export const TRIP_ROUTES: TripRoute[] = [
     vehicleSlugs: [
       { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "urbania-12-seater-maharaja", label: "Urbania 12 Seater Maharaja" },
       { category: "tempo-traveller", slug: "tempo-traveller-17-seater", label: "17 Seater Tempo Traveller" }
@@ -45,7 +45,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Coorg (Madikeri) is a popular hill-station weekend getaway from Bangalore, reached via Mysore and Kushalnagar. Hill roads through the Western Ghats mean the return leg can take slightly longer than the outbound drive, so most travellers book it as a 2-day round trip.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "urbania-12-seater-maharaja", label: "Urbania 12 Seater Maharaja" },
       { category: "tempo-traveller", slug: "tempo-traveller-17-seater", label: "17 Seater Tempo Traveller" },
@@ -63,7 +63,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Ooty is reached via Mysore and Bandipur/Mudumalai, with a ghat-road climb through Tamil Nadu forest checkposts near the border. Because of the ghat section and forest-gate timing restrictions on some routes, most travellers plan this as a multi-day trip rather than a single-day round trip.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -77,7 +77,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Chikmagalur's coffee-estate hills are typically reached via Hassan or Kunigal, and it's a common weekend or long-weekend trip for both families and small friend groups. The route mostly runs on state highways with a shorter ghat stretch than Coorg or Ooty.",
     vehicleSlugs: [
       { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -91,7 +91,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Hampi is a longer outstation drive from Bangalore, usually via Chitradurga and Hospet on NH48. Given the distance, most travellers book this as a 2-day round trip or a one-way drop, especially for heritage and photography-focused visits.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -105,7 +105,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Tirupati is one of the most frequently booked pilgrimage routes from Bangalore, travelled via Chittoor on NH71/NH716. Early starts are common so travellers can complete the temple darshan and drive back the same day or the next.",
     vehicleSlugs: [
       { category: "car", slug: "toyota-innova", label: "Toyota Innova" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" },
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "maharaja-tempo-traveller", label: "12 Seater Tempo Traveller" },
       { category: "tempo-traveller", slug: "urbania-12-seater-maharaja", label: "Urbania 12 Seater Maharaja" },
       { category: "tempo-traveller", slug: "tempo-traveller-17-seater", label: "17 Seater Tempo Traveller" }
@@ -165,7 +165,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Mangalore is reached either via Hassan and the Shiradi Ghat or via Sakleshpur, both routes crossing the Western Ghats. Road conditions through the ghat sections can add time in the monsoon, so this route is best planned with some schedule flexibility.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -193,7 +193,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "The Kerala backwaters route to Alleppey and Kumarakom is usually driven via Salem and Kochi. Given the distance, this is typically planned as a multi-day trip with an overnight halt rather than a single-day drive.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -207,7 +207,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Munnar's tea-garden hills are reached via Coimbatore and Udumalpet, with a ghat climb in the final stretch. Most travellers plan this as a multi-day trip given the drive length and the hill roads near the destination.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   },
   {
@@ -249,7 +249,7 @@ export const TRIP_ROUTES: TripRoute[] = [
       "Wayanad is reached via Mysore, Gundlupet and Bandipur/Muthanga forest range, with a wildlife-corridor stretch that has timing restrictions after dark. Most travellers plan an early start and a multi-day stay given the drive length.",
     vehicleSlugs: [
       { category: "car", slug: "innova-crysta", label: "Toyota Innova Crysta" },
-      { category: "tempo-traveller", slug: "tempo-traveller-12-seater", label: "9 Seater Tempo Traveller" }
+      { category: "tempo-traveller", slug: "9-seater-tempo-traveller", label: "9 Seater Tempo Traveller" }
     ]
   }
 ];

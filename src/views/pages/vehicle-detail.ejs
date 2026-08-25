@@ -59,7 +59,7 @@
         <% if (vehicle.rating || vehicle.vehicleClass) { %>
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2.5">
           <% if (vehicle.rating) { %>
-          <span class="inline-flex items-center gap-1 bg-ink-900 text-white rounded-md px-2 py-1 text-[12px] font-semibold">
+          <span class="inline-flex items-center gap-1 bg-ink-900 text-white rounded-md px-2 py-1 text-[12px] font-semibold" title="Our own vehicle condition rating, not a customer review score">
             <span class="flex items-center gap-0.5" aria-hidden="true">
               <% const __fullStars = Math.floor(vehicle.rating); const __halfStar = vehicle.rating - __fullStars >= 0.5;
                  for (let i = 0; i < 5; i++) {

@@ -15,6 +15,7 @@ import {
   sortVehiclesAlphabetically
 } from "../db/content.js";
 import { faqSchema } from "../utils/schema.js";
+import { orgSchemaWithRating } from "../middleware/viewLocals.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +50,7 @@ router.get("/", async (req, res, next) => {
       testimonials,
       galleryTeaser,
       homeRoutes: TRIP_ROUTES.slice(0, 6),
+      organizationSchema: orgSchemaWithRating,
       schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
     });
   } catch (err) {
@@ -68,6 +70,7 @@ router.get("/about", async (req, res, next) => {
         { name: "Home", url: "/" },
         { name: "About", url: "/about" }
       ],
+      organizationSchema: orgSchemaWithRating,
       testimonials
     });
   } catch (err) {
@@ -84,7 +87,8 @@ router.get("/contact", (req, res) => {
     crumbs: [
       { name: "Home", url: "/" },
       { name: "Contact", url: "/contact" }
-    ]
+    ],
+    organizationSchema: orgSchemaWithRating
   });
 });
 

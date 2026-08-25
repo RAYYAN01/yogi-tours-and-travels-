@@ -1,8 +1,9 @@
 <%
-const __title = typeof title !== "undefined" ? title : `${business.name} | Tours & Travels in Bangalore`;
+const __title = typeof title !== "undefined" ? title : `${business.name} — Car, Tempo Traveller & Bus Rental in Bangalore`;
 const __desc = typeof metaDescription !== "undefined" ? metaDescription : business.description;
 const __canonical = typeof canonicalPath !== "undefined" ? `${env.siteUrl}${canonicalPath}` : canonicalUrl;
-const __ogImage = typeof ogImage !== "undefined" ? ogImage : `${env.siteUrl}/assets/images/og-default.png`;
+const __hasCustomOgImage = typeof ogImage !== "undefined";
+const __ogImage = __hasCustomOgImage ? ogImage : `${env.siteUrl}/assets/images/og-default.png`;
 const __noindex = typeof noindex !== "undefined" ? noindex : false;
 const __schemas = typeof schemas !== "undefined" ? schemas : [];
 // Google itself has ignored the keywords meta tag since ~2009, but it's a
@@ -45,8 +46,10 @@ const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
   <meta property="og:description" content="<%= __desc %>" />
   <meta property="og:url" content="<%= __canonical %>" />
   <meta property="og:image" content="<%= __ogImage %>" />
+  <% if (!__hasCustomOgImage) { %>
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <% } %>
   <meta property="og:locale" content="en_IN" />
 
   <!-- Twitter -->
@@ -63,7 +66,13 @@ const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" /></noscript>
 
   <link rel="stylesheet" href="/css/main.css" />
 

@@ -15,8 +15,8 @@ const __transparentHeader = typeof transparentHeader !== "undefined" && transpar
     <div class="container flex items-center justify-between h-14 lg:h-16">
       <%- include('logo') %>
 
-      <nav aria-label="Primary navigation" class="hidden lg:flex items-center gap-8">
-        <% [mainNav[0], mainNav[2], mainNav[3], mainNav[4], mainNav[5]].forEach(function(link) {
+      <nav aria-label="Primary navigation" class="hidden lg:flex items-center gap-6 xl:gap-8">
+        <% [mainNav[0], mainNav[1], mainNav[2], mainNav[3], mainNav[4], mainNav[5], mainNav[6]].forEach(function(link) {
           const isActive = link.match === "/" ? currentPath === "/" : currentPath.startsWith(link.match);
         %>
           <a

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { packagesRepo, packageHighlights, packageVehicleOptions, vehiclesRepo } from "../db/content.js";
-import { touristTripSchema, breadcrumbSchema } from "../utils/schema.js";
+import { touristTripSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
 
 const router = Router();
 
@@ -60,6 +60,24 @@ router.get("/:slug", async (req, res, next) => {
       related.length > 0 ? related : (await packagesRepo.all()).filter((p) => p.id !== pkg.id).slice(0, 3);
     const vehicles = await vehiclesRepo.all();
 
+    // Honest, direct-answer Q&A built only from confirmed fields on the
+    // package (no fabricated pricing) — matches the visible FAQ block in
+    // package-detail.ejs so schema and page content stay in sync.
+    const packageFaqs = [
+      {
+        question: `How many days is the ${pkg.title}?`,
+        answer: `This is a ${pkg.duration} package starting from ${pkg.startLocation}.`
+      },
+      {
+        question: `How much does the ${pkg.title} cost?`,
+        answer: `Cost depends on your vehicle choice, group size and travel dates — share your requirement for a confirmed quotation.`
+      },
+      {
+        question: `Who is the ${pkg.title} suitable for?`,
+        answer: pkg.idealFor
+      }
+    ];
+
     res.render("pages/package-detail", {
       title: `${pkg.title} | ${pkg.duration} Tour Package from Bangalore`,
       metaDescription: `${pkg.title} — ${pkg.duration} tour package from Bangalore to ${pkg.destination}. ${pkg.idealFor}`,
@@ -74,6 +92,7 @@ router.get("/:slug", async (req, res, next) => {
       vehicleOptions: packageVehicleOptions(pkg),
       vehicles,
       related: fallbackRelated,
+      packageFaqs,
       schemas: [
         touristTripSchema({
           name: pkg.title,
@@ -85,7 +104,8 @@ router.get("/:slug", async (req, res, next) => {
           { name: "Home", url: "/" },
           { name: "Tours & Packages", url: "/tour-packages" },
           { name: pkg.title, url: `/tour-packages/${pkg.slug}` }
-        ])
+        ]),
+        faqSchema(packageFaqs)
       ]
     });
   } catch (err) {

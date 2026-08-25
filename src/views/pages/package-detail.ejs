@@ -53,6 +53,20 @@
         <p class="text-xs text-ink-400 mt-3">Vehicle choice depends on your group size — we'll confirm the best fit when you enquire.</p>
       </div>
       <% } %>
+
+      <% if (packageFaqs && packageFaqs.length) { %>
+      <div class="mt-8 rounded-2xl bg-ink-50/70 p-5 sm:p-6">
+        <h2 class="font-display font-semibold text-ink-900 mb-3">Common Questions — <%= pkg.title %></h2>
+        <div class="space-y-4 text-sm text-ink-700">
+          <% packageFaqs.forEach(function(f) { %>
+          <div>
+            <p class="font-medium text-ink-900"><%= f.question %></p>
+            <p class="mt-1 text-ink-600"><%= f.answer %></p>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
     </div>
 
     <div class="lg:col-span-2">

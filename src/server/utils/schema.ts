@@ -1,6 +1,6 @@
 import { business, env } from "../config/env.js";
 
-export function organizationSchema(): Record<string, unknown> {
+export function organizationSchema(includeRating = false): Record<string, unknown> {
   // The verified Google Business Profile belongs in sameAs alongside social
   // profiles — it's the strongest signal tying this website to the real,
   // Google-verified business entity (helps local pack / Knowledge Panel / AI
@@ -14,6 +14,11 @@ export function organizationSchema(): Record<string, unknown> {
     "@type": "TravelAgency",
     "@id": `${env.siteUrl}/#organization`,
     name: business.name,
+    // Exact-string match to the verified Google Business Profile listing name
+    // ("YOGI TOURS AND TRAVELS") — the on-site name uses "&" and different
+    // capitalization, so this keeps entity resolution between the site and
+    // the Maps listing unambiguous even though the strings differ slightly.
+    alternateName: "Yogi Tours and Travels",
     description: business.description,
     url: env.siteUrl,
     telephone: business.whatsapp,
@@ -53,11 +58,20 @@ export function organizationSchema(): Record<string, unknown> {
       opens: "00:00",
       closes: "23:59"
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: business.googleRating.value,
-      reviewCount: business.googleRating.count
-    },
+    // Google's review-snippet spam policy targets aggregateRating markup that
+    // appears on pages not substantively about the rated entity (e.g. the
+    // same badge repeated on every blog post or legal page). Keep it only on
+    // pages that opt in — home, about, contact — where the whole page is
+    // about this business.
+    ...(includeRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: business.googleRating.value,
+            reviewCount: business.googleRating.count
+          }
+        }
+      : {}),
     // First entry carries the "Bengaluru"/"Bangalore" dual-name explicitly so
     // search & AI engines resolve both spellings to the same served city;
     // the rest are the specific localities we operate in day-to-day.
@@ -116,7 +130,7 @@ export function serviceSchema(input: { name: string; description: string; url: s
   };
 }
 
-export function productVehicleSchema(input: {
+export function vehicleServiceSchema(input: {
   name: string;
   description: string;
   url: string;
@@ -124,14 +138,19 @@ export function productVehicleSchema(input: {
   /** Real confirmed per-km rate in INR — omitted (no `offers` block) rather than faked when not yet confirmed. */
   ratePerKm?: number | null;
 }): Record<string, unknown> {
+  // A chauffeur-driven vehicle-for-hire is a rental service, not a purchasable
+  // good — "Service" matches what's actually being sold; "Product" implies
+  // Merchant-listing eligibility (priceValidUntil, shipping, etc.) this isn't.
   return {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Service",
+    serviceType: input.name,
     name: input.name,
     description: input.description,
     url: `${env.siteUrl}${input.url}`,
     ...(input.imageUrl ? { image: input.imageUrl } : {}),
-    brand: { "@type": "Organization", name: business.name },
+    provider: { "@id": `${env.siteUrl}/#organization` },
+    areaServed: { "@type": "City", name: "Bangalore", alternateName: "Bengaluru" },
     ...(input.ratePerKm
       ? {
           offers: {

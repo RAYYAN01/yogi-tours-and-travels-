@@ -86,7 +86,7 @@ async function seedVehicles(): Promise<void> {
       features: commonCarFeatures, featured: 0, sortOrder: 6 },
 
     // TEMPO TRAVELLERS
-    { category: "tempo-traveller", name: "9 Seater Tempo Traveller", slug: "tempo-traveller-12-seater", seats: 9, luggage: "9 bags + roof carrier",
+    { category: "tempo-traveller", name: "9 Seater Tempo Traveller", slug: "9-seater-tempo-traveller", seats: 9, luggage: "9 bags + roof carrier",
       tagline: "One of Bangalore's most-booked 9 seater Tempo Travellers — well suited to group outstation trips across Karnataka and pilgrimage tours.",
       description: "The 9 Seater Tempo Traveller is a dependable middle-ground choice for office outings, pilgrimage groups, and multi-family trips. Available for 9 seater Tempo Traveller rental in Bangalore (Bengaluru) and outstation trips across Karnataka and South India. Forward-facing push-back seats, individual windows and a dedicated luggage boot make it well suited to multi-day itineraries.",
       features: commonTTFeatures, featured: 1, sortOrder: 2, ratePerKm: 28 },
