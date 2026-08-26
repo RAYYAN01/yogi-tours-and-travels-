@@ -13,18 +13,9 @@
 
     <form action="/admin/settings/password" method="post" class="space-y-4">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-      <div>
-        <label for="currentPassword" class="form-label">Current Password</label>
-        <input type="password" id="currentPassword" name="currentPassword" class="form-input" autocomplete="current-password" required />
-      </div>
-      <div>
-        <label for="newPassword" class="form-label">New Password</label>
-        <input type="password" id="newPassword" name="newPassword" class="form-input" autocomplete="new-password" minlength="8" required />
-      </div>
-      <div>
-        <label for="confirmPassword" class="form-label">Confirm New Password</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" autocomplete="new-password" minlength="8" required />
-      </div>
+      <%- include('../partials/password-field', { id: 'currentPassword', name: 'currentPassword', label: 'Current Password', autocomplete: 'current-password' }) %>
+      <%- include('../partials/password-field', { id: 'newPassword', name: 'newPassword', label: 'New Password', autocomplete: 'new-password', minlength: 8 }) %>
+      <%- include('../partials/password-field', { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirm New Password', autocomplete: 'new-password', minlength: 8 }) %>
       <button type="submit" class="btn btn-primary w-full">Update Password</button>
     </form>
   </div>

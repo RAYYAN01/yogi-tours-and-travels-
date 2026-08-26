@@ -133,6 +133,14 @@ CREATE TABLE IF NOT EXISTS admin_users (
   "createdAt" TEXT NOT NULL DEFAULT to_char(NOW(), 'YYYY-MM-DD HH24:MI:SS')
 );
 
+-- Added after initial launch — ADD COLUMN IF NOT EXISTS so this applies
+-- cleanly to the already-live admin_users table, not just fresh databases.
+-- Stores a hash of the reset token (never the raw token itself) plus its
+-- expiry, so a forgotten admin password can be reset via an emailed link
+-- instead of requiring direct database access.
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS "resetTokenHash" TEXT;
+ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS "resetTokenExpires" TEXT;
+
 CREATE INDEX IF NOT EXISTS idx_vehicles_category ON vehicles(category);
 CREATE INDEX IF NOT EXISTS idx_enquiries_status ON enquiries(status);
 CREATE INDEX IF NOT EXISTS idx_enquiries_createdat ON enquiries("createdAt");

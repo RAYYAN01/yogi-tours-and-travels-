@@ -44,3 +44,28 @@ export async function notifyNewEnquiry(enquiry: NewEnquiry): Promise<void> {
     console.error("[mailer] Failed to send enquiry notification email:", err);
   }
 }
+
+/**
+ * Sends the admin password-reset link. Same deliberate no-op behaviour as
+ * notifyNewEnquiry when SMTP isn't configured — returns false so the caller
+ * can log it, rather than silently pretending an email went out.
+ */
+export async function sendAdminResetEmail(resetUrl: string): Promise<boolean> {
+  const t = getTransporter();
+  if (!t) {
+    console.log(`[mailer] SMTP not configured — cannot send admin password reset email. Reset URL: ${resetUrl}`);
+    return false;
+  }
+  try {
+    await t.sendMail({
+      from: `"${business.name} Website" <${env.smtp.user}>`,
+      to: env.smtp.notifyTo || business.email,
+      subject: `Reset your ${business.name} admin password`,
+      text: `A password reset was requested for the ${business.name} admin panel.\n\nReset it here (valid for 30 minutes): ${resetUrl}\n\nIf you didn't request this, you can ignore this email — your password won't change unless the link above is used.`
+    });
+    return true;
+  } catch (err) {
+    console.error("[mailer] Failed to send admin reset email:", err);
+    return false;
+  }
+}

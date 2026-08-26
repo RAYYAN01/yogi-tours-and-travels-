@@ -146,6 +146,8 @@ export interface AdminUser {
   id: number;
   username: string;
   passwordHash: string;
+  resetTokenHash: string | null;
+  resetTokenExpires: string | null;
   createdAt: string;
 }
 
