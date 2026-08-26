@@ -9,7 +9,7 @@
           A Bangalore-based tours and travels agency offering car rentals, Tempo Traveller and mini bus hire, tourist bus rental, airport transfers and customised tour packages across Karnataka and South India.
         </p>
         <div class="flex items-center gap-2.5 mt-5">
-          <% [["facebook", business.social.facebook], ["instagram", business.social.instagram], ["youtube", business.social.youtube], ["twitter", business.social.twitter]].forEach(function(s) { %>
+          <% [["facebook", business.social.facebook], ["instagram", business.social.instagram], ["youtube", business.social.youtube], ["twitter", business.social.twitter], ["tripadvisor", business.social.tripadvisor]].forEach(function(s) { %>
             <a href="<%= s[1] || '#' %>" class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 text-ink-300 hover:bg-brand-600 hover:text-white transition-colors" aria-label="<%= s[0] %>" <%= s[1] ? '' : 'aria-disabled="true"' %>>
               <%- include('icon', { name: s[0], cls: 'w-4 h-4' }) %>
             </a>

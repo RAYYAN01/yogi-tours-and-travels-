@@ -75,7 +75,8 @@ export const business = {
     facebook: "",
     instagram: "https://www.instagram.com/yogi_travels93/",
     youtube: "",
-    twitter: ""
+    twitter: "",
+    tripadvisor: "https://www.tripadvisor.in/Profile/Roving07830876165"
   },
   // Verified Google Business Profile, supplied by the owner via their own
   // "Share" link (https://share.google/aoUumyZBQXRl3AGOK), which resolves to
