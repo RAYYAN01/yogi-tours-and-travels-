@@ -224,3 +224,23 @@ export function blogPostingSchema(input: {
     publisher: { "@id": `${env.siteUrl}/#organization` }
   };
 }
+
+/**
+ * WebSite entity, tied to the organization via publisher/@id so search and AI
+ * engines resolve the site and the business as one entity rather than two.
+ * Deliberately omits SearchAction — this site has no internal search endpoint,
+ * and declaring one Google can't actually use is invalid structured data.
+ */
+export function websiteSchema(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${env.siteUrl}/#website`,
+    url: env.siteUrl,
+    name: business.name,
+    alternateName: "Yogi Tours and Travels",
+    description: business.description,
+    inLanguage: "en-IN",
+    publisher: { "@id": `${env.siteUrl}/#organization` }
+  };
+}

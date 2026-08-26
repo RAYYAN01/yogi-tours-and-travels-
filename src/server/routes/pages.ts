@@ -14,7 +14,7 @@ import {
   galleryPreview,
   sortVehiclesAlphabetically
 } from "../db/content.js";
-import { faqSchema } from "../utils/schema.js";
+import { faqSchema, websiteSchema } from "../utils/schema.js";
 import { orgSchemaWithRating } from "../middleware/viewLocals.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 
@@ -51,7 +51,7 @@ router.get("/", async (req, res, next) => {
       galleryTeaser,
       homeRoutes: TRIP_ROUTES.slice(0, 6),
       organizationSchema: orgSchemaWithRating,
-      schemas: [faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
+      schemas: [websiteSchema(), faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))]
     });
   } catch (err) {
     next(err);
