@@ -6,7 +6,7 @@
     <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight">Car &amp; Cab Rental in <%= location.name %>, Bangalore</h1>
     <p class="text-[15px] text-ink-600 leading-relaxed mt-4"><%= location.intro %></p>
     <p class="text-[15px] text-ink-600 leading-relaxed mt-4"><%= location.detail %></p>
-    <p class="text-[15px] text-ink-600 leading-relaxed mt-4">Searching for tours and travels near <%= location.name %>? Yogi Tours &amp; Travels picks up directly from <%= location.name %> and the surrounding area, so you get a nearby vehicle and driver rather than a long wait for one to arrive.</p>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4">Searching for tours and travels near <%= location.name %>? <a href="/about" class="text-brand-700 hover:text-brand-800 font-medium">Yogi Tours &amp; Travels</a> picks up directly from <%= location.name %> and the surrounding area, so you get a nearby vehicle and driver rather than a long wait for one to arrive.</p>
 
     <% if (location.landmarks.length) { %>
     <div class="flex flex-wrap gap-2 mt-5">

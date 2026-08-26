@@ -124,6 +124,21 @@
           class="btn btn-outline btn-sm w-full mt-4"
         ><%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %>Get Directions</a>
       </div>
+      <div class="admin-card !border-ink-100 p-6">
+        <h3 class="font-display font-semibold text-ink-900 mb-3">New Here?</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="/about" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+              <span>About Yogi Tours &amp; Travels</span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+            </a>
+          </li>
+          <li>
+            <a href="/fleet" class="flex items-center justify-between text-sm text-ink-600 hover:text-brand-700 py-1.5 group">
+              <span>Browse Our Full Fleet</span><%- include('../partials/icon', { name: 'chevron-right', cls: 'w-4 h-4 text-ink-300 group-hover:text-brand-500' }) %>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
