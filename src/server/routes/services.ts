@@ -8,7 +8,7 @@ router.get("/", async (req, res, next) => {
   try {
     const services = await servicesRepo.all();
     res.render("pages/services-list", {
-      title: "Our Services | Outstation, Airport Transfer, Corporate & Wedding Travel — Bangalore",
+      title: "Our Services | Bangalore Travel & Cab Services",
       metaDescription:
         "Outstation trips, airport transfers, corporate travel, wedding transportation and custom itineraries — travel services from Yogi Tours & Travels, Bangalore.",
       canonicalPath: "/services",

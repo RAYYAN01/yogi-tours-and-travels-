@@ -2,6 +2,7 @@ import { Router } from "express";
 import { LOCATIONS, findLocation } from "../config/locations.js";
 import { vehiclesRepo, VEHICLE_CATEGORY_SLUGS, VEHICLE_CATEGORY_LABELS } from "../db/content.js";
 import { breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { clampDescription } from "../utils/meta.js";
 import type { VehicleCategory } from "../types/models.js";
 
 const router = Router();
@@ -47,8 +48,8 @@ router.get("/car-rental-:slug", async (req, res, next) => {
 
     const canonicalPath = `/locations/car-rental-${location.slug}`;
     res.render("pages/location-detail", {
-      title: `Tours and Travels Near ${location.name}, Bangalore | Yogi Tours & Travels`,
-      metaDescription: `Tours and travels near ${location.name}, Bangalore — book car, cab, Tempo Traveller and bus rental with local pickup. Local, airport and outstation trips with transparent per-km pricing.`,
+      title: `Tours and Travels Near ${location.name} | Yogi Tours`,
+      metaDescription: clampDescription(`Tours and travels near ${location.name}, Bangalore — book car, cab, Tempo Traveller and bus rental with local pickup. Local, airport and outstation trips with transparent per-km pricing.`),
       canonicalPath,
       crumbs: [
         { name: "Home", url: "/" },

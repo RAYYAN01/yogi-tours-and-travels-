@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { packagesRepo, packageHighlights, packageVehicleOptions, vehiclesRepo } from "../db/content.js";
 import { touristTripSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { clampDescription, shortDuration } from "../utils/meta.js";
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.get("/", async (req, res, next) => {
     }
 
     res.render("pages/packages-list", {
-      title: "Tour Packages from Bangalore | Coorg, Ooty, Mysore, Goa & More",
+      title: "Tour Packages from Bangalore | Coorg, Mysore, Goa",
       metaDescription:
         "Tour packages from Bangalore — Coorg, Ooty, Mysore, Chikmagalur, Hampi, Goa and Kerala backwaters. Customisable itineraries, your choice of vehicle.",
       canonicalPath: "/tour-packages",
@@ -79,8 +80,8 @@ router.get("/:slug", async (req, res, next) => {
     ];
 
     res.render("pages/package-detail", {
-      title: `${pkg.title} | ${pkg.duration} Tour Package from Bangalore`,
-      metaDescription: `${pkg.title} — ${pkg.duration} tour package from Bangalore to ${pkg.destination}. ${pkg.idealFor}`,
+      title: `${pkg.title} | ${shortDuration(pkg.duration)} from Bangalore`,
+      metaDescription: clampDescription(`${pkg.title} — ${pkg.duration} tour package from Bangalore to ${pkg.destination}. ${pkg.idealFor}`),
       canonicalPath: `/tour-packages/${pkg.slug}`,
       crumbs: [
         { name: "Home", url: "/" },

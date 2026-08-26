@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { publishedBlogPosts, blogRepo } from "../db/content.js";
 import { blogPostingSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { clampDescription } from "../utils/meta.js";
 import { business, env } from "../config/env.js";
 
 // Real places/entities each post is substantively about — used for BlogPosting
@@ -79,7 +80,7 @@ router.get("/:slug", async (req, res, next) => {
 
     res.render("pages/blog-post", {
       title: `${post.title} | Yogi Tours & Travels Blog`,
-      metaDescription: post.excerpt,
+      metaDescription: clampDescription(post.excerpt),
       canonicalPath: `/blog/${post.slug}`,
       // Falls back to the generic og-default.png in head.ejs when the post has no cover photo.
       ...(absoluteCoverImage ? { ogImage: absoluteCoverImage } : {}),

@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
     ]);
 
     res.render("pages/gallery", {
-      title: "Gallery | Vehicles, Tours & Group Travel Photos — Yogi Tours & Travels",
+      title: "Gallery | Yogi Tours & Travels, Bangalore",
       metaDescription:
         "Browse photos of our vehicle fleet, group tours, corporate travel and wedding transportation from Yogi Tours & Travels, Bangalore.",
       canonicalPath: "/gallery",

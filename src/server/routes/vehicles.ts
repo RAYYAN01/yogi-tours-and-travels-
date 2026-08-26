@@ -6,10 +6,12 @@ import {
   VEHICLE_CATEGORY_SLUGS,
   vehicleFeatures,
   vehicleGallery,
-  packagesForVehicle
+  packagesForVehicle,
+  findVehicleBySlugOrAlias
 } from "../db/content.js";
 import { vehicleServiceSchema, breadcrumbSchema, serviceSchema, faqSchema } from "../utils/schema.js";
 import { env, business } from "../config/env.js";
+import { clampDescription } from "../utils/meta.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 import type { Vehicle, VehicleCategory } from "../types/models.js";
 
@@ -30,8 +32,8 @@ const CATEGORY_RENTAL_LABEL: Record<VehicleCategory, string> = {
 // claim on every vehicle) since it's backed by the business's real 4.9★/210
 // Google rating stated in the meta description below, not an empty boast.
 const VEHICLE_TITLE_OVERRIDE: Record<string, string> = {
-  "maharaja-tempo-traveller": "Best 12 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels",
-  "tempo-traveller-17-seater": "Best 17 Seater Tempo Traveller in Bangalore | Yogi Tours & Travels"
+  "maharaja-tempo-traveller": "Best 12 Seater Tempo Traveller Bangalore | Yogi Tours",
+  "tempo-traveller-17-seater": "Best 17 Seater Tempo Traveller Bangalore | Yogi Tours"
 };
 
 // Real, honest Q&A phrased close to how people actually search/ask AI
@@ -148,7 +150,7 @@ router.get("/", async (req, res, next) => {
       }))
     );
     res.render("pages/vehicles-list", {
-      title: "Vehicle Fleet | Car, Tempo Traveller, Mini Bus & Tourist Bus Rental in Bangalore",
+      title: "Vehicle Fleet | Car & Tempo Traveller Rental Bangalore",
       metaDescription:
         "Browse the full Yogi Tours & Travels fleet in Bangalore — sedans, Innova Crysta, Tempo Travellers, mini buses and tourist buses.",
       canonicalPath: "/fleet",
@@ -181,8 +183,8 @@ router.get("/:category", async (req, res, next) => {
     const vehicles = await vehiclesByCategory(category);
     const categoryPath = `/fleet/${category}`;
     res.render("pages/vehicles-category", {
-      title: `${rentalLabel} Rental in Bangalore | Yogi Tours & Travels`,
-      metaDescription: `${CATEGORY_INTRO[category]} Transparent quotations, experienced drivers and well-maintained vehicles.`,
+      title: `${rentalLabel} Rental Bangalore | Yogi Tours`,
+      metaDescription: clampDescription(`${CATEGORY_INTRO[category]} Transparent quotations, experienced drivers and well-maintained vehicles.`),
       metaKeywords: CATEGORY_KEYWORDS[category],
       canonicalPath: categoryPath,
       crumbs: [
@@ -220,9 +222,16 @@ router.get("/:category/:slug", async (req, res, next) => {
       next();
       return;
     }
-    const vehicle = await vehiclesRepo.findBySlug(req.params.slug);
+    const vehicle = await findVehicleBySlugOrAlias(req.params.slug);
     if (!vehicle || vehicle.category !== category) {
       next();
+      return;
+    }
+    // The DB is the source of truth for slugs. If this vehicle was reached
+    // via a renamed alias, send the crawler on to its real, current URL
+    // rather than serving the same page under two addresses.
+    if (vehicle.slug !== req.params.slug) {
+      res.redirect(301, "/fleet/" + category + "/" + vehicle.slug);
       return;
     }
     const label = VEHICLE_CATEGORY_LABELS[category];
@@ -237,8 +246,8 @@ router.get("/:category/:slug", async (req, res, next) => {
     const vehicleFaqs = VEHICLE_FAQS[vehicle.slug] ?? genericVehicleFaqs(vehicle, CATEGORY_RENTAL_LABEL[category]);
 
     res.render("pages/vehicle-detail", {
-      title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental in Bangalore | Yogi Tours & Travels`,
-      metaDescription: `Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`,
+      title: VEHICLE_TITLE_OVERRIDE[vehicle.slug] ?? `${vehicle.name} Rental Bangalore | Yogi Tours`,
+      metaDescription: clampDescription(`Book the ${vehicle.name}${seatSuffix} with driver in Bangalore for outstation trips, airport transfers and group travel. ${vehicle.tagline}`),
       metaKeywords: vehicleKeywords(vehicle, label),
       canonicalPath: `/fleet/${category}/${vehicle.slug}`,
       crumbs: [

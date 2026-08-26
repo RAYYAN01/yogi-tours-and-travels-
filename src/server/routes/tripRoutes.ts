@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { TRIP_ROUTES, findTripRoute } from "../config/tripRoutes.js";
-import { vehiclesRepo } from "../db/content.js";
+import { vehiclesRepo, findVehicleBySlugOrAlias } from "../db/content.js";
 import { breadcrumbSchema, touristTripSchema, faqSchema } from "../utils/schema.js";
 
 const router = Router();
 
 router.get("/", (req, res) => {
   res.render("pages/routes-list", {
-    title: "Bangalore Outstation Cab Routes | Tempo Traveller Rental | Yogi Tours & Travels",
+    title: "Outstation Cab Routes from Bangalore | Yogi Tours",
     metaDescription:
       "Distance, travel time and vehicle options for popular outstation routes from Bangalore — Mysore, Coorg, Ooty, Hampi, Tirupati and more.",
     canonicalPath: "/routes",
@@ -33,7 +33,7 @@ router.get("/:slug", async (req, res, next) => {
       return;
     }
     const vehicles = (
-      await Promise.all(route.vehicleSlugs.map((v) => vehiclesRepo.findBySlug(v.slug)))
+      await Promise.all(route.vehicleSlugs.map((v) => findVehicleBySlugOrAlias(v.slug)))
     ).filter((v): v is NonNullable<typeof v> => Boolean(v));
 
     // Interconnect route pages with each other — same-state routes first
@@ -68,7 +68,7 @@ router.get("/:slug", async (req, res, next) => {
 
     const canonicalPath = `/routes/${route.slug}`;
     res.render("pages/route-detail", {
-      title: `Bangalore to ${route.destination} Cab | Tempo Traveller & Cab Rental | Yogi Tours & Travels`,
+      title: `Bangalore to ${route.destination.split(' (')[0]} Cab | Yogi Tours`,
       metaDescription: `Bangalore to ${route.destination} cab — approx ${route.distanceKm} km, ${route.travelTimeHours}. Innova, Tempo Traveller rental and more with transparent per-km pricing.`,
       canonicalPath,
       crumbs: [

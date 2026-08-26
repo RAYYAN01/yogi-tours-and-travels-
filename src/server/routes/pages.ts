@@ -14,7 +14,7 @@ import {
   galleryPreview,
   sortVehiclesAlphabetically
 } from "../db/content.js";
-import { faqSchema, websiteSchema } from "../utils/schema.js";
+import { faqSchema, websiteSchema, breadcrumbSchema } from "../utils/schema.js";
 import { orgSchemaWithRating } from "../middleware/viewLocals.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 
@@ -37,7 +37,7 @@ router.get("/", async (req, res, next) => {
     const faqs = allFaqs.slice(0, 12);
     res.render("pages/home", {
       vehicles: sortVehiclesAlphabetically(vehicles),
-      title: "Tours and Travels Near Me in Bangalore | Yogi Tours & Travels",
+      title: "Tours and Travels Near Me Bangalore | Yogi Tours",
       metaDescription:
         "Tours and travels near me in Bangalore — car, cab, Tempo Traveller, Urbania & bus rental for local, airport and outstation trips. Transparent pricing, 24/7.",
       canonicalPath: "/",
@@ -62,7 +62,7 @@ router.get("/about", async (req, res, next) => {
   try {
     const testimonials = await testimonialsRepo.all();
     res.render("pages/about", {
-      title: "About Us | Yogi Tours & Travels — Bangalore Tours & Travels Agency",
+      title: "About Us | Yogi Tours & Travels, Bangalore",
       metaDescription:
         "Yogi Tours & Travels is a Bangalore tours and travels agency serving families, corporates and groups with cars, Tempo Travellers, mini buses and tourist buses.",
       canonicalPath: "/about",
@@ -71,6 +71,12 @@ router.get("/about", async (req, res, next) => {
         { name: "About", url: "/about" }
       ],
       organizationSchema: orgSchemaWithRating,
+      schemas: [
+        breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "About", url: "/about" }
+        ])
+      ],
       testimonials
     });
   } catch (err) {
@@ -88,7 +94,13 @@ router.get("/contact", (req, res) => {
       { name: "Home", url: "/" },
       { name: "Contact", url: "/contact" }
     ],
-    organizationSchema: orgSchemaWithRating
+    organizationSchema: orgSchemaWithRating,
+    schemas: [
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Contact", url: "/contact" }
+      ])
+    ]
   });
 });
 
@@ -100,6 +112,12 @@ router.get("/privacy-policy", (req, res) => {
     crumbs: [
       { name: "Home", url: "/" },
       { name: "Privacy Policy", url: "/privacy-policy" }
+    ],
+    schemas: [
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Privacy Policy", url: "/privacy-policy" }
+      ])
     ],
     pageHeading: "Privacy Policy",
     lastUpdated: "8 August 2026",
@@ -116,6 +134,12 @@ router.get("/terms-and-conditions", (req, res) => {
       { name: "Home", url: "/" },
       { name: "Terms & Conditions", url: "/terms-and-conditions" }
     ],
+    schemas: [
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Terms & Conditions", url: "/terms-and-conditions" }
+      ])
+    ],
     pageHeading: "Terms & Conditions",
     lastUpdated: "8 August 2026",
     template: "terms"
@@ -130,6 +154,12 @@ router.get("/cancellation-policy", (req, res) => {
     crumbs: [
       { name: "Home", url: "/" },
       { name: "Cancellation Policy", url: "/cancellation-policy" }
+    ],
+    schemas: [
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: "Cancellation Policy", url: "/cancellation-policy" }
+      ])
     ],
     pageHeading: "Cancellation Policy",
     lastUpdated: "8 August 2026",

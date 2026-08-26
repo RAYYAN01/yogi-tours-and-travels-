@@ -34,11 +34,4 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/about-us": "/about",
   "/booking": "/contact",
   "/blog-2": "/blog",
-
-  // The "9 Seater Tempo Traveller" vehicle previously lived at a slug that
-  // said "12-seater" — a real content/URL mismatch. Renamed to
-  // 9-seater-tempo-traveller; this preserves any equity the old slug had
-  // already picked up (indexed by Google, linked from elsewhere on this
-  // site's own history, or bookmarked) instead of letting it 404.
-  "/fleet/tempo-traveller/tempo-traveller-12-seater": "/fleet/tempo-traveller/9-seater-tempo-traveller"
 };

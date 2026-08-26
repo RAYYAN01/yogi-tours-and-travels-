@@ -185,3 +185,26 @@ export function packageHighlights(p: TourPackage): string[] {
 export function packageVehicleOptions(p: TourPackage): string[] {
   return parseJsonArray(p.vehicleOptions);
 }
+
+/**
+ * Vehicle slugs that have been renamed, mapped in both directions.
+ *
+ * Slugs live in the database (the admin regenerates them from the vehicle
+ * name on save), so code must never assume a rename has already been applied
+ * — a hardcoded slug that doesn't match the DB row yields a dead page. This
+ * map lets a lookup succeed under either the old or the new slug, whichever
+ * the DB currently holds, so the site stays correct before and after the
+ * rename lands rather than depending on a manual step.
+ */
+const VEHICLE_SLUG_ALIASES: Record<string, string> = {
+  "9-seater-tempo-traveller": "tempo-traveller-12-seater",
+  "tempo-traveller-12-seater": "9-seater-tempo-traveller"
+};
+
+/** Resolves a vehicle by slug, falling back to its known alias if the DB holds the other spelling. */
+export async function findVehicleBySlugOrAlias(slug: string): Promise<Vehicle | undefined> {
+  const direct = await vehiclesRepo.findBySlug(slug);
+  if (direct) return direct;
+  const alias = VEHICLE_SLUG_ALIASES[slug];
+  return alias ? await vehiclesRepo.findBySlug(alias) : undefined;
+}
