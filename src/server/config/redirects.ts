@@ -11,6 +11,11 @@
 export const LEGACY_REDIRECTS: Record<string, string> = {
   "/best-outstation-cab-service-in-bangalore": "/services/outstation-travel",
   "/best-outstation-cabs-service-in-bangalore": "/services/outstation-travel",
+  // Google is actively surfacing this exact URL as a "Booking options" link
+  // on the Knowledge Panel/Maps listing (real, observed — not hypothetical),
+  // sourced from the old WordPress site. Without this it 404s for anyone
+  // who clicks it directly from Google.
+  "/best-outstation-taxi-service-in-bangalore": "/services/outstation-travel",
   // "9/10 Seater" in the old title matches the real 9 Seater Tempo
   // Traveller, not the 17-seat Force Urbania — was previously mismatched.
   "/luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/9-seater-tempo-traveller",

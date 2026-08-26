@@ -4,6 +4,13 @@ import { serviceSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
 
 const router = Router();
 
+// Real, published posts relevant to a specific service — an editorial link,
+// not a generic "read our blog" pointer, so it only appears where it's
+// actually on-topic.
+const SERVICE_RELATED_POSTS: Record<string, { slug: string; title: string }> = {
+  "outstation-travel": { slug: "outstation-taxi-service-bangalore-what-to-expect", title: "What to Expect From an Outstation Taxi Booking" }
+};
+
 router.get("/", async (req, res, next) => {
   try {
     const services = await servicesRepo.all();
@@ -56,6 +63,7 @@ router.get("/:slug", async (req, res, next) => {
       highlights: serviceHighlights(service),
       relatedFaqs,
       related,
+      relatedPost: SERVICE_RELATED_POSTS[service.slug],
       schemas: [
         serviceSchema({ name: service.name, description: service.description, url: `/services/${service.slug}` }),
         breadcrumbSchema([

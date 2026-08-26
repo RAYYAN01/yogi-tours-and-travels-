@@ -21,6 +21,24 @@ const POST_MENTIONS: Record<string, Array<{ name: string; type?: string }>> = {
 // as FAQPage schema so the same content is eligible for AI-answer citation,
 // not just full-page indexing.
 const POST_FAQS: Record<string, Array<{ question: string; answer: string }>> = {
+  "outstation-taxi-service-bangalore-what-to-expect": [
+    {
+      question: "What is the minimum kilometres charged for an outstation taxi from Bangalore?",
+      answer: "Outstation bookings run on a minimum of 300 km per day, with a driver Bata (allowance) charged on top of the per-km rate."
+    },
+    {
+      question: "What is not included in the per-km outstation taxi rate?",
+      answer: "Toll, parking, permit and state taxes are additional and vary by route, so they're confirmed separately rather than built into the per-km rate."
+    },
+    {
+      question: "What are the duty hours for an outstation taxi booking?",
+      answer: "Duty hours run 6:00 AM to 10:00 PM. An extra driver Bata applies for duty after 10:00 PM."
+    },
+    {
+      question: "How far ahead should I book an outstation taxi from Bangalore?",
+      answer: "Same-day booking usually works for local trips, but for outstation travel — especially weekends or festival periods — booking a few days ahead means the vehicle you actually want is available."
+    }
+  ],
   "karnataka-to-gujarat-road-trip-statue-of-unity": [
     {
       question: "How far is the Statue of Unity from Bangalore/Karnataka by road?",
