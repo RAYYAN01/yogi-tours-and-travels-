@@ -5,9 +5,7 @@ function isActive(prefix) { return __path === prefix || __path.startsWith(prefix
 %>
 <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-ink-950 text-ink-300 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
   <div class="h-16 flex items-center gap-2.5 px-5 border-b border-white/10 shrink-0">
-    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white">
-      <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" fill="currentColor"/></svg>
-    </span>
+    <img src="/assets/images/logo.png" alt="<%= business.name %>" class="h-9 w-9 rounded-lg object-cover" />
     <span class="text-white font-display font-semibold text-sm leading-tight">Yogi Admin</span>
   </div>
 
