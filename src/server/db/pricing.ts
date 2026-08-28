@@ -22,13 +22,12 @@ export const DUTY_POLICY = {
 /** Keyed by vehicle slug. */
 const TARIFFS: Record<string, DutyTariff> = {
   "maruti-swift-dzire": { minKmPerDay: 300, driverBata: 400 },
-  "toyota-etios": { minKmPerDay: 300, driverBata: 400 },
   "toyota-innova": { minKmPerDay: 300, driverBata: 400 },
   "innova-crysta": { minKmPerDay: 300, driverBata: 400 },
   // Keyed under both spellings — the DB may hold either until the rename lands.
   "9-seater-tempo-traveller": { minKmPerDay: 300, driverBata: 500 },
   "tempo-traveller-12-seater": { minKmPerDay: 300, driverBata: 500 },
-  "maharaja-tempo-traveller": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 20 },
+  "maharaja-tempo-traveller": { minKmPerDay: 300, driverBata: 500, nonAcRatePerKm: 20 },
   "tempo-traveller-17-seater": { minKmPerDay: 300, driverBata: 700, nonAcRatePerKm: 28 },
   "force-urbania": { minKmPerDay: 300, driverBata: 700 }
 };
