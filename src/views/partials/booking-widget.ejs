@@ -1,180 +1,21 @@
 <div id="booking-widget" class="relative bg-white/10 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl shadow-glass border border-white/20 max-w-3xl w-full" data-enquiry-root>
  <div data-form-state="idle">
-  <div role="tablist" aria-label="Choose booking type" class="grid grid-cols-3 gap-1 p-2 rounded-t-2xl">
-    <button type="button" role="tab" id="booking-tab-outstation" aria-controls="booking-panel-outstation" aria-selected="true" class="booking-tab" data-booking-tab="outstation">
-      <%- include('icon', { name: 'route', cls: 'w-4 h-4' }) %><span>Outstation</span>
-    </button>
-    <button type="button" role="tab" id="booking-tab-local" aria-controls="booking-panel-local" aria-selected="false" class="booking-tab" data-booking-tab="local">
-      <%- include('icon', { name: 'map-pin', cls: 'w-4 h-4' }) %><span class="truncate"><span class="sm:hidden">Local</span><span class="hidden sm:inline">Local / Intercity</span></span>
-    </button>
-    <button type="button" role="tab" id="booking-tab-airport" aria-controls="booking-panel-airport" aria-selected="false" class="booking-tab" data-booking-tab="airport">
-      <%- include('icon', { name: 'plane', cls: 'w-4 h-4' }) %><span>Airport</span>
-    </button>
+  <div class="px-4 pt-4 sm:px-5 sm:pt-5">
+    <h2 class="font-display text-lg font-bold text-white">Get a Free Quote</h2>
+    <p class="text-sm text-white/70 mt-0.5">Tell us your vehicle and travel dates — we'll reply with a price.</p>
   </div>
 
   <form id="booking-form" class="p-4 sm:p-5" data-enquiry-form novalidate>
+    <input type="hidden" name="type" value="quote" />
     <input type="hidden" name="sourcePage" value="" />
-    <div class="hidden" aria-hidden="true">
-      <label for="booking-website">Leave blank</label>
-      <input type="text" id="booking-website" name="website" tabindex="-1" autocomplete="off" />
-    </div>
 
-    <!-- OUTSTATION -->
-    <div data-booking-panel="outstation" role="tabpanel" id="booking-panel-outstation" aria-labelledby="booking-tab-outstation">
-      <input type="hidden" name="type" value="outstation" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="sm:col-span-1">
-          <label for="os-pickup" class="form-label">Pickup Location</label>
-          <input type="text" id="os-pickup" name="pickupLocation" class="form-input" placeholder="e.g. Koramangala, Bangalore" required />
-          <p class="form-error" data-error-for="pickupLocation"></p>
-        </div>
-        <div class="sm:col-span-1">
-          <label for="os-destination" class="form-label">Destination</label>
-          <input type="text" id="os-destination" name="destination" class="form-input" placeholder="e.g. Coorg" required />
-          <p class="form-error" data-error-for="destination"></p>
-        </div>
+    <%- include('enquiry-fields', { idPrefix: 'booking' }) %>
 
-        <div class="sm:col-span-2">
-          <span class="form-label">Trip Type</span>
-          <div class="flex gap-2" role="radiogroup" aria-label="Trip type">
-            <label class="trip-type-option">
-              <input type="radio" name="tripType" value="One Way" class="sr-only" checked data-default-trip-type />
-              <span><%- include('icon', { name: 'arrow-right', cls: 'w-3.5 h-3.5' }) %>One Way</span>
-            </label>
-            <label class="trip-type-option">
-              <input type="radio" name="tripType" value="Round Trip" class="sr-only" data-round-trip-radio />
-              <span><%- include('icon', { name: 'route', cls: 'w-3.5 h-3.5' }) %>Round Trip</span>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label for="os-pickup-date" class="form-label">Pickup Date</label>
-          <input type="date" id="os-pickup-date" name="pickupDate" class="form-input" required />
-          <p class="form-error" data-error-for="pickupDate"></p>
-        </div>
-        <div data-return-date-field class="hidden">
-          <label for="os-return-date" class="form-label">Return Date</label>
-          <input type="date" id="os-return-date" name="returnDate" class="form-input" />
-        </div>
-
-        <div>
-          <label for="os-vehicle" class="form-label">Vehicle Type</label>
-          <select id="os-vehicle" name="vehicleType" class="form-input" data-custom-select>
-            <%- include('vehicle-type-options') %>
-          </select>
-        </div>
-        <div>
-          <label for="os-passengers" class="form-label">Passengers</label>
-          <input type="number" id="os-passengers" name="passengers" class="form-input" min="1" max="60" placeholder="e.g. 4" />
-        </div>
-      </div>
-      <p class="form-error mt-3" data-error-for="_form"></p>
-      <button type="submit" class="btn btn-accent w-full sm:w-auto mt-5" data-submit-button>
-        <span data-btn-label>Get a Quote</span>
-        <%- include('icon', { name: 'loader', cls: 'w-4 h-4 ml-1 animate-spin hidden' }) %>
-      </button>
-    </div>
-
-    <!-- LOCAL / INTERCITY -->
-    <div data-booking-panel="local" role="tabpanel" id="booking-panel-local" aria-labelledby="booking-tab-local" hidden>
-      <input type="hidden" name="type" value="local" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="sm:col-span-2">
-          <label for="lc-pickup" class="form-label">Pickup Location</label>
-          <input type="text" id="lc-pickup" name="pickupLocation" class="form-input" placeholder="e.g. Indiranagar, Bangalore" required />
-          <p class="form-error" data-error-for="pickupLocation"></p>
-        </div>
-        <div>
-          <label for="lc-date" class="form-label">Travel Date</label>
-          <input type="date" id="lc-date" name="pickupDate" class="form-input" required />
-          <p class="form-error" data-error-for="pickupDate"></p>
-        </div>
-        <div>
-          <label for="lc-duration" class="form-label">Duration</label>
-          <select id="lc-duration" name="tripType" class="form-input" data-duration-select data-custom-select>
-            <option value="8 Hrs / 80 KM">8 Hrs / 80 KM</option>
-            <option value="12 Hrs / 120 KM">12 Hrs / 120 KM</option>
-            <option value="Custom">Custom</option>
-          </select>
-        </div>
-        <div class="sm:col-span-2 hidden" data-custom-duration-field>
-          <label for="lc-duration-custom" class="form-label">Custom Duration</label>
-          <input type="text" id="lc-duration-custom" name="customDuration" class="form-input" placeholder="e.g. 6 Hrs / 60 KM" />
-        </div>
-        <div>
-          <label for="lc-vehicle" class="form-label">Vehicle Type</label>
-          <select id="lc-vehicle" name="vehicleType" class="form-input" data-custom-select>
-            <%- include('vehicle-type-options') %>
-          </select>
-        </div>
-        <div>
-          <label for="lc-passengers" class="form-label">Passengers</label>
-          <input type="number" id="lc-passengers" name="passengers" class="form-input" min="1" max="60" placeholder="e.g. 2" />
-        </div>
-      </div>
-      <p class="form-error mt-3" data-error-for="_form"></p>
-      <button type="submit" class="btn btn-accent w-full sm:w-auto mt-5" data-submit-button>
-        <span data-btn-label>Get a Quote</span>
-        <%- include('icon', { name: 'loader', cls: 'w-4 h-4 ml-1 animate-spin hidden' }) %>
-      </button>
-    </div>
-
-    <!-- AIRPORT TRANSFER -->
-    <div data-booking-panel="airport" role="tabpanel" id="booking-panel-airport" aria-labelledby="booking-tab-airport" hidden>
-      <input type="hidden" name="type" value="airport" />
-      <input type="hidden" name="destination" value="Kempegowda International Airport (BLR)" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="sm:col-span-2">
-          <span class="form-label">Airport</span>
-          <div class="form-input flex items-center gap-2 cursor-not-allowed">
-            <%- include('icon', { name: 'plane', cls: 'w-4 h-4' }) %>Kempegowda International Airport (BLR)
-          </div>
-        </div>
-        <div class="sm:col-span-2">
-          <span class="form-label">Pickup / Drop</span>
-          <div class="flex gap-2" role="radiogroup" aria-label="Pickup or drop">
-            <label class="trip-type-option">
-              <input type="radio" name="tripType" value="Airport Drop" class="sr-only" data-default-trip-type />
-              <span class="truncate"><%- include('icon', { name: 'arrow-right', cls: 'w-3.5 h-3.5' }) %>Drop to Airport</span>
-            </label>
-            <label class="trip-type-option">
-              <input type="radio" name="tripType" value="Airport Pickup" class="sr-only" />
-              <span class="truncate"><%- include('icon', { name: 'arrow-left', cls: 'w-3.5 h-3.5' }) %>Pickup from Airport</span>
-            </label>
-          </div>
-        </div>
-        <div class="sm:col-span-2">
-          <label for="ap-pickup" class="form-label">Pickup Location</label>
-          <input type="text" id="ap-pickup" name="pickupLocation" class="form-input" placeholder="e.g. Whitefield, Bangalore" required />
-          <p class="form-error" data-error-for="pickupLocation"></p>
-        </div>
-        <div>
-          <label for="ap-date" class="form-label">Date</label>
-          <input type="date" id="ap-date" name="pickupDate" class="form-input" required />
-          <p class="form-error" data-error-for="pickupDate"></p>
-        </div>
-        <div>
-          <label for="ap-time" class="form-label">Time</label>
-          <input type="time" id="ap-time" name="pickupTime" class="form-input" required />
-        </div>
-        <div>
-          <label for="ap-passengers" class="form-label">Passengers</label>
-          <input type="number" id="ap-passengers" name="passengers" class="form-input" min="1" max="60" placeholder="e.g. 2" />
-        </div>
-        <div>
-          <label for="ap-vehicle" class="form-label">Vehicle Type</label>
-          <select id="ap-vehicle" name="vehicleType" class="form-input" data-custom-select>
-            <%- include('vehicle-type-options') %>
-          </select>
-        </div>
-      </div>
-      <p class="form-error mt-3" data-error-for="_form"></p>
-      <button type="submit" class="btn btn-accent w-full sm:w-auto mt-5" data-submit-button>
-        <span data-btn-label>Book Airport Transfer</span>
-        <%- include('icon', { name: 'loader', cls: 'w-4 h-4 ml-1 animate-spin hidden' }) %>
-      </button>
-    </div>
+    <p class="form-error mt-3" data-error-for="_form"></p>
+    <button type="submit" class="btn btn-accent w-full sm:w-auto mt-5" data-submit-button>
+      <span data-btn-label>Get a Quote</span>
+      <%- include('icon', { name: 'loader', cls: 'w-4 h-4 ml-1 animate-spin hidden' }) %>
+    </button>
   </form>
  </div>
 

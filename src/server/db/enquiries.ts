@@ -1,5 +1,15 @@
 import { query, queryOne, run } from "./connection.js";
+import { encryptField, decryptField } from "../utils/crypto.js";
 import type { Enquiry, EnquiryStatus } from "../types/models.js";
+
+function decryptEnquiry(row: Enquiry): Enquiry {
+  return {
+    ...row,
+    name: decryptField(row.name) ?? row.name,
+    phone: decryptField(row.phone) ?? row.phone,
+    email: decryptField(row.email)
+  };
+}
 
 export interface NewEnquiry {
   type: Enquiry["type"];
@@ -27,9 +37,9 @@ export async function createEnquiry(data: NewEnquiry): Promise<number> {
   `,
     [
       data.type,
-      data.name,
-      data.phone,
-      data.email ?? null,
+      encryptField(data.name),
+      encryptField(data.phone),
+      encryptField(data.email ?? null),
       data.pickupLocation ?? null,
       data.destination ?? null,
       data.tripType ?? null,
@@ -45,14 +55,15 @@ export async function createEnquiry(data: NewEnquiry): Promise<number> {
 }
 
 export async function allEnquiries(statusFilter?: EnquiryStatus): Promise<Enquiry[]> {
-  if (statusFilter) {
-    return query<Enquiry>('SELECT * FROM enquiries WHERE status = ? ORDER BY "createdAt" DESC', [statusFilter]);
-  }
-  return query<Enquiry>('SELECT * FROM enquiries ORDER BY "createdAt" DESC');
+  const rows = statusFilter
+    ? await query<Enquiry>('SELECT * FROM enquiries WHERE status = ? ORDER BY "createdAt" DESC', [statusFilter])
+    : await query<Enquiry>('SELECT * FROM enquiries ORDER BY "createdAt" DESC');
+  return rows.map(decryptEnquiry);
 }
 
 export async function findEnquiry(id: number): Promise<Enquiry | undefined> {
-  return queryOne<Enquiry>("SELECT * FROM enquiries WHERE id = ?", [id]);
+  const row = await queryOne<Enquiry>("SELECT * FROM enquiries WHERE id = ?", [id]);
+  return row ? decryptEnquiry(row) : undefined;
 }
 
 export async function updateEnquiryStatus(id: number, status: EnquiryStatus): Promise<void> {

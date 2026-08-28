@@ -15,6 +15,7 @@ import { initRevealOnScroll } from "./modules/revealOnScroll.js";
 import { initAdminConfirm, initAdminSidebar, initImagePreview } from "./modules/adminUi.js";
 import { initHeroVideo } from "./modules/heroVideo.js";
 import { initCustomSelects } from "./modules/customSelect.js";
+import { initCookieConsent } from "./modules/cookieConsent.js";
 
 /**
  * Runs an init function in isolation. Without this, an uncaught error in any
@@ -48,6 +49,7 @@ function init(): void {
   safeInit("adminConfirm", initAdminConfirm);
   safeInit("adminSidebar", initAdminSidebar);
   safeInit("imagePreview", initImagePreview);
+  safeInit("cookieConsent", initCookieConsent);
 }
 
 if (document.readyState === "loading") {

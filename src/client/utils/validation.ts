@@ -29,9 +29,10 @@ export function validateEnquiryPayload(payload: Record<string, string>): Record<
     const destination = (payload.destination || "").trim();
     if (!destination || destination.length < 2) errors.destination = "Please enter a destination.";
   }
-  if (type === "contact") {
-    const message = (payload.message || "").trim();
-    if (!message || message.length < 3) errors.message = "Please enter a message.";
+  // The simplified enquiry forms (popup, Contact page, homepage widget) all
+  // carry a travel date — the one date field on those forms is required.
+  if (type === "quote" || type === "contact") {
+    if (!(payload.pickupDate || "").trim()) errors.pickupDate = "Please choose your travel date.";
   }
 
   return errors;

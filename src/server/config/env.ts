@@ -17,6 +17,8 @@ export const env = {
   sessionSecret: required("SESSION_SECRET", "dev-secret-change-me"),
   /** Postgres connection string (e.g. from Vercel Postgres/Neon/Supabase). Required in production. */
   databaseUrl: process.env.DATABASE_URL || "",
+  /** 32-byte hex key (`openssl rand -hex 32`) for encrypting enquiry PII at rest. Leave unset to store plaintext (dev only). */
+  encryptionKey: process.env.ENCRYPTION_KEY || "",
   smtp: {
     host: process.env.SMTP_HOST || "",
     port: Number(process.env.SMTP_PORT) || 587,

@@ -82,12 +82,8 @@ const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
   <% }); %>
 
   <% if (env.gaMeasurementId) { %>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= env.gaMeasurementId %>"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '<%= env.gaMeasurementId %>');
-  </script>
+  <!-- Google Analytics is NOT loaded here. cookieConsent.ts injects it only
+       after the visitor accepts analytics cookies in the consent banner. -->
+  <script>window.__gaMeasurementId = "<%= env.gaMeasurementId %>";</script>
   <% } %>
 </head>

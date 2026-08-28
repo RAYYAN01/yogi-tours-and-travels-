@@ -67,10 +67,18 @@ export function validateEnquiry(body: EnquiryInput): ValidationResult {
     errors.destination = "Please enter a destination.";
   }
 
+  // The simplified enquiry forms (popup modal, Contact page, homepage widget)
+  // send type "quote" / "contact" and always include a travel date.
+  if ((body.type === "quote" || body.type === "contact") && !(body.pickupDate || "").trim()) {
+    errors.pickupDate = "Please choose your travel date.";
+  }
+
   checkMaxLength(errors, "pickupLocation", body.pickupLocation, "Pickup location");
   checkMaxLength(errors, "destination", body.destination, "Destination");
   checkMaxLength(errors, "tripType", body.tripType, "Trip type");
   checkMaxLength(errors, "vehicleType", body.vehicleType, "Vehicle type");
+  checkMaxLength(errors, "pickupDate", body.pickupDate, "Travel date");
+  checkMaxLength(errors, "returnDate", body.returnDate, "Return date");
   checkMaxLength(errors, "passengers", body.passengers, "Passengers");
   checkMaxLength(errors, "sourcePage", body.sourcePage, "Source page");
 

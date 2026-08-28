@@ -1,0 +1,33 @@
+<!--
+  Cookie consent banner. Hidden by default (the `hidden` class) — cookieConsent.ts
+  removes it on first visit when no choice is stored, and re-opens it when the
+  footer "Cookie preferences" link is used. Analytics cookies are only set after
+  the visitor picks "Accept"; "Reject" (or ignoring it) keeps the site on the
+  strictly-necessary session cookie alone.
+-->
+<div
+  id="cookie-consent"
+  class="hidden fixed inset-x-0 bottom-0 z-[70] px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-4 sm:pb-4"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="cookie-consent-title"
+  aria-describedby="cookie-consent-text"
+>
+  <div class="mx-auto max-w-3xl rounded-2xl bg-white shadow-popover border border-ink-100 p-4 sm:p-5">
+    <div class="sm:flex sm:items-start sm:gap-4">
+      <div class="flex-1">
+        <p id="cookie-consent-title" class="font-display font-bold text-ink-900 text-sm sm:text-base">We value your privacy</p>
+        <p id="cookie-consent-text" class="text-xs sm:text-sm text-ink-500 mt-1 leading-relaxed">
+          We use a strictly-necessary cookie to run this site. With your consent we also use analytics
+          cookies to understand how the site is used. You can accept or reject analytics cookies —
+          your choice is saved and can be changed anytime from the footer. See our
+          <a href="/privacy-policy" class="text-brand-700 font-medium underline">Privacy Policy</a>.
+        </p>
+      </div>
+      <div class="flex gap-2.5 mt-4 sm:mt-0 sm:flex-col sm:w-40 shrink-0">
+        <button type="button" class="btn btn-primary btn-sm flex-1 sm:w-full" data-cookie-accept>Accept</button>
+        <button type="button" class="btn btn-outline btn-sm flex-1 sm:w-full" data-cookie-reject>Reject</button>
+      </div>
+    </div>
+  </div>
+</div>

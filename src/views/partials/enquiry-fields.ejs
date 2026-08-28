@@ -1,0 +1,51 @@
+<%
+  // Shared field set for every enquiry surface (popup modal, Contact page,
+  // homepage widget). Caller passes:
+  //   idPrefix  — unique per surface, keeps input ids/label `for`s distinct
+  //               when more than one form is on the same page
+  //   showMessage (default true) — render the optional requirement textarea
+  var idPrefix = typeof idPrefix !== "undefined" ? idPrefix : "enquiry";
+  var showMessage = typeof showMessage === "undefined" ? true : showMessage;
+%>
+<!-- honeypot -->
+<div class="hidden" aria-hidden="true">
+  <label for="<%= idPrefix %>-website">Leave blank</label>
+  <input type="text" id="<%= idPrefix %>-website" name="website" tabindex="-1" autocomplete="off" />
+</div>
+
+<div class="grid sm:grid-cols-2 gap-4">
+  <div>
+    <label for="<%= idPrefix %>-name" class="form-label">Full Name <span class="text-error">*</span></label>
+    <input type="text" id="<%= idPrefix %>-name" name="name" class="form-input" autocomplete="name" required />
+    <p class="form-error" data-error-for="name"></p>
+  </div>
+  <div>
+    <label for="<%= idPrefix %>-phone" class="form-label">Phone Number <span class="text-error">*</span></label>
+    <input type="tel" id="<%= idPrefix %>-phone" name="phone" class="form-input" autocomplete="tel" inputmode="tel" required />
+    <p class="form-error" data-error-for="phone"></p>
+  </div>
+  <div class="sm:col-span-2">
+    <label for="<%= idPrefix %>-vehicle" class="form-label">Which Vehicle</label>
+    <select id="<%= idPrefix %>-vehicle" name="vehicleType" class="form-input" data-custom-select>
+      <%- include('vehicle-type-options') %>
+    </select>
+    <p class="form-error" data-error-for="vehicleType"></p>
+  </div>
+  <div>
+    <label for="<%= idPrefix %>-date" class="form-label">Travel Date <span class="text-error">*</span></label>
+    <input type="date" id="<%= idPrefix %>-date" name="pickupDate" class="form-input" required />
+    <p class="form-error" data-error-for="pickupDate"></p>
+  </div>
+  <div>
+    <label for="<%= idPrefix %>-return-date" class="form-label">Return Date <span class="text-ink-400 font-normal">(optional)</span></label>
+    <input type="date" id="<%= idPrefix %>-return-date" name="returnDate" class="form-input" />
+    <p class="form-error" data-error-for="returnDate"></p>
+  </div>
+  <% if (showMessage) { %>
+  <div class="sm:col-span-2">
+    <label for="<%= idPrefix %>-message" class="form-label">Your Requirement <span class="text-ink-400 font-normal">(optional)</span></label>
+    <textarea id="<%= idPrefix %>-message" name="message" rows="3" class="form-input resize-none"></textarea>
+    <p class="form-error" data-error-for="message"></p>
+  </div>
+  <% } %>
+</div>

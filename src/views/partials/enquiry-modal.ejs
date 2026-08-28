@@ -27,35 +27,8 @@
         <form id="enquiry-form" data-enquiry-form novalidate>
           <input type="hidden" name="type" value="quote" />
           <input type="hidden" name="sourcePage" value="" />
-          <input type="hidden" name="vehicleType" value="" />
-          <!-- honeypot -->
-          <div class="hidden" aria-hidden="true">
-            <label for="enquiry-website">Leave blank</label>
-            <input type="text" id="enquiry-website" name="website" tabindex="-1" autocomplete="off" />
-          </div>
 
-          <div class="space-y-4">
-            <div>
-              <label for="enquiry-name" class="form-label">Full Name <span class="text-error">*</span></label>
-              <input type="text" id="enquiry-name" name="name" class="form-input" autocomplete="name" required />
-              <p class="form-error" data-error-for="name"></p>
-            </div>
-            <div>
-              <label for="enquiry-phone" class="form-label">Phone Number <span class="text-error">*</span></label>
-              <input type="tel" id="enquiry-phone" name="phone" class="form-input" autocomplete="tel" inputmode="tel" required />
-              <p class="form-error" data-error-for="phone"></p>
-            </div>
-            <div>
-              <label for="enquiry-email" class="form-label">Email <span class="text-ink-400 font-normal">(optional)</span></label>
-              <input type="email" id="enquiry-email" name="email" class="form-input" autocomplete="email" />
-              <p class="form-error" data-error-for="email"></p>
-            </div>
-            <div>
-              <label for="enquiry-message" class="form-label">Your Requirement</label>
-              <textarea id="enquiry-message" name="message" rows="3" class="form-input resize-none"></textarea>
-              <p class="form-error" data-error-for="message"></p>
-            </div>
-          </div>
+          <%- include('enquiry-fields', { idPrefix: 'enquiry' }) %>
 
           <p class="form-error mt-3" data-error-for="_form"></p>
 

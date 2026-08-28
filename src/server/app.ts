@@ -48,8 +48,19 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+        // GA4 beacons post to google-analytics.com; the pixel fallback and
+        // Google Tag Manager assets need image + script allowances too. These
+        // only ever fire after the visitor accepts analytics cookies.
+        imgSrc: ["'self'", "data:", "https://www.google-analytics.com", "https://*.google-analytics.com", "https://*.googletagmanager.com"],
+        connectSrc: [
+          "'self'",
+          "https://fonts.googleapis.com",
+          "https://fonts.gstatic.com",
+          "https://www.google-analytics.com",
+          "https://*.google-analytics.com",
+          "https://*.analytics.google.com",
+          "https://*.googletagmanager.com"
+        ],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         formAction: ["'self'"],

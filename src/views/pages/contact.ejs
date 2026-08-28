@@ -42,33 +42,8 @@
       <form id="contact-form" data-enquiry-form data-form-state="idle" novalidate>
         <input type="hidden" name="type" value="contact" />
         <input type="hidden" name="sourcePage" value="/contact" />
-        <div class="hidden" aria-hidden="true">
-          <label for="contact-website">Leave blank</label>
-          <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off" />
-        </div>
 
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label for="contact-name" class="form-label">Full Name <span class="text-error">*</span></label>
-            <input type="text" id="contact-name" name="name" class="form-input" autocomplete="name" required />
-            <p class="form-error" data-error-for="name"></p>
-          </div>
-          <div>
-            <label for="contact-phone" class="form-label">Phone Number <span class="text-error">*</span></label>
-            <input type="tel" id="contact-phone" name="phone" class="form-input" autocomplete="tel" required />
-            <p class="form-error" data-error-for="phone"></p>
-          </div>
-          <div class="sm:col-span-2">
-            <label for="contact-email" class="form-label">Email <span class="text-ink-400 font-normal">(optional)</span></label>
-            <input type="email" id="contact-email" name="email" class="form-input" autocomplete="email" />
-            <p class="form-error" data-error-for="email"></p>
-          </div>
-          <div class="sm:col-span-2">
-            <label for="contact-message" class="form-label">Your Message <span class="text-error">*</span></label>
-            <textarea id="contact-message" name="message" rows="4" class="form-input resize-none" required></textarea>
-            <p class="form-error" data-error-for="message"></p>
-          </div>
-        </div>
+        <%- include('../partials/enquiry-fields', { idPrefix: 'contact' }) %>
 
         <p class="form-error mt-3" data-error-for="_form"></p>
 

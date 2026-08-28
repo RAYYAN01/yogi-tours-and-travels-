@@ -171,7 +171,13 @@ export function prefillEnquiryForm(
     if (messageInput && !messageInput.value) messageInput.value = fields.message;
   }
   if (fields.vehicleType) {
-    const vehicleInput = qs<HTMLInputElement>('[name="vehicleType"]', form);
-    if (vehicleInput) vehicleInput.value = fields.vehicleType;
+    const vehicleInput = qs<HTMLSelectElement | HTMLInputElement>('[name="vehicleType"]', form);
+    if (vehicleInput) {
+      vehicleInput.value = fields.vehicleType;
+      // The <select> is visually replaced by a custom listbox (customSelect.ts)
+      // that only re-syncs its label on "change" — fire one so the prefilled
+      // vehicle actually shows.
+      vehicleInput.dispatchEvent(new Event("change", { bubbles: true }));
+    }
   }
 }
