@@ -13,3 +13,7 @@ public/assets/uploads/*
 .DS_Store
 Thumbs.db
 .vercel
+.vercel.old-account
+.vercel-token
+yogesh.zip
+*.zip
