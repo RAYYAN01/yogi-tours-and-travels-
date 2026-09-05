@@ -3,6 +3,7 @@ import { env, business } from "../config/env.js";
 import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS, faqsRepo } from "../db/content.js";
 import { LOCATIONS } from "../config/locations.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
+import { VEHICLE_GROUPS } from "../config/vehicleGroups.js";
 
 const router = Router();
 
@@ -59,6 +60,16 @@ router.get("/sitemap.xml", async (req, res, next) => {
   }
   for (const r of TRIP_ROUTES) {
     urls.push({ path: `/routes/${r.slug}`, priority: "0.7", changefreq: "monthly" });
+  }
+  // Vehicle-group x location combo pages (/:groupSlug/:locationSlug) — only
+  // for groups that actually have a matching vehicle, mirroring the guard in
+  // routes/vehicleLocations.ts so the sitemap never lists a page that 404s.
+  for (const g of VEHICLE_GROUPS) {
+    const hasVehicle = vehicles.some((v) => v.category === g.category && (g.seats === undefined || v.seats === g.seats));
+    if (!hasVehicle) continue;
+    for (const l of LOCATIONS) {
+      urls.push({ path: `/${g.slug}/${l.slug}`, priority: "0.6", changefreq: "monthly" });
+    }
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

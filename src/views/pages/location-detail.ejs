@@ -38,6 +38,17 @@
       </div>
     </div>
 
+    <div class="mt-8">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Tempo Traveller, Mini Bus &amp; Tourist Bus in <%= location.name %></h2>
+      <div class="flex flex-wrap gap-2.5">
+        <% vehicleGroups.forEach(function(g) { %>
+          <a href="/<%= g.slug %>/<%= location.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+            <%- include('../partials/icon', { name: 'van', cls: 'w-3.5 h-3.5' }) %><%= g.label %> in <%= location.name %>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+
     <% if (featuredVehicles.length) { %>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 mt-8">
       <% featuredVehicles.forEach(function(v) { %>

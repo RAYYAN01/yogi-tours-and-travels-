@@ -1,0 +1,95 @@
+<%- include('../partials/page-start') %>
+<%- include('../partials/breadcrumbs') %>
+
+<section class="py-10 lg:py-16">
+  <div class="container max-w-3xl">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-ink-900 tracking-tight"><%= group.label %> Rental in <%= location.name %>, Bangalore</h1>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4"><%= group.about %></p>
+    <p class="text-[15px] text-ink-600 leading-relaxed mt-4">
+      For pickup in <%= location.name %>, Yogi Tours &amp; Travels arranges a <%= group.label %> with driver directly from the area<% if (location.landmarks.length) { %>, close to <%= location.landmarks[0] %><% } %>. <%= location.detail %>
+    </p>
+
+    <% if (location.landmarks.length) { %>
+    <div class="flex flex-wrap gap-2 mt-5">
+      <% location.landmarks.forEach(function(l) { %>
+        <span class="badge badge-outline"><%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %><%= l %></span>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="mt-10">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4"><%= group.label %> Options</h2>
+      <p class="text-sm text-ink-600 mb-5">Available for local, outstation and group travel from <%= location.name %> — transparent per-km pricing where confirmed.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
+        <% vehicles.forEach(function(v) { %>
+          <%- include('../components/vehicle-card', { vehicle: v }) %>
+        <% }); %>
+      </div>
+    </div>
+
+    <div class="mt-10 rounded-2xl bg-ink-50/70 p-5 sm:p-6">
+      <h2 class="font-display font-semibold text-ink-900 mb-3">Common Questions — <%= group.label %> in <%= location.name %></h2>
+      <div class="space-y-4 text-sm text-ink-700">
+        <div>
+          <p class="font-medium text-ink-900">Is a <%= group.label %> available for pickup in <%= location.name %>?</p>
+          <p class="mt-1 text-ink-600">Yes — a <%= group.label %> can be arranged for pickup directly from <%= location.name %>.</p>
+        </div>
+        <div>
+          <p class="font-medium text-ink-900">Can I book a <%= group.label %> from <%= location.name %> for an outstation trip?</p>
+          <p class="mt-1 text-ink-600">Yes. Outstation trips are available with a <%= group.label %> starting from <%= location.name %>, with the driver's Bata and minimum daily kilometres confirmed at booking. Browse <a href="/routes" class="text-brand-700 hover:text-brand-800 font-medium">popular routes from Bangalore</a>.</p>
+        </div>
+        <div>
+          <p class="font-medium text-ink-900">What's the fare for a <%= group.label %> from <%= location.name %>?</p>
+          <p class="mt-1 text-ink-600">Per-kilometre rates are shown on each vehicle above where confirmed. Enquire with your route and dates for an exact quotation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 grid sm:grid-cols-2 gap-8">
+      <div>
+        <h2 class="font-display font-bold text-lg text-ink-900 mb-4">Other Vehicles in <%= location.name %></h2>
+        <div class="flex flex-wrap gap-2.5">
+          <a href="/locations/car-rental-<%= location.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+            <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %>Full Fleet in <%= location.name %>
+          </a>
+          <% otherGroups.forEach(function(g) { %>
+            <a href="/<%= g.slug %>/<%= location.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+              <%- include('../partials/icon', { name: 'van', cls: 'w-3.5 h-3.5' }) %><%= g.label %>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+      <div>
+        <h2 class="font-display font-bold text-lg text-ink-900 mb-4"><%= group.label %> in Other Areas</h2>
+        <div class="flex flex-wrap gap-2.5">
+          <% otherLocations.forEach(function(l) { %>
+            <a href="/<%= group.slug %>/<%= l.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+              <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %><%= l.name %>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <% if (nearbyLocations.length) { %>
+    <div class="mt-10">
+      <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Nearby Areas We Serve</h2>
+      <div class="flex flex-wrap gap-2.5">
+        <% nearbyLocations.forEach(function(n) { %>
+          <a href="/<%= group.slug %>/<%= n.slug %>" class="badge badge-outline !py-2 !px-3.5 text-[13px] hover:border-brand-300 hover:text-brand-700 transition-colors">
+            <%- include('../partials/icon', { name: 'map-pin', cls: 'w-3.5 h-3.5' }) %><%= group.label %> in <%= n.name %>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
+    <p class="text-sm text-ink-500 mt-10 pt-8 border-t border-ink-100">Looking for a different vehicle or area? Browse the <a href="/fleet" class="text-brand-700 hover:text-brand-800 font-medium">full fleet</a> or all <a href="/locations" class="text-brand-700 hover:text-brand-800 font-medium">areas we serve in Bangalore</a>.</p>
+  </div>
+</section>
+
+<%- include('../partials/cta-section', {
+  ctaHeading: `Book a ${group.label} in ${location.name}`,
+  ctaSub: `Tell us your pickup point in ${location.name}, group size and travel dates — we'll confirm the right vehicle and a clear quotation.`
+}) %>
+<%- include('../partials/page-end') %>

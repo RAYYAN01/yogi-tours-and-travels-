@@ -25,6 +25,7 @@ import seoRouter from "./routes/seo.js";
 import adminRouter from "./routes/admin/index.js";
 import locationsRouter from "./routes/locations.js";
 import tripRoutesRouter from "./routes/tripRoutes.js";
+import vehicleLocationsRouter from "./routes/vehicleLocations.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "../../");
@@ -201,6 +202,10 @@ app.use("/gallery", galleryRouter);
 app.use("/blog", blogRouter);
 app.use("/api", apiRouter);
 app.use("/admin", adminRouter);
+// Root-mounted, exactly-2-segment routes (/:groupSlug/:locationSlug) — must
+// come after every other router above so it never shadows a real page; a
+// 1-segment path like /about can't match this pattern regardless of order.
+app.use(vehicleLocationsRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

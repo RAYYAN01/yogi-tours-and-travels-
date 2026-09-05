@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { LOCATIONS, findLocation } from "../config/locations.js";
+import { VEHICLE_GROUPS } from "../config/vehicleGroups.js";
 import { vehiclesRepo, VEHICLE_CATEGORY_SLUGS, VEHICLE_CATEGORY_LABELS } from "../db/content.js";
 import { breadcrumbSchema, faqSchema } from "../utils/schema.js";
 import { clampDescription } from "../utils/meta.js";
@@ -60,6 +61,7 @@ router.get("/car-rental-:slug", async (req, res, next) => {
       nearby,
       featuredVehicles,
       vehicleCategoryLabelsList: VEHICLE_CATEGORY_SLUGS.map((s) => ({ slug: s, label: VEHICLE_CATEGORY_LABELS[s] })),
+      vehicleGroups: VEHICLE_GROUPS,
       schemas: [
         breadcrumbSchema([
           { name: "Home", url: "/" },
