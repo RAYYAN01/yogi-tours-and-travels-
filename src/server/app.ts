@@ -13,6 +13,7 @@ import { injectViewLocals } from "./middleware/viewLocals.js";
 import { ensureCsrfToken } from "./middleware/csrf.js";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 import { LEGACY_REDIRECTS } from "./config/redirects.js";
+import { getCacheVersion, getCachedPage, setCachedPage } from "./utils/cache.js";
 
 import pagesRouter from "./routes/pages.js";
 import vehiclesRouter from "./routes/vehicles.js";
@@ -148,13 +149,21 @@ app.use((req, res, next) => {
 app.use("/admin", ensureCsrfToken);
 app.use(injectViewLocals);
 
+// Shared by the header middleware below and the Redis page cache: every GET
+// that isn't /admin or /api is a public, non-personalized page — safe to
+// cache at any layer since (per the comment above ensureCsrfToken) none of
+// them touch the session or carry a per-visitor Set-Cookie.
+function isPublicCacheablePath(req: express.Request): boolean {
+  return req.method === "GET" && !req.path.startsWith("/admin") && !req.path.startsWith("/api");
+}
+
 // Public, non-personalized pages are safe to cache now that they no longer
 // carry a per-visitor Set-Cookie. A short edge cache means most visitors —
 // including from India, where Vercel's edge is close but the function/DB
 // round-trip is not — get an instant cached response instead of re-running
 // the full render + database query path on every request.
 app.use((req, res, next) => {
-  if (req.method === "GET" && !req.path.startsWith("/admin") && !req.path.startsWith("/api")) {
+  if (isPublicCacheablePath(req)) {
     res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=600");
     // Vercel's edge strips s-maxage from the client-facing Cache-Control on
     // Serverless Function responses, so it doesn't drive Vercel's own CDN
@@ -171,6 +180,49 @@ app.use(
   express.static(path.join(projectRoot, "public/assets/uploads"), { maxAge: env.isProd ? "7d" : 0 })
 );
 app.use(express.static(path.join(projectRoot, "public"), { maxAge: env.isProd ? "1d" : 0 }));
+
+// Redis-backed page cache for the same public/non-personalized routes as the
+// header middleware above. This is what actually keeps repeat requests off
+// Postgres and out of the render path — the Cache-Control headers only
+// affect the browser and Vercel's edge, which still call this function on
+// every cache miss/expiry/region. A miss here just falls through to the
+// normal render (res.send is captured below and stored for next time); a
+// disabled/unreachable Redis makes getCachedPage resolve null, so this is a
+// pure no-op when caching isn't configured.
+const PAGE_CACHE_TTL_SECONDS = 300;
+app.use((req, res, next) => {
+  if (!isPublicCacheablePath(req)) {
+    next();
+    return;
+  }
+  const cacheKey = req.originalUrl;
+  // Fetch the version once and reuse it for both the read and the eventual
+  // write below — rendering happens in between, and if we let each call
+  // fetch its own version instead, a bumpCacheVersion() from an admin save
+  // landing mid-render would make the write land under the new (post-edit)
+  // version key with pre-edit content, hiding the edit for the full TTL
+  // instead of invalidating it immediately.
+  getCacheVersion()
+    .then((version) =>
+      getCachedPage(cacheKey, version).then((html) => {
+        if (html !== null) {
+          res.setHeader("X-Cache", "HIT");
+          res.type("html").send(html);
+          return;
+        }
+        res.setHeader("X-Cache", "MISS");
+        const originalSend = res.send.bind(res);
+        res.send = ((body: unknown) => {
+          if (res.statusCode === 200 && typeof body === "string") {
+            void setCachedPage(cacheKey, body, PAGE_CACHE_TTL_SECONDS, version);
+          }
+          return originalSend(body as never);
+        }) as typeof res.send;
+        next();
+      })
+    )
+    .catch(next);
+});
 
 // Basic abuse protection on the public enquiry endpoint.
 const enquiryLimiter = rateLimit({

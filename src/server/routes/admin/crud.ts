@@ -5,6 +5,7 @@ import { setFlash } from "../../middleware/viewLocals.js";
 import { upload, uploadedPath } from "../../middleware/upload.js";
 import { slugify } from "../../utils/slug.js";
 import { linesToJsonArray, parseJsonArray } from "../../db/repo.js";
+import { bumpCacheVersion } from "../../utils/cache.js";
 import { resources, type ResourceConfig, type FieldConfig } from "./resourceConfig.js";
 
 const router = Router();
@@ -108,6 +109,7 @@ resources.forEach((resource) => {
         record.slug = await uniqueSlug(resource, String(record.slug || ""));
       }
       const id = await resource.repo.insert(record);
+      await bumpCacheVersion();
       setFlash(req, "success", `${resource.singular} created successfully.`);
       res.redirect(`/admin/${resource.key}/${id}/edit`);
     } catch (err) {
@@ -160,6 +162,7 @@ resources.forEach((resource) => {
           record.slug = await uniqueSlug(resource, String(record.slug || ""), id);
         }
         await resource.repo.update(id, record);
+        await bumpCacheVersion();
         setFlash(req, "success", `${resource.singular} updated successfully.`);
         res.redirect(`/admin/${resource.key}/${id}/edit`);
       } catch (err) {
@@ -181,6 +184,7 @@ resources.forEach((resource) => {
   router.post(`/${resource.key}/:id/delete`, verifyCsrfToken, async (req, res, next) => {
     try {
       await resource.repo.remove(Number(req.params.id));
+      await bumpCacheVersion();
       setFlash(req, "success", `${resource.singular} deleted.`);
       res.redirect(`/admin/${resource.key}`);
     } catch (err) {

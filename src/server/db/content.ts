@@ -1,4 +1,5 @@
 import { createRepo, parseJsonArray } from "./repo.js";
+import { cached } from "../utils/cache.js";
 import type {
   Vehicle,
   Service,
@@ -53,9 +54,17 @@ export function sortVehiclesAlphabetically<T extends { name: string; seats: numb
   });
 }
 
+// Public content changes only through /admin, which is rare — a short cache
+// here trades a few minutes of staleness after an edit (bumpCacheVersion()
+// in admin/crud.ts clears it immediately anyway) for skipping a DB round-trip
+// on every one of these calls for every anonymous visitor.
+const CONTENT_CACHE_TTL_SECONDS = 300;
+
 export async function vehiclesByCategory(category: VehicleCategory): Promise<Vehicle[]> {
-  const vehicles = await vehiclesRepo.allWhere("category = ?", category);
-  return sortVehiclesAlphabetically(vehicles);
+  return cached(`vehicles:byCategory:${category}`, CONTENT_CACHE_TTL_SECONDS, async () => {
+    const vehicles = await vehiclesRepo.allWhere("category = ?", category);
+    return sortVehiclesAlphabetically(vehicles);
+  });
 }
 
 function normalizeVehicleLabel(s: string): string {
@@ -89,25 +98,32 @@ export function matchVehicleByLabel(label: string, vehicles: Vehicle[]): Vehicle
  * matchVehicleByLabel so the two stay consistent in both directions.
  */
 export async function packagesForVehicle(vehicle: Vehicle): Promise<TourPackage[]> {
-  const allPackages = await packagesRepo.all();
-  return allPackages.filter((p) => packageVehicleOptions(p).some((opt) => matchVehicleByLabel(opt, [vehicle]) !== null));
+  return cached(`packages:forVehicle:${vehicle.id}`, CONTENT_CACHE_TTL_SECONDS, async () => {
+    const allPackages = await packagesRepo.all();
+    return allPackages.filter((p) => packageVehicleOptions(p).some((opt) => matchVehicleByLabel(opt, [vehicle]) !== null));
+  });
 }
 
 export async function featuredPackages(limit = 6): Promise<TourPackage[]> {
-  return (await packagesRepo.allWhere("featured = 1")).slice(0, limit);
+  return cached(`packages:featured:${limit}`, CONTENT_CACHE_TTL_SECONDS, async () =>
+    (await packagesRepo.allWhere("featured = 1")).slice(0, limit)
+  );
 }
 
 export async function featuredServices(limit = 6): Promise<Service[]> {
-  return (await servicesRepo.allWhere("featured = 1")).slice(0, limit);
+  return cached(`services:featured:${limit}`, CONTENT_CACHE_TTL_SECONDS, async () =>
+    (await servicesRepo.allWhere("featured = 1")).slice(0, limit)
+  );
 }
 
 export async function publishedBlogPosts(): Promise<BlogPost[]> {
-  return blogRepo.allWhere("published = 1");
+  return cached("blog:published", CONTENT_CACHE_TTL_SECONDS, () => blogRepo.allWhere("published = 1"));
 }
 
 export async function galleryByCategory(category: GalleryCategory | "All"): Promise<GalleryItem[]> {
-  if (category === "All") return galleryRepo.all();
-  return galleryRepo.allWhere("category = ?", category);
+  return cached(`gallery:byCategory:${category}`, CONTENT_CACHE_TTL_SECONDS, () =>
+    category === "All" ? galleryRepo.all() : galleryRepo.allWhere("category = ?", category)
+  );
 }
 
 const GALLERY_CATEGORY_ICONS: Record<GalleryCategory, string> = {
@@ -128,14 +144,16 @@ const GALLERY_CATEGORY_ICONS: Record<GalleryCategory, string> = {
 export async function galleryPreview(): Promise<
   Array<{ category: GalleryCategory; icon: string; imageKey: string; altText: string }>
 > {
-  const categories: GalleryCategory[] = ["Vehicles", "Tours", "Group Travel", "Corporate", "Weddings", "Destinations"];
-  const items = await Promise.all(
-    categories.map(async (category) => {
-      const [first] = await galleryRepo.allWhere('category = ? AND "imageKey" != \'\'', category);
-      return first ? { category, icon: GALLERY_CATEGORY_ICONS[category], imageKey: first.imageKey, altText: first.altText } : null;
-    })
-  );
-  return items.filter((i): i is NonNullable<typeof i> => i !== null);
+  return cached("gallery:preview", CONTENT_CACHE_TTL_SECONDS, async () => {
+    const categories: GalleryCategory[] = ["Vehicles", "Tours", "Group Travel", "Corporate", "Weddings", "Destinations"];
+    const items = await Promise.all(
+      categories.map(async (category) => {
+        const [first] = await galleryRepo.allWhere('category = ? AND "imageKey" != \'\'', category);
+        return first ? { category, icon: GALLERY_CATEGORY_ICONS[category], imageKey: first.imageKey, altText: first.altText } : null;
+      })
+    );
+    return items.filter((i): i is NonNullable<typeof i> => i !== null);
+  });
 }
 
 export const VEHICLE_CATEGORY_LABELS: Record<VehicleCategory, string> = {
@@ -156,12 +174,14 @@ export const VEHICLE_CATEGORY_SLUGS: VehicleCategory[] = ["car", "tempo-travelle
 export async function startingPriceByCategory(): Promise<
   Array<{ category: VehicleCategory; startingFrom: number | null }>
 > {
-  return Promise.all(
-    VEHICLE_CATEGORY_SLUGS.map(async (category) => {
-      const vehicles = await vehiclesByCategory(category);
-      const rates = vehicles.map((v) => v.ratePerKm).filter((r): r is number => typeof r === "number" && r > 0);
-      return { category, startingFrom: rates.length ? Math.min(...rates) : null };
-    })
+  return cached("pricing:startingByCategory", CONTENT_CACHE_TTL_SECONDS, () =>
+    Promise.all(
+      VEHICLE_CATEGORY_SLUGS.map(async (category) => {
+        const vehicles = await vehiclesByCategory(category);
+        const rates = vehicles.map((v) => v.ratePerKm).filter((r): r is number => typeof r === "number" && r > 0);
+        return { category, startingFrom: rates.length ? Math.min(...rates) : null };
+      })
+    )
   );
 }
 
