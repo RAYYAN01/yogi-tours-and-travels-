@@ -18,7 +18,15 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/best-outstation-taxi-service-in-bangalore": "/services/outstation-travel",
   // "9/10 Seater" in the old title matches the real 9 Seater Tempo
   // Traveller, not the 17-seat Force Urbania — was previously mismatched.
-  "/luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/9-seater-tempo-traveller",
+  //
+  // Points directly at the vehicle's current DB slug (tempo-traveller-12-seater),
+  // not the older "9-seater-tempo-traveller" spelling — that spelling still
+  // resolves (findVehicleBySlugOrAlias in content.ts), but only by issuing its
+  // own second 301 to the current slug, turning every hit on these 4 legacy
+  // URLs into a 3-hop redirect chain (confirmed live in production) instead
+  // of one. Update this alongside VEHICLE_SLUG_ALIASES in content.ts if the
+  // canonical slug changes again.
+  "/luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
   "/best-sedan-cab-service-bangalore": "/fleet/car",
 
   // WordPress tag-archive pages
@@ -26,12 +34,12 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   "/tag/mini-bus-rental-bangalore-12-seater": "/fleet/mini-bus",
   "/tag/tempo-traveller-rental-bangalore": "/fleet/tempo-traveller",
   "/tag/book-tempo-traveller-on-rent-in-bangalore-online": "/fleet/tempo-traveller",
-  "/tag/best-luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/9-seater-tempo-traveller",
+  "/tag/best-luxury-tempo-traveller-9-10-seater-on-rent-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
   "/category/blog": "/blog",
 
   // Individual vehicle/keyword landing pages
-  "/9-seater-tempo-traveller-rental-in-bangalore": "/fleet/tempo-traveller/9-seater-tempo-traveller",
-  "/best-9-seater-tempo-traveller-for-rent-in-bangalore": "/fleet/tempo-traveller/9-seater-tempo-traveller",
+  "/9-seater-tempo-traveller-rental-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
+  "/best-9-seater-tempo-traveller-for-rent-in-bangalore": "/fleet/tempo-traveller/tempo-traveller-12-seater",
   "/best-tempo-traveller-on-rent-in-bangalore": "/fleet/tempo-traveller",
   "/best-innova-car-rental-in-bangalore-for-outstation": "/fleet/car/toyota-innova",
 
