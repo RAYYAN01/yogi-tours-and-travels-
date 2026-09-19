@@ -35,6 +35,7 @@ function isActive(prefix) { return __path === prefix || __path.startsWith(prefix
 
   <div class="p-3 border-t border-white/10 shrink-0">
     <form action="/admin/logout" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       <button type="submit" class="admin-nav-link w-full text-left">
         <%- include('../../partials/icon', { name: 'logout', cls: 'w-4 h-4' }) %>Log Out
       </button>

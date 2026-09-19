@@ -21,6 +21,7 @@ export interface EnquiryInput {
   message?: string;
   sourcePage?: string;
   website?: string; // honeypot field
+  customDuration?: string;
 }
 
 const VALID_TYPES = new Set(["outstation", "local", "airport", "quote", "contact", "package", "vehicle"]);
@@ -81,6 +82,10 @@ export function validateEnquiry(body: EnquiryInput): ValidationResult {
   checkMaxLength(errors, "returnDate", body.returnDate, "Return date");
   checkMaxLength(errors, "passengers", body.passengers, "Passengers");
   checkMaxLength(errors, "sourcePage", body.sourcePage, "Source page");
+  // api.ts prepends this to `message` ("Custom duration requested: ...")
+  // before saving — validated here, at the source, rather than re-checking
+  // the length of the field it gets built into afterward.
+  checkMaxLength(errors, "customDuration", body.customDuration, "Custom duration");
 
   if (body.message && body.message.length > 2000) {
     errors.message = "Message is too long.";

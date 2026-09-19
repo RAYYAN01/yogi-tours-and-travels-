@@ -15,9 +15,24 @@ export function ensureCsrfToken(req: Request, _res: Response, next: NextFunction
   next();
 }
 
+/** Constant-time string equality — plain `===` on a secret token leaks its value one byte at a time via response-time differences. */
+function timingSafeStringEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  // timingSafeEqual throws on a length mismatch rather than returning false,
+  // and comparing against a same-length-but-wrong buffer first keeps this
+  // check itself from leaking the real token's length via an early throw.
+  if (bufA.length !== bufB.length) {
+    crypto.timingSafeEqual(bufA, bufA);
+    return false;
+  }
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 export function verifyCsrfToken(req: Request, res: Response, next: NextFunction): void {
   const submitted = (req.body && req.body._csrf) || req.get("x-csrf-token");
-  if (submitted && submitted === req.session.csrfToken) {
+  const expected = req.session.csrfToken;
+  if (typeof submitted === "string" && expected && timingSafeStringEqual(submitted, expected)) {
     next();
     return;
   }

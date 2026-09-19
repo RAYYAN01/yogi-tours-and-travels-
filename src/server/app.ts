@@ -261,6 +261,26 @@ const loginLimiter = rateLimit({
 });
 app.use("/admin/login", loginLimiter);
 
+// forgot-password has no auth gate (it can't — that's the point) and
+// triggers a real outbound email via SMTP on every hit for a guessed/known
+// username, so an unthrottled attacker could mail-bomb the business's own
+// inbox or exhaust the SMTP send quota. Tighter than the login limiter
+// since there's no legitimate reason to hit this more than a handful of
+// times in 15 minutes.
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use("/admin/forgot-password", forgotPasswordLimiter);
+
+// Defense-in-depth on the admin password-change form: this is behind
+// requireAdmin already, so it only matters if a session is already
+// compromised, but there's no reason a legitimate admin ever needs more
+// than a handful of attempts in 15 minutes.
+app.use("/admin/settings/password", loginLimiter);
+
 app.use(seoRouter);
 app.use(pagesRouter);
 app.use("/fleet", vehiclesRouter);

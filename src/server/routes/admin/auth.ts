@@ -127,7 +127,7 @@ router.post("/reset-password/:token", verifyCsrfToken, async (req, res) => {
   res.render("admin/login", { error: null, resetSuccess: true, layoutSection: "admin-auth" });
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", verifyCsrfToken, (req, res) => {
   req.session.destroy(() => {
     res.redirect("/admin/login");
   });

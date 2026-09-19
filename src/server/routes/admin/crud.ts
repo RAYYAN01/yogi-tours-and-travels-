@@ -2,7 +2,7 @@ import { Router, type RequestHandler } from "express";
 import { requireAdmin } from "../../middleware/auth.js";
 import { verifyCsrfToken } from "../../middleware/csrf.js";
 import { setFlash } from "../../middleware/viewLocals.js";
-import { upload, uploadedPath } from "../../middleware/upload.js";
+import { upload, saveUploadedFile } from "../../middleware/upload.js";
 import { slugify } from "../../utils/slug.js";
 import { linesToJsonArray, parseJsonArray } from "../../db/repo.js";
 import { bumpCacheVersion } from "../../utils/cache.js";
@@ -46,7 +46,11 @@ function buildRecordFromBody(
         break;
       case "image": {
         if (file) {
-          record[field.name] = uploadedPath(file.filename);
+          // Only reached from inside this route handler, i.e. after
+          // verifyCsrfToken has already passed — see upload.ts for why the
+          // actual disk write is deferred to here rather than happening as
+          // a side effect of multer's own (pre-CSRF-check) body parsing.
+          record[field.name] = saveUploadedFile(file);
         } else if (typeof raw === "string" && raw.trim() !== "") {
           record[field.name] = raw.trim();
         } else {

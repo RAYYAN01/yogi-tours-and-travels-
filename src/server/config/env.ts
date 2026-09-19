@@ -5,10 +5,31 @@ function required(name: string, fallback: string): string {
   return value && value.trim() !== "" ? value : fallback;
 }
 
+const isProd = process.env.NODE_ENV === "production";
+
+// SESSION_SECRET and ENCRYPTION_KEY both have a permissive fallback below
+// (an unpredictable-but-fixed dev secret; plaintext storage) purely so
+// `npm run dev` works with zero setup. That same fallback silently
+// reappearing in a misconfigured PRODUCTION deployment would mean forgeable
+// admin session cookies and plaintext customer PII respectively — bad
+// enough to fail startup over rather than degrade quietly. Real deploys
+// already have both set (verified against this project's Vercel env), so
+// this only ever fires on an actual misconfiguration, never in normal use.
+if (isProd && (!process.env.SESSION_SECRET || !process.env.SESSION_SECRET.trim())) {
+  throw new Error(
+    "[env] SESSION_SECRET is not set in production — refusing to start with the dev fallback secret, which would let anyone forge a valid session cookie. Set it in the deployment's environment variables."
+  );
+}
+if (isProd && (!process.env.ENCRYPTION_KEY || !process.env.ENCRYPTION_KEY.trim())) {
+  throw new Error(
+    "[env] ENCRYPTION_KEY is not set in production — refusing to start, since that would silently store enquiry PII (name/phone/email) in plaintext instead of encrypted. Set it in the deployment's environment variables."
+  );
+}
+
 export const env = {
   port: Number(process.env.PORT) || 3000,
   nodeEnv: process.env.NODE_ENV || "development",
-  isProd: process.env.NODE_ENV === "production",
+  isProd,
   siteUrl: required("SITE_URL", "http://localhost:3000"),
   /** GA4 Measurement ID (e.g. "G-XXXXXXX") — leave unset to skip loading Google Analytics entirely. */
   gaMeasurementId: process.env.GA_MEASUREMENT_ID || "",
@@ -22,7 +43,7 @@ export const env = {
     url: process.env.UPSTASH_REDIS_REST_URL || "",
     token: process.env.UPSTASH_REDIS_REST_TOKEN || ""
   },
-  /** 32-byte hex key (`openssl rand -hex 32`) for encrypting enquiry PII at rest. Leave unset to store plaintext (dev only). */
+  /** 32-byte hex key (`openssl rand -hex 32`) for encrypting enquiry PII at rest. Leave unset to store plaintext (dev only) — see the startup check above for why production requires it. */
   encryptionKey: process.env.ENCRYPTION_KEY || "",
   smtp: {
     host: process.env.SMTP_HOST || "",
