@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { TRIP_ROUTES, findTripRoute } from "../config/tripRoutes.js";
 import { vehiclesRepo, findVehicleBySlugOrAlias } from "../db/content.js";
-import { breadcrumbSchema, touristTripSchema, faqSchema } from "../utils/schema.js";
+import { breadcrumbSchema, touristTripSchema, faqSchema, speakableSchema } from "../utils/schema.js";
 
 const router = Router();
 
@@ -91,7 +91,8 @@ router.get("/:slug", async (req, res, next) => {
           { name: "Home", url: "/" },
           { name: "Routes", url: "/routes" },
           { name: `Bangalore to ${route.destination}`, url: canonicalPath }
-        ])
+        ]),
+        speakableSchema(canonicalPath, ["#faq"])
       ]
     });
   } catch (err) {

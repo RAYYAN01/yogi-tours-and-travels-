@@ -117,7 +117,13 @@ export function faqSchema(faqs: Array<{ question: string; answer: string }>): Re
   };
 }
 
-export function serviceSchema(input: { name: string; description: string; url: string }): Record<string, unknown> {
+export function serviceSchema(input: {
+  name: string;
+  description: string;
+  url: string;
+  /** Raw DB "YYYY-MM-DD HH:MM:SS" updatedAt — converted to ISO 8601. Freshness signal for AI answer engines (ChatGPT/Gemini/Claude) deciding whether cached page content is still current. */
+  dateModified?: string;
+}): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -126,7 +132,8 @@ export function serviceSchema(input: { name: string; description: string; url: s
     description: input.description,
     url: `${env.siteUrl}${input.url}`,
     provider: { "@id": `${env.siteUrl}/#organization` },
-    areaServed: { "@type": "City", name: "Bangalore" }
+    areaServed: { "@type": "City", name: "Bangalore" },
+    ...(input.dateModified ? { dateModified: toIso(input.dateModified) } : {})
   };
 }
 
@@ -137,6 +144,8 @@ export function vehicleServiceSchema(input: {
   imageUrl?: string;
   /** Real confirmed per-km rate in INR — omitted (no `offers` block) rather than faked when not yet confirmed. */
   ratePerKm?: number | null;
+  /** Raw DB "YYYY-MM-DD HH:MM:SS" updatedAt — converted to ISO 8601. */
+  dateModified?: string;
 }): Record<string, unknown> {
   // A chauffeur-driven vehicle-for-hire is a rental service, not a purchasable
   // good — "Service" matches what's actually being sold; "Product" implies
@@ -151,6 +160,7 @@ export function vehicleServiceSchema(input: {
     ...(input.imageUrl ? { image: input.imageUrl } : {}),
     provider: { "@id": `${env.siteUrl}/#organization` },
     areaServed: { "@type": "City", name: "Bangalore", alternateName: "Bengaluru" },
+    ...(input.dateModified ? { dateModified: toIso(input.dateModified) } : {}),
     ...(input.ratePerKm
       ? {
           offers: {
@@ -178,6 +188,8 @@ export function touristTripSchema(input: {
   description: string;
   url: string;
   duration: string;
+  /** Raw DB "YYYY-MM-DD HH:MM:SS" updatedAt — converted to ISO 8601. Omitted for statically-configured routes (TRIP_ROUTES) that have no updatedAt of their own. */
+  dateModified?: string;
 }): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
@@ -185,13 +197,26 @@ export function touristTripSchema(input: {
     name: input.name,
     description: input.description,
     url: `${env.siteUrl}${input.url}`,
-    provider: { "@id": `${env.siteUrl}/#organization` }
+    provider: { "@id": `${env.siteUrl}/#organization` },
+    ...(input.dateModified ? { dateModified: toIso(input.dateModified) } : {})
   };
 }
 
-/** DB timestamps are stored as "YYYY-MM-DD HH:MM:SS" — schema.org/Google want real ISO 8601 ("...T...Z"). */
-function toIso(dbTimestamp: string): string {
-  const d = new Date(dbTimestamp.includes("T") ? dbTimestamp : `${dbTimestamp.replace(" ", "T")}Z`);
+/**
+ * DB timestamps are normally stored as plain "YYYY-MM-DD HH:MM:SS" (no
+ * timezone — treated as UTC by appending "Z" before parsing). Some rows
+ * predate that convention and already carry their own offset, e.g.
+ * "2026-08-13 20:11:57.28099+00" from when a column was timestamptz — for
+ * those, appending another "Z" produces an invalid double-offset string
+ * that Date silently rejects, so this checks for an existing Z/±HH[:MM]
+ * suffix first and leaves the string alone (space-and-offset format parses
+ * fine on its own) rather than assuming the plain-format case unconditionally.
+ */
+export function toIso(dbTimestamp: string): string {
+  const trimmed = dbTimestamp.trim();
+  const hasOffset = /(Z|[+-]\d{2}(:?\d{2})?)$/.test(trimmed);
+  const candidate = hasOffset ? trimmed : `${trimmed.replace(" ", "T")}Z`;
+  const d = new Date(candidate);
   return Number.isNaN(d.getTime()) ? dbTimestamp : d.toISOString();
 }
 
@@ -242,5 +267,28 @@ export function websiteSchema(): Record<string, unknown> {
     description: business.description,
     inLanguage: "en-IN",
     publisher: { "@id": `${env.siteUrl}/#organization` }
+  };
+}
+
+/**
+ * Marks the page's FAQ block as safe to read aloud/quote verbatim — the
+ * `SpeakableSpecification` property Google Assistant and other AI answer
+ * surfaces (ChatGPT, Gemini, Claude included, where the underlying crawler
+ * respects it) use to pick which part of a page is a clean, self-contained
+ * answer rather than pulling from the whole page and misquoting surrounding
+ * nav/CTA copy. `cssSelectors` must match real ids/classes present in the
+ * rendered HTML of the same page (each faqSchema()-emitting route wraps its
+ * visible FAQ block in `id="faq"` specifically so this can target it).
+ */
+export function speakableSchema(canonicalPath: string, cssSelectors: string[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${env.siteUrl}${canonicalPath}`,
+    url: `${env.siteUrl}${canonicalPath}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: cssSelectors
+    }
   };
 }

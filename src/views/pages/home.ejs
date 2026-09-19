@@ -14,9 +14,12 @@
       poster="/assets/images/destinations/hero-bangalore.webp"
       data-hero-video
     >
-      <!-- Smaller (640x360, ~1.9MB) encode for phones/tablets — the full
-           1280x720 desktop file (~9.3MB) would be a real data/load-time
-           cost on cellular connections for a purely decorative background. -->
+      <!-- Smaller (640x360, ~2.5MB) encode for phones/tablets — the full
+           1280x720 desktop file (~4.3MB) would be a real data/load-time
+           cost on cellular connections for a purely decorative background.
+           Both stripped of their (always-muted, never-played) audio track
+           and re-encoded at a bitrate-capped CRF instead of the original's
+           much higher bitrate — same footage, ~55% smaller either way. -->
       <source src="/assets/video/hero-background-mobile.mp4" type="video/mp4" />
     </video>
     <video
@@ -396,7 +399,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
+<section id="faq" class="py-16 lg:py-24 bg-ink-50/60" data-reveal>
   <div class="container max-w-3xl">
     <%- include('../components/section-heading', {
       eyebrow: 'FAQs',

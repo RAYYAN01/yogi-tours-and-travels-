@@ -6,6 +6,7 @@ const __hasCustomOgImage = typeof ogImage !== "undefined";
 const __ogImage = __hasCustomOgImage ? ogImage : `${env.siteUrl}/assets/images/og-default.png`;
 const __noindex = typeof noindex !== "undefined" ? noindex : false;
 const __schemas = typeof schemas !== "undefined" ? schemas : [];
+const __ogType = typeof ogType !== "undefined" ? ogType : "website";
 // Google itself has ignored the keywords meta tag since ~2009, but it's a
 // harmless, real reflection of the page's actual topic and some SEO audit
 // tools/other search engines still check for it. Page routes can pass a
@@ -40,7 +41,7 @@ const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
   <meta name="geo.position" content="<%= business.geo.latitude %>;<%= business.geo.longitude %>" />
 
   <!-- Open Graph -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="<%= __ogType %>" />
   <meta property="og:site_name" content="<%= business.name %>" />
   <meta property="og:title" content="<%= __title %>" />
   <meta property="og:description" content="<%= __desc %>" />
@@ -51,6 +52,15 @@ const __keywords = typeof metaKeywords !== "undefined" ? metaKeywords :
   <meta property="og:image:height" content="630" />
   <% } %>
   <meta property="og:locale" content="en_IN" />
+  <% if (__ogType === "article") { %>
+  <% if (typeof articlePublishedTime !== "undefined") { %>
+  <meta property="article:published_time" content="<%= articlePublishedTime %>" />
+  <% } %>
+  <% if (typeof articleModifiedTime !== "undefined") { %>
+  <meta property="article:modified_time" content="<%= articleModifiedTime %>" />
+  <% } %>
+  <meta property="article:publisher" content="<%= env.siteUrl %>" />
+  <% } %>
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />

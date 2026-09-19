@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { publishedBlogPosts, blogRepo } from "../db/content.js";
-import { blogPostingSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { blogPostingSchema, breadcrumbSchema, faqSchema, speakableSchema, toIso } from "../utils/schema.js";
 import { clampDescription } from "../utils/meta.js";
 import { business, env } from "../config/env.js";
 
@@ -100,6 +100,13 @@ router.get("/:slug", async (req, res, next) => {
       title: `${post.title} | Yogi Tours & Travels Blog`,
       metaDescription: clampDescription(post.excerpt),
       canonicalPath: `/blog/${post.slug}`,
+      // "article" (vs the sitewide default "website") plus the published/modified
+      // dates below give AI crawlers (GPTBot, ClaudeBot, Google-Extended) and
+      // classic article-type parsers an explicit freshness signal beyond what's
+      // already in the BlogPosting JSON-LD.
+      ogType: "article",
+      articlePublishedTime: toIso(post.publishedAt),
+      articleModifiedTime: toIso(post.updatedAt),
       // Falls back to the generic og-default.png in head.ejs when the post has no cover photo.
       ...(absoluteCoverImage ? { ogImage: absoluteCoverImage } : {}),
       crumbs: [
@@ -126,7 +133,7 @@ router.get("/:slug", async (req, res, next) => {
           { name: "Blog", url: "/blog" },
           { name: post.title, url: `/blog/${post.slug}` }
         ]),
-        ...(faqs ? [faqSchema(faqs)] : [])
+        ...(faqs ? [faqSchema(faqs), speakableSchema(`/blog/${post.slug}`, ["#faq"])] : [])
       ]
     });
   } catch (err) {

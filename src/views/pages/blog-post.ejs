@@ -16,7 +16,7 @@
     <div class="prose-content text-[15.5px] text-ink-700"><%- post.content %></div>
 
     <% if (typeof faqs !== "undefined" && faqs.length) { %>
-    <div class="mt-10 pt-8 border-t border-ink-100">
+    <div id="faq" class="mt-10 pt-8 border-t border-ink-100">
       <h2 class="font-display font-bold text-xl text-ink-900 mb-4">Frequently Asked Questions</h2>
       <div class="space-y-4">
         <% faqs.forEach(function(f) { %>

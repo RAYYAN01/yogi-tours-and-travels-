@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { packagesRepo, packageHighlights, packageVehicleOptions, vehiclesRepo } from "../db/content.js";
-import { touristTripSchema, breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { touristTripSchema, breadcrumbSchema, faqSchema, speakableSchema } from "../utils/schema.js";
 import { clampDescription, shortDuration } from "../utils/meta.js";
 
 const router = Router();
@@ -25,6 +25,9 @@ router.get("/", async (req, res, next) => {
       title: "Tour Packages from Bangalore | Coorg, Mysore, Goa",
       metaDescription:
         "Tour packages from Bangalore — Coorg, Ooty, Mysore, Chikmagalur, Hampi, Goa and Kerala backwaters. Customisable itineraries, your choice of vehicle.",
+      metaKeywords: `tour packages from bangalore, weekend getaway packages bangalore, family tour packages bangalore, ${TRAVEL_CATEGORIES.map(
+        (c) => `${c.toLowerCase()} tour packages bangalore`
+      ).join(", ")}`,
       canonicalPath: "/tour-packages",
       crumbs: [
         { name: "Home", url: "/" },
@@ -82,6 +85,10 @@ router.get("/:slug", async (req, res, next) => {
     res.render("pages/package-detail", {
       title: `${pkg.title} | ${shortDuration(pkg.duration)} from Bangalore`,
       metaDescription: clampDescription(`${pkg.title} — ${pkg.duration} tour package from Bangalore to ${pkg.destination}. ${pkg.idealFor}`),
+      // destination is often "Place, State" — split off just the place name
+      // for the "bangalore to X" phrase so it doesn't read as one run-on
+      // phrase with a comma buried in the middle of it.
+      metaKeywords: `${pkg.title.toLowerCase()}, bangalore to ${pkg.destination.split(",")[0]!.trim().toLowerCase()} package, ${pkg.destination.toLowerCase()} tour package from bangalore, ${pkg.travelCategory.toLowerCase()} tour package bangalore`,
       canonicalPath: `/tour-packages/${pkg.slug}`,
       crumbs: [
         { name: "Home", url: "/" },
@@ -99,14 +106,16 @@ router.get("/:slug", async (req, res, next) => {
           name: pkg.title,
           description: pkg.description,
           url: `/tour-packages/${pkg.slug}`,
-          duration: pkg.duration
+          duration: pkg.duration,
+          dateModified: pkg.updatedAt
         }),
         breadcrumbSchema([
           { name: "Home", url: "/" },
           { name: "Tours & Packages", url: "/tour-packages" },
           { name: pkg.title, url: `/tour-packages/${pkg.slug}` }
         ]),
-        faqSchema(packageFaqs)
+        faqSchema(packageFaqs),
+        speakableSchema(`/tour-packages/${pkg.slug}`, ["#faq"])
       ]
     });
   } catch (err) {

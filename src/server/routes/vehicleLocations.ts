@@ -2,7 +2,7 @@ import { Router } from "express";
 import { VEHICLE_GROUPS, findVehicleGroup } from "../config/vehicleGroups.js";
 import { LOCATIONS, findLocation } from "../config/locations.js";
 import { vehiclesRepo } from "../db/content.js";
-import { breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { breadcrumbSchema, faqSchema, speakableSchema } from "../utils/schema.js";
 import { clampDescription } from "../utils/meta.js";
 
 const router = Router();
@@ -79,7 +79,8 @@ router.get("/:groupSlug/:locationSlug", async (req, res, next) => {
             question: `What's the fare for a ${group.label} from ${location.name}?`,
             answer: `Per-kilometre rates are shown on each vehicle below where confirmed. Enquire with your route and dates for an exact quotation.`
           }
-        ])
+        ]),
+        speakableSchema(canonicalPath, ["#faq"])
       ]
     });
   } catch (err) {

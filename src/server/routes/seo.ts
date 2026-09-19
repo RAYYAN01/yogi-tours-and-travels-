@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { env, business } from "../config/env.js";
 import { vehiclesRepo, servicesRepo, packagesRepo, publishedBlogPosts, VEHICLE_CATEGORY_SLUGS, faqsRepo } from "../db/content.js";
+import { DUTY_POLICY, dutyTariff } from "../db/pricing.js";
 import { LOCATIONS } from "../config/locations.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
 import { VEHICLE_GROUPS } from "../config/vehicleGroups.js";
@@ -118,6 +119,16 @@ Allow: /
 User-agent: anthropic-ai
 Allow: /
 
+# Newer Anthropic crawlers, mirroring the OpenAI section above: Claude-User
+# fetches a page when someone asks Claude to browse/read it live, and
+# Claude-SearchBot fetches pages for Claude's search/answer features —
+# distinct from ClaudeBot's model-training crawl.
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
 User-agent: Google-Extended
 Allow: /
 
@@ -181,6 +192,23 @@ router.get("/llms.txt", async (req, res, next) => {
 
     const faqSection = faqs.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n");
 
+    // Confirmed duty-tariff facts (real terms, not estimates) — direct-answer
+    // material for "what's included in the rate" / "what's the minimum km"
+    // style questions that AI answer engines get asked constantly and that
+    // otherwise only lived inside one blog post's FAQ block.
+    const policyLines = vehicles
+      .map((v) => {
+        const tariff = dutyTariff(v.slug);
+        if (!tariff || !v.ratePerKm) return null;
+        const rateText = tariff.nonAcRatePerKm
+          ? `₹${v.ratePerKm}/km AC, ₹${tariff.nonAcRatePerKm}/km Non-AC`
+          : `₹${v.ratePerKm}/km`;
+        return `- ${v.name}: ${rateText}, minimum ${tariff.minKmPerDay} km/day, driver Bata ₹${tariff.driverBata}/day.`;
+      })
+      .filter((line): line is string => line !== null)
+      .join("\n");
+    const policiesSection = `Duty hours: ${DUTY_POLICY.dutyStart} to ${DUTY_POLICY.dutyEnd}. ${DUTY_POLICY.extraBataNote}. ${DUTY_POLICY.additionalChargesNote} and confirmed in the quotation, not included in the per-km rate.\n\n${policyLines}`;
+
     const body = `# ${business.name}
 
 > ${business.description}
@@ -204,6 +232,10 @@ Full services list: ${env.siteUrl}/services
 ${packagesSection}
 
 Full tour packages list: ${env.siteUrl}/tour-packages
+
+## Booking Policies
+
+${policiesSection}
 
 ## Frequently Asked Questions
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { LOCATIONS, findLocation } from "../config/locations.js";
 import { VEHICLE_GROUPS } from "../config/vehicleGroups.js";
 import { vehiclesRepo, VEHICLE_CATEGORY_SLUGS, VEHICLE_CATEGORY_LABELS } from "../db/content.js";
-import { breadcrumbSchema, faqSchema } from "../utils/schema.js";
+import { breadcrumbSchema, faqSchema, speakableSchema } from "../utils/schema.js";
 import { clampDescription } from "../utils/meta.js";
 import type { VehicleCategory } from "../types/models.js";
 
@@ -10,9 +10,15 @@ const router = Router();
 
 router.get("/", (req, res) => {
   res.render("pages/locations-list", {
-    title: "Areas We Serve in Bangalore | Yogi Tours & Travels",
-    metaDescription:
-      "Car, cab, Tempo Traveller and bus rental across Bangalore localities — find your area, covering Whitefield, Koramangala and more.",
+    // "Areas We Serve" isn't a phrase anyone actually searches — this page's
+    // real job is ranking for "car/cab rental near me" style queries, so the
+    // title leads with that intent instead. LOCATIONS.length keeps the count
+    // honest and self-updating rather than a number that drifts out of date.
+    title: `Car & Cab Rental Near You — ${LOCATIONS.length}+ Areas in Bangalore | Yogi Tours`,
+    metaDescription: clampDescription(
+      `Car, cab, Tempo Traveller and bus rental near you — covering ${LOCATIONS.length}+ areas across Bangalore including Whitefield, Koramangala and HSR Layout, with local pickup and transparent per-km pricing.`
+    ),
+    metaKeywords: "car rental near me bangalore, cab service near me bangalore, tempo traveller rental near me, taxi service near me bangalore",
     canonicalPath: "/locations",
     crumbs: [
       { name: "Home", url: "/" },
@@ -84,7 +90,8 @@ router.get("/car-rental-:slug", async (req, res, next) => {
             question: `Which vehicles are available in ${location.name}?`,
             answer: `The full fleet — sedans, Toyota Innova & Innova Crysta, Tempo Travellers, Force Urbania and buses — can be arranged for pickup in ${location.name}.`
           }
-        ])
+        ]),
+        speakableSchema(canonicalPath, ["#faq"])
       ]
     });
   } catch (err) {

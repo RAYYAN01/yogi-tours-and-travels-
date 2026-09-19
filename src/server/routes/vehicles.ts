@@ -9,7 +9,7 @@ import {
   packagesForVehicle,
   findVehicleBySlugOrAlias
 } from "../db/content.js";
-import { vehicleServiceSchema, breadcrumbSchema, serviceSchema, faqSchema } from "../utils/schema.js";
+import { vehicleServiceSchema, breadcrumbSchema, serviceSchema, faqSchema, speakableSchema } from "../utils/schema.js";
 import { env, business } from "../config/env.js";
 import { clampDescription } from "../utils/meta.js";
 import { TRIP_ROUTES } from "../config/tripRoutes.js";
@@ -270,7 +270,8 @@ router.get("/:category/:slug", async (req, res, next) => {
           description: vehicle.description,
           url: `/fleet/${category}/${vehicle.slug}`,
           imageUrl: vehicle.imageKey ? `${env.siteUrl}${vehicle.imageKey}` : undefined,
-          ratePerKm: vehicle.ratePerKm
+          ratePerKm: vehicle.ratePerKm,
+          dateModified: vehicle.updatedAt
         }),
         breadcrumbSchema([
           { name: "Home", url: "/" },
@@ -278,7 +279,9 @@ router.get("/:category/:slug", async (req, res, next) => {
           { name: label, url: `/fleet/${category}` },
           { name: vehicle.name, url: `/fleet/${category}/${vehicle.slug}` }
         ]),
-        ...(vehicleFaqs ? [faqSchema(vehicleFaqs)] : [])
+        ...(vehicleFaqs
+          ? [faqSchema(vehicleFaqs), speakableSchema(`/fleet/${category}/${vehicle.slug}`, ["#faq"])]
+          : [])
       ]
     });
   } catch (err) {
