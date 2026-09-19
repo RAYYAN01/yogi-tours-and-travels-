@@ -33,7 +33,9 @@ function toLastmod(value: string | undefined | null): string | undefined {
 
 router.get("/sitemap.xml", async (req, res, next) => {
  try {
-  const urls: Array<{ path: string; priority: string; changefreq: string; lastmod?: string }> = [...STATIC_PATHS];
+  const urls: Array<{ path: string; priority: string; changefreq: string; lastmod?: string; image?: string }> = [
+    ...STATIC_PATHS
+  ];
 
   for (const cat of VEHICLE_CATEGORY_SLUGS) {
     urls.push({ path: `/fleet/${cat}`, priority: "0.8", changefreq: "weekly" });
@@ -44,17 +46,44 @@ router.get("/sitemap.xml", async (req, res, next) => {
     packagesRepo.all(),
     publishedBlogPosts()
   ]);
+  // image, where present, points Google Images at the real content photo for
+  // that page (not the sitewide og-default.png) — real fleet/tour photography
+  // is exactly the kind of image search traffic this site can actually rank
+  // for, and it was previously only discoverable by crawling each page's <img>.
   for (const v of vehicles) {
-    urls.push({ path: `/fleet/${v.category}/${v.slug}`, priority: "0.7", changefreq: "monthly", lastmod: toLastmod(v.updatedAt) });
+    urls.push({
+      path: `/fleet/${v.category}/${v.slug}`,
+      priority: "0.7",
+      changefreq: "monthly",
+      lastmod: toLastmod(v.updatedAt),
+      image: v.imageKey ? `${env.siteUrl}${v.imageKey}` : undefined
+    });
   }
   for (const s of services) {
-    urls.push({ path: `/services/${s.slug}`, priority: "0.8", changefreq: "monthly", lastmod: toLastmod(s.updatedAt) });
+    urls.push({
+      path: `/services/${s.slug}`,
+      priority: "0.8",
+      changefreq: "monthly",
+      lastmod: toLastmod(s.updatedAt),
+      image: s.imageKey ? `${env.siteUrl}${s.imageKey}` : undefined
+    });
   }
   for (const p of packages) {
-    urls.push({ path: `/tour-packages/${p.slug}`, priority: "0.7", changefreq: "monthly" });
+    urls.push({
+      path: `/tour-packages/${p.slug}`,
+      priority: "0.7",
+      changefreq: "monthly",
+      image: p.imageKey ? `${env.siteUrl}${p.imageKey}` : undefined
+    });
   }
   for (const post of blogPosts) {
-    urls.push({ path: `/blog/${post.slug}`, priority: "0.5", changefreq: "monthly", lastmod: toLastmod(post.updatedAt) });
+    urls.push({
+      path: `/blog/${post.slug}`,
+      priority: "0.5",
+      changefreq: "monthly",
+      lastmod: toLastmod(post.updatedAt),
+      image: post.coverImageKey ? `${env.siteUrl}${post.coverImageKey}` : undefined
+    });
   }
   for (const l of LOCATIONS) {
     urls.push({ path: `/locations/car-rental-${l.slug}`, priority: "0.6", changefreq: "monthly" });
@@ -74,13 +103,13 @@ router.get("/sitemap.xml", async (req, res, next) => {
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls
   .map(
     (u) => `  <url>
     <loc>${env.siteUrl}${u.path}</loc>
     <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ""}
+    <priority>${u.priority}</priority>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ""}${u.image ? `\n    <image:image>\n      <image:loc>${u.image}</image:loc>\n    </image:image>` : ""}
   </url>`
   )
   .join("\n")}
