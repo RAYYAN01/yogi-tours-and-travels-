@@ -83,6 +83,24 @@ app.use((req, res, next) => {
   );
   next();
 });
+// Vulnerability-scanner background noise that hits every public domain on
+// the internet constantly (this site runs no WordPress/PHP, so none of
+// these can ever be a real route) — rejected before the DB schema wait,
+// session, and Redis page-cache lookup that every other request pays for,
+// so this traffic costs as little compute as possible per hit. It still
+// counts as one Vercel Edge Request/Function Invocation either way —
+// stopping it from reaching the edge at all needs Vercel's Firewall
+// (blocking by path/rate), which is a Pro-plan feature this project's
+// Hobby-tier account doesn't have.
+const JUNK_PATH_RE = /^\/(?:wp-|xmlrpc\.php|comments\/feed|tag\/|cate-\d|\.env|\.git|phpmyadmin|wordpress\/)/i;
+app.use((req, res, next) => {
+  if (req.method === "GET" && JUNK_PATH_RE.test(req.path)) {
+    res.status(404).type("text/plain").send("Not found");
+    return;
+  }
+  next();
+});
+
 app.use(compression());
 if (!env.isProd) {
   app.use(morgan("dev"));
