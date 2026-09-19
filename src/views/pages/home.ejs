@@ -6,13 +6,12 @@
     <video
       class="lg:hidden w-full h-full object-cover"
       style="background-color: #2f0e04;"
-      autoplay
       muted
       loop
       playsinline
       preload="metadata"
       poster="/assets/images/destinations/hero-bangalore.webp"
-      data-hero-video
+      data-hero-video="mobile"
     >
       <!-- Smaller (640x360, ~1.5MB) encode for phones/tablets — the
            960x540 desktop file (~2.8MB) would be a real data/load-time
@@ -21,19 +20,24 @@
            and re-encoded at a bitrate-capped CRF well below the original's
            bitrate — same footage, ~70-75% smaller than the source either
            way (checked visually: no visible banding/blocking, and both
-           videos sit under two dark gradient overlays regardless). -->
+           videos sit under two dark gradient overlays regardless).
+           No `autoplay` attribute here — heroVideo.ts decides which one of
+           the two to actually play based on the current viewport. Without
+           that, both elements would buffer/play simultaneously regardless
+           of which is CSS-hidden (display:none does not pause a <video>),
+           silently doubling the real bandwidth cost of every homepage
+           visit — confirmed happening before this fix. -->
       <source src="/assets/video/hero-background-mobile.mp4" type="video/mp4" />
     </video>
     <video
       class="hidden lg:block w-full h-full object-cover"
       style="background-color: #2f0e04;"
-      autoplay
       muted
       loop
       playsinline
       preload="metadata"
       poster="/assets/images/destinations/hero-bangalore.webp"
-      data-hero-video
+      data-hero-video="desktop"
     >
       <source src="/assets/video/hero-background.mp4" type="video/mp4" />
     </video>
