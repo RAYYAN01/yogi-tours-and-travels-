@@ -38,10 +38,18 @@ export const env = {
   sessionSecret: required("SESSION_SECRET", "dev-secret-change-me"),
   /** Postgres connection string (e.g. from Vercel Postgres/Neon/Supabase). Required in production. */
   databaseUrl: process.env.DATABASE_URL || "",
-  /** Upstash Redis REST credentials (from the Vercel Marketplace integration or upstash.com). Optional — leave both unset and the site runs exactly as before, just without the read/page cache. */
+  /**
+   * Upstash Redis REST credentials. Optional — leave unset and the site runs
+   * exactly as before, just without the read/page cache. Two naming
+   * conventions are checked: UPSTASH_REDIS_REST_* is what upstash.com's own
+   * dashboard and older Vercel integrations generate; KV_REST_API_* is what
+   * the current "Upstash for Redis" Vercel Marketplace integration
+   * generates (inherited from the old first-party Vercel KV product's
+   * naming) — this project uses that one in production.
+   */
   redis: {
-    url: process.env.UPSTASH_REDIS_REST_URL || "",
-    token: process.env.UPSTASH_REDIS_REST_TOKEN || ""
+    url: process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || "",
+    token: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || ""
   },
   /** 32-byte hex key (`openssl rand -hex 32`) for encrypting enquiry PII at rest. Leave unset to store plaintext (dev only) — see the startup check above for why production requires it. */
   encryptionKey: process.env.ENCRYPTION_KEY || "",

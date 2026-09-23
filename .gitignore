@@ -17,3 +17,5 @@ Thumbs.db
 .vercel-token
 yogesh.zip
 *.zip
+
+.env*
