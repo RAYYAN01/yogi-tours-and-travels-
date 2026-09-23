@@ -14,7 +14,16 @@ export const pool = new Pool({
   // Hosted Postgres (Vercel Postgres/Neon/Supabase) requires TLS; their
   // certs aren't in Node's default trust store, so this is the standard
   // "connect, don't verify the chain" setting recommended by all three.
-  ssl: env.databaseUrl.includes("localhost") ? false : { rejectUnauthorized: false }
+  ssl: env.databaseUrl.includes("localhost") ? false : { rejectUnauthorized: false },
+  // Every Vercel serverless invocation can spin up its own instance of this
+  // module (and therefore its own Pool) — pg's default max of 10 per pool
+  // multiplies with concurrent traffic and can blow through a pooled
+  // provider's total connection budget fast (hit in production: Supabase's
+  // session-mode pooler caps at 15 total and a handful of concurrent
+  // requests exhausted it). Each invocation only ever runs one query at a
+  // time here, so there's no real concurrency to serve within a single
+  // instance — keep the per-instance pool small regardless of provider.
+  max: 3
 });
 
 /** Rewrites node:sqlite-style "?" positional placeholders into Postgres's "$1, $2, ...". */
