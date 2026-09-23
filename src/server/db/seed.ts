@@ -22,10 +22,13 @@ const publicDir = path.resolve(__dirname, "../../../public");
  * renders a broken <img>.
  */
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".webp", ".png"];
-function findImagePath(dir: string, slug: string): string {
-  for (const ext of IMAGE_EXTENSIONS) {
-    if (fs.existsSync(path.join(publicDir, "assets/images", dir, `${slug}${ext}`))) {
-      return `/assets/images/${dir}/${slug}${ext}`;
+/** suffixes tried in order after the bare slug — vehicles with a full photo set are saved as "<slug>--front-01.ext" etc rather than one flat "<slug>.ext" file. */
+function findImagePath(dir: string, slug: string, suffixes: string[] = [""]): string {
+  for (const suffix of suffixes) {
+    for (const ext of IMAGE_EXTENSIONS) {
+      if (fs.existsSync(path.join(publicDir, "assets/images", dir, `${slug}${suffix}${ext}`))) {
+        return `/assets/images/${dir}/${slug}${suffix}${ext}`;
+      }
     }
   }
   return "";
@@ -34,9 +37,26 @@ function destinationImagePath(slug: string): string {
   return findImagePath("destinations", slug);
 }
 
-/** Same idea for the handful of vehicles with a real fetched/supplied photo. */
+/**
+ * Same idea for vehicles, but most have a full photo set saved as
+ * "<slug>--front-01.ext" / "<slug>--exterior.ext" (multi-angle: front,
+ * interior, dashboard, rear) rather than one flat "<slug>.ext" file — only a
+ * handful of older entries use the flat naming. Try the flat file first,
+ * then the front/exterior shot from a photo set.
+ *
+ * A couple of vehicles' DB slugs and their image folder name have drifted
+ * apart (renamed at some point — see VEHICLE_SLUG_ALIASES in db/content.ts
+ * for the same drift affecting URL routing). Check under the known alias
+ * before giving up, rather than leave a real, already-available photo unused.
+ */
+const VEHICLE_IMAGE_SLUG_ALIAS: Record<string, string> = {
+  "9-seater-tempo-traveller": "tempo-traveller-12-seater"
+};
 function vehicleImagePath(slug: string): string {
-  return findImagePath("vehicles", slug);
+  const direct = findImagePath("vehicles", slug, ["", "--front-01", "--exterior"]);
+  if (direct) return direct;
+  const alias = VEHICLE_IMAGE_SLUG_ALIAS[slug];
+  return alias ? findImagePath("vehicles", alias, ["", "--front-01", "--exterior"]) : "";
 }
 
 /** Same idea for services (public/assets/images/services/<slug>.<ext>). */
